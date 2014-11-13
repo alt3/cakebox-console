@@ -10,8 +10,7 @@ class DatabaseTask extends Shell {
 	];
 
 /**
- * normalizeName():
- * - replaces dots (.) in database name with underscores
+ * normalizeName() replaces non-allowed dots (.) in database name with underscores.
  *
  * @param string $name of the database
  * @return string $name converted to safe format
