@@ -1,8 +1,10 @@
 <?php
 namespace App\Shell;
+use Cake\Core\App;
 use Cake\Console\Shell;
 # use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
+use Cake\Core\Configure;
 
 /**
  * SiteShell class is used to generate, enable and load website configuration files.
@@ -14,15 +16,16 @@ use Cake\Filesystem\Folder;
 class SiteShell extends Shell {
 
     /*
-     * Task to include
+     * SiteShell uses these tasks
      */
     public $tasks = [
         'Symlink',
-        'Exec'
+        'Exec',
+        'Template'
     ];
 
     /*
-     *
+     * var @array containing webserver specific settings
      */
     public $webservers = [
         'nginx' => [
@@ -68,7 +71,6 @@ class SiteShell extends Shell {
 
     }
 
-
     /**
      * create() generates, enables and loads a site configuration file.
      *
@@ -88,7 +90,16 @@ class SiteShell extends Shell {
             }
             $this->out("* Overwriting existing file");
         }
-        $this->createFile($file, "wtf, want my element");
+
+        # Set viewVars for the template
+        $this->Template->set ([
+           'url' => $url,
+           'webroot' => $webroot
+        ]);
+
+        # Write generated template to file
+        $contents = $this->Template->generate('config', 'vhost_nginx');
+        $this->createFile($file, $contents);
 
         # Enable site by creating symlink in sites-enabled
         $this->out("Enabling site");
