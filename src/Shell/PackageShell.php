@@ -2,7 +2,6 @@
 namespace App\Shell;
 
 use Cake\Console\Shell;
-use Cake\Core\Configure;
 
 /**
  * PackageShell class is used to install additional software from the Ubuntu Pacakge archive.
@@ -45,8 +44,9 @@ class PackageShell extends Shell {
  * @return bool false on success, true when errors are encountered
  */
 	public function add($name) {
-		$this->out("Installing additional software package $name:");
-		$this->Exec->run("DEBIAN_FRONTEND=noninteractive apt-get install -qq -y $name");
+		$this->log('', 'info');
+		$this->log("Installing additional software package $name", 'info');
+		$this->Exec->run("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
 		return (0);
 	}
 

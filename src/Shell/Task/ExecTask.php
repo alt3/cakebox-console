@@ -14,13 +14,25 @@ class ExecTask extends Shell {
  */
 	public function run($command, $su = false) {
 		if ($su == false) {
-			$ret = $this->out(exec("$command", $out, $err));
+			$command = "$command 2>&1";
 		} else {
-			$ret = exec("su vagrant -c \"$command\"", $out, $err);
+			$command = "su vagrant -c \"$command\" 2>&1";
 		}
 
+		# Execute the command
+		$this->log("Executing command '$command'", 'info');
+		$ret = exec($command, $out, $err);
+
+		# Write stdout and stderr to log
+		foreach ($out as $line) {
+			if (!empty($line)) {
+				$this->log("=> $line", 'info');
+			}
+		}
+
+		# Log exit-code if errors occured
 		if ($err) {
-			$this->out("Error executing command '$command'");
+			$this->log("Non-zero exit code ($err)");
 			exit(1);
 		}
 	}
