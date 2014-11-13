@@ -80,7 +80,7 @@ class SiteShell extends Shell {
 			return (1);
 		}
 
-		# Generate site configuration file
+		# Check for existing configuration file
 		$file = $this->webservers['nginx']['sites_available'] . "/" . $url;
 		if (file_exists($file)) {
 			if ($this->params['force'] == false) {
