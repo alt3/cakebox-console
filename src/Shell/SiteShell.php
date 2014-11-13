@@ -1,6 +1,5 @@
 <?php
 namespace App\Shell;
-use Cake\Core\App;
 use Cake\Console\Shell;
 # use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
@@ -64,11 +63,6 @@ class SiteShell extends Shell {
             ]]);
 
         return $parser;
-    }
-
-
-    public function main() {
-
     }
 
     /**
