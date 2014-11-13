@@ -42,7 +42,7 @@ class SiteShell extends Shell {
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 
-		$parser->addSubcommand('create', [
+		$parser->addSubcommand('add', [
 			'parser' => [
 				'description' => [
 					__("Generates, enables and loads an Nginx site configuration file.")
@@ -66,13 +66,13 @@ class SiteShell extends Shell {
 	}
 
 /**
- * create() generates, enables and loads a site configuration file.
+ * add() generates, enables and loads a site configuration file.
  *
  * @param string $url containing fqdn used to expose the site
  * @param string $webroot containing full path to site's webroot directory
  * @return bool false on success, true when errors are encountered
  */
-	public function create($url, $webroot) {
+	public function add($url, $webroot) {
 		$this->out("Creating site configuration file:");
 
 		# Prevent overwriting default Cakebox site
