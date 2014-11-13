@@ -74,13 +74,19 @@ class SiteShell extends Shell {
  */
 	public function create($url, $webroot) {
 		$this->out("Creating site configuration file:");
-		$file = $this->webservers['nginx']['sites_available'] . "/" . $url;
+
+		# Prevent overwriting default Cakebox site
+		if ($url == 'default') {
+			$this->out("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
+			return (1);
+		}
 
 		# Generate site configuration file
+		$file = $this->webservers['nginx']['sites_available'] . "/" . $url;
 		if (file_exists($file)) {
 			if ($this->params['force'] == false) {
 				$this->out("* Skipping: $file already exists. Use --force to overwrite.");
-				return;
+				return (0);
 			}
 			$this->out("* Overwriting existing file");
 		}
