@@ -15,15 +15,6 @@ use Cake\Filesystem\Folder;
 class SiteShell extends Shell {
 
 /**
- * _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
- * and is used to disable the welcome screen.
- *
- * @return void
- */
-	protected function _welcome() {
-	}
-
-/**
  * @var array containing tasks used by this shell
  */
 	public $tasks = [
@@ -41,6 +32,15 @@ class SiteShell extends Shell {
 			'sites_enabled' => '/etc/nginx/sites-enabled'
 			]
 		];
+
+/**
+ * _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
+ * and is used to disable the welcome screen.
+ *
+ * @return void
+ */
+	protected function _welcome() {
+	}
 
 /**
  * Define `cakebox site` subcommands and their options `create` and `listall`.
