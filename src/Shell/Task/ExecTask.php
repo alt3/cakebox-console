@@ -23,21 +23,37 @@ class ExecTask extends Shell {
 		}
 
 		# Execute the command
-		$this->log("Executing command '$command'", 'info');
+		$this->out("Executing command '$command'");
 		$ret = exec($command, $out, $err);
 
 		# Write stdout and stderr to log
 		foreach ($out as $line) {
 			if (!empty($line)) {
-				$this->log("=> $line", 'info');
+				$this->out("=> $line");
 			}
 		}
 
 		# Log exit-code if errors occured
 		if ($err) {
-			$this->log("Non-zero exit code ($err)");
+			$this->out("Error: Non-zero exit code ($err)");
 			exit(1);
 		}
 	}
 
+/**
+ * dirAvailable() checks if a directory is either non-existent or empty and can
+ * be used before e.g. git cloning.
+ *
+ * @param string $directory containing full path to the directory to check
+ * @return bool true if the directory is non-existint or empty
+ */
+	public function dirAvailable($directory) {
+		if (!file_exists($directory)) {
+			return true;
+		}
+		if (($files = scandir($directory)) && count($files) <= 2) {
+			return true;
+		}
+		return false;
+	}
 }
