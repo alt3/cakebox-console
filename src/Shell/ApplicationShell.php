@@ -82,10 +82,11 @@ class ApplicationShell extends Shell {
 		}
 
 		# Check if the target directory meets requirements for git cloning
-		#if (!$this->Exec->dirAvailable($this->settings['apps_dir'] . DS . $url)) {
-		#	$this->out("Error: target directory is not empty.");
-		#	exit (1);
-		#}
+		$targetdir = $this->settings['apps_dir'] . DS . $url;
+		if (!$this->Exec->dirAvailable($targetdir)) {
+			$this->out("Error: target directory $targetdir is not empty.");
+			exit (1);
+		}
 
 		# Run framework/version specific installer method
 		if (!$this->__runFrameworkInstaller($url, $this->params['framework'], $this->params['majorversion'], $this->params['template'])) {
