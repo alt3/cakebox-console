@@ -43,7 +43,7 @@ class SiteShell extends Shell {
 	}
 
 /**
- * getOptionParser() is used to define subcommands, arguments and options
+ * getOptionParser() is used to define shell subcommands, arguments and options
  *
  * @return void
  */
@@ -122,7 +122,8 @@ class SiteShell extends Shell {
 	}
 
 /**
- * listall
+ * listall() returns a list of all "available" site configuration files, enclosing
+ * "enabled" sites with an <info> tag,
  *
  * @return void
  */

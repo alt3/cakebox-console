@@ -25,7 +25,7 @@ class PackageShell extends Shell {
 	}
 
 /**
- * getOptionParser() is used to define subcommands, arguments and options
+ * getOptionParser() is used to define shell subcommands, arguments and options
  *
  * @return void
  */
