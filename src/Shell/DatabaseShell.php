@@ -75,38 +75,38 @@ class DatabaseShell extends Shell {
 /**
  * add() will create two databases, one suffixed with '_test
  *
- * @param string $name to be used for the databases
+ * @param string $database to be used for the databases
  * @return bool true when errors are encoutered, false on success
  */
-	public function add($name) {
-		$name = $this->Database->normalizeName($name);
-		$testName = $name . "_test";
-		$this->out("Creating databases for $name");
+	public function add($database) {
+		$database = $this->Database->normalizeName($database);
+		$testDatabase = $database . "_test";
+		$this->out("Creating databases for $database");
 
 		# Prevent processing protected databases
-		if ($name == 'information_schema') {
-			$this->out("Error: cannot drop protected database '$name'.");
+		if ($database == 'information_schema') {
+			$this->out("Error: cannot drop protected database '$database'.");
 			return (1);
 		}
 
 		# Check for existing databases
-		if ($this->Database->exists($name)) {
+		if ($this->Database->exists($database)) {
 			if ($this->params['force'] == false) {
 				$this->out("* Skipping: databases already exists. Use --force to drop.");
 				return (0);
 			}
 			$this->out("* Dropping existing database");
-			$this->Database->drop($name);
-			$this->Database->drop($testName);
+			$this->Database->drop($database);
+			$this->Database->drop($testDatabase);
 		}
 
 		# Create new databases
-		$this->Database->create($name);
-		$this->Database->create($testName);
+		$this->Database->create($database);
+		$this->Database->create($testDatabase);
 
 		# Set permissions
-		$this->Database->grant($name, $this->params['username'], $this->params['password']);
-		$this->Database->grant($testName, $this->params['username'], $this->params['password']);
+		$this->Database->grant($database, $this->params['username'], $this->params['password']);
+		$this->Database->grant($testDatabase, $this->params['username'], $this->params['password']);
 	}
 
 /**
