@@ -17,11 +17,11 @@ class PackageShell extends Shell {
 	];
 
 /**
-* _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
-* and is used to disable the welcome screen.
-*
-* @return void
-*/
+ * _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
+ * and is used to disable the welcome screen.
+ *
+ * @return void
+ */
 	protected function _welcome() {
 	}
 
