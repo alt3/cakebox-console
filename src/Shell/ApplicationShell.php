@@ -38,9 +38,7 @@ class ApplicationShell extends Shell {
 			'writable_dirs' => ['app/tmp']
 		],
 		'cakephp3' => [
-			'repository' => 'https://github.com/cakephp/app.git',
-			'webdir' => 'webroot',
-			'writable_dirs' => ['tmp', 'logs']
+			'webdir' => 'webroot'
 			]
 		];
 
@@ -84,10 +82,10 @@ class ApplicationShell extends Shell {
 		}
 
 		# Check if the target directory meets requirements for git cloning
-		if (!$this->Exec->dirAvailable($this->settings['apps_dir'] . DS . $url)) {
-			$this->out("Error: target directory is not empty.");
-			exit (1);
-		}
+		#if (!$this->Exec->dirAvailable($this->settings['apps_dir'] . DS . $url)) {
+		#	$this->out("Error: target directory is not empty.");
+		#	exit (1);
+		#}
 
 		# Run framework/version specific installer method
 		if (!$this->__runFrameworkInstaller($url, $this->params['framework'], $this->params['majorversion'], $this->params['template'])) {
@@ -120,17 +118,6 @@ class ApplicationShell extends Shell {
 				$this->out("Error: reached undefined framework installer.");
 				return false;
 		}
-	}
-
-/**
- * _installCake3() installs and configures a CakePHP 3.x application.
- *
- * @param string $url containing fqdn used to expose the application's site
- * @return bool true on success, false on errors
- */
-	private function __installCake3($url) {
-		$this->out("Installing CakePHP 3.x application $url");
-		return true;
 	}
 
 /**
@@ -193,6 +180,44 @@ class ApplicationShell extends Shell {
 		$oldPassword = "'password' => 'password'";
 		$newPassword = "'password' => 'secret'";
 		$this->Installer->replaceConfigValue($dbConfig, $oldPassword, $newPassword);
+
+		return true;
+	}
+
+/**
+ * _installCake3() installs and configures a CakePHP 3.x application.
+ *
+ * @param string $url containing fqdn used to expose the application's site
+ * @return bool true on success, false on errors
+ */
+	private function __installCake3($url) {
+		$this->out("Installing CakePHP 3.x application $url");
+
+		# Composer install Cake3 using Application Template
+		$targetdir = $this->settings['apps_dir'] . DS . $url;
+		if ($this->Exec->Run("composer create-project --prefer-dist -s dev cakephp/app $targetdir", 'vagrant')) {
+			$this->out("Error composer installing to $targetdir");
+		}
+
+		# Create nginx site
+		$webroot = $targetdir . DS . $this->settings['cakephp3']['webdir'];
+		$this->dispatchShell("site add $url $webroot --force");
+
+		# Create databases
+		$this->dispatchShell("database add $url --force");
+
+		# Update database settings is app.php
+		$dbName = $this->Database->normalizeName($url);
+		$appConfig = $targetdir . DS . "config" . DS . "app.php";
+
+		$oldUser = "'username' => 'my_app'";
+		$newUser = "'username' => 'cakebox'";
+		$this->Installer->replaceConfigValue($appConfig, $oldUser, $newUser);
+		$this->Installer->replaceConfigValue($appConfig, 'test_myapp', $dbName . '_test');
+
+		$oldDatabase = "'database' => 'my_app'";
+		$newDatabase = "'database' => '$dbName'";
+		$this->Installer->replaceConfigValue($appConfig, $oldDatabase, $newDatabase);
 
 		return true;
 	}
