@@ -15,7 +15,16 @@ use Cake\Filesystem\Folder;
 class SiteShell extends Shell {
 
 /**
- * SiteShell uses these tasks
+ * _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
+ * and is used to disable the welcome screen.
+ *
+ * @return void
+ */
+	protected function _welcome() {
+	}
+
+/**
+ * @var array containing tasks used by this shell
  */
 	public $tasks = [
 		'Symlink',
@@ -40,11 +49,12 @@ class SiteShell extends Shell {
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
+		$parser->description([__('Manage Nginx site configuration files.')]);
 
 		$parser->addSubcommand('add', [
 			'parser' => [
 				'description' => [
-					__("Generates, enables and loads an Nginx site configuration file.")
+					__("Creates and enables an Nginx site configuration file.")
 				],
 				'arguments' => [
 					'url' => ['help' => __('Fully qualified domain name used to expose the site.'), 'required' => true],
@@ -54,6 +64,7 @@ class SiteShell extends Shell {
 					'force' => ['short' => 'f', 'help' => __('Overwrite existing configuration file.'), 'boolean' => true]
 				]
 		]]);
+
 		$parser->addSubcommand('listall', [
 			'parser' => [
 					'description' => [
@@ -85,7 +96,7 @@ class SiteShell extends Shell {
 		if (file_exists($file)) {
 			if ($this->params['force'] == false) {
 				$this->out("* Skipping: $file already exists. Use --force to overwrite.");
-				return (0);
+				exit (0);
 			}
 			$this->out("* Overwriting existing file");
 		}
