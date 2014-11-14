@@ -21,6 +21,15 @@ class DatabaseShell extends Shell {
 	];
 
 /**
+ * _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
+ * and is used to disable the welcome screen.
+ *
+ * @return void
+ */
+	protected function _welcome() {
+	}
+
+/**
  * var @array containing database specific settings
  */
 	public $dbservers = [
@@ -37,6 +46,7 @@ class DatabaseShell extends Shell {
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
+		$parser->description([__('Easily manage your Cakebox databases.')]);
 
 		$parser->addSubcommand('add', [
 			'parser' => [
@@ -63,15 +73,14 @@ class DatabaseShell extends Shell {
 	}
 
 /**
- * add() generates, enables and loads a site configuration file.
+ * add() will create two databases, one suffixed with '_test
  *
- * @param string $url containing fqdn used to expose the site
- * @param string $webroot containing full path to site's webroot directory
- * @return bool false on success, true when errors are encountered
+ * @param string $name to be used for the databases
+ * @return bool true when errors are encoutered, false on success
  */
 	public function add($name) {
 		$name = $this->Database->normalizeName($name);
-		$test_name = $name . "_test";
+		$testName = $name . "_test";
 		$this->out("Creating databases for $name");
 
 		# Prevent processing protected databases
@@ -88,16 +97,16 @@ class DatabaseShell extends Shell {
 			}
 			$this->out("* Dropping existing database");
 			$this->Database->drop($name);
-			$this->Database->drop($test_name);
+			$this->Database->drop($testName);
 		}
 
 		# Create new databases
 		$this->Database->create($name);
-		$this->Database->create($test_name);
+		$this->Database->create($testName);
 
 		# Set permissions
 		$this->Database->grant($name, $this->params['username'], $this->params['password']);
-		$this->Database->grant($test_name, $this->params['username'], $this->params['password']);
+		$this->Database->grant($testName, $this->params['username'], $this->params['password']);
 	}
 
 /**
@@ -110,14 +119,14 @@ class DatabaseShell extends Shell {
 		$databases = $this->Database->getList();
 		var_dump($databases);
 
-#		$files = $dir->find('.*', 'sort');
-#		foreach ($files as $file) {
-#			if ($this->Symlink->exists($this->webservers['nginx']['sites_enabled'] . "/$file")) {
-#				$this->out("  <info>$file</info>");
-#			} else {
-#				$this->out("  $file");
-#			}
-#		}
+		#$files = $dir->find('.*', 'sort');
+		#foreach ($files as $file) {
+		#	if ($this->Symlink->exists($this->webservers['nginx']['sites_enabled'] . "/$file")) {
+		#		$this->out("  <info>$file</info>");
+		#	} else {
+		#		$this->out("  $file");
+		#	}
+		#}
 	}
 
 }
