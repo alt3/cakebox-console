@@ -91,7 +91,7 @@ class DatabaseShell extends Shell {
 		if ($this->Database->exists($database)) {
 			if ($this->params['force'] == false) {
 				$this->out("* Skipping: databases already exists. Use --force to drop.");
-				return (0);
+				exit (0);
 			}
 			$this->out("* Dropping existing database");
 			$this->Database->drop($database);

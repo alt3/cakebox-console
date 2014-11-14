@@ -93,6 +93,9 @@ class ApplicationShell extends Shell {
 			$this->out("Error: error running framework specific installer method.");
 			exit (0);
 		}
+
+		# Provide Vagrant feedback
+		$this->out("Application installation completed successfully");
 	}
 
 /**
