@@ -3,6 +3,9 @@ namespace App\Shell\Task;
 
 use Cake\Console\Shell;
 
+/**
+ * Task class for managing system command shelling.
+ */
 class ExecTask extends Shell {
 
 /**

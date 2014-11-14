@@ -4,13 +4,12 @@ namespace App\Shell;
 use Cake\Console\Shell;
 
 /**
- * PackageShell class is used to install additional software from the Ubuntu Pacakge archive.
- *
+ * Shell class for managing software installation.
  */
 class PackageShell extends Shell {
 
 /**
- * PackagesShell uses these tasks
+ * @var array containing tasks used by this shell
  */
 	public $tasks = [
 		'Exec'
@@ -26,7 +25,7 @@ class PackageShell extends Shell {
 	}
 
 /**
- * Define `cakebox package` subcommands and their arguments and options
+ * getOptionParser() is used to define subcommands, arguments and options
  *
  * @return void
  */

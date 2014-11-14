@@ -3,6 +3,9 @@ namespace App\Shell\Task;
 
 use Cake\Console\Shell;
 
+/**
+ * Task class for managing symbolic links.
+ */
 class SymlinkTask extends Shell {
 
 /**

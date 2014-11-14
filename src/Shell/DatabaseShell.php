@@ -7,13 +7,12 @@ use Cake\Core\Configure;
 use Cake\Filesystem\Folder;
 
 /**
- * DatabaseShell class is used to create two MySQL databases, one suffixed with '_test'.
- *
+ * Shell class for managing databases.
  */
 class DatabaseShell extends Shell {
 
 /**
- * DatabaseShell uses these tasks
+ * @var array containing tasks used by this shell
  */
 	public $tasks = [
 		'Database',
@@ -21,8 +20,7 @@ class DatabaseShell extends Shell {
 	];
 
 /**
- * _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
- * and is used to disable the welcome screen.
+ * _welcome() override same class in /cakephp/src/Shell/Bakeshell to disable welcome screen
  *
  * @return void
  */
@@ -30,7 +28,7 @@ class DatabaseShell extends Shell {
 	}
 
 /**
- * var @array containing database specific settings
+ * @var array containing database specific settings
  */
 	public $dbservers = [
 		'mysql' => [
@@ -40,7 +38,7 @@ class DatabaseShell extends Shell {
 		];
 
 /**
- * Define `cakebox database` subcommands and their options and arguments
+ * getOptionParser() is used to define subcommands, arguments and options
  *
  * @return void
  */

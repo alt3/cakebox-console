@@ -6,11 +6,11 @@ use Cake\Console\Shell;
 use Cake\Filesystem\Folder;
 
 /**
- * SiteShell class is used to generate, enable and load website configuration files.
+ * Shell class for managing website configuration files.
  *
- * Not using File class right now due to error "Call to undefined method App\Shell\SiteShell::clearStatCache()
- * in /cakebox/commands/vendor/cakephp/cakephp/src/Filesystem/File.php on line 403.
- *
+ * NOTE: not using File class right now due to error "Call to undefined method
+ * App\Shell\SiteShell::clearStatCache() in
+ * /cakebox/commands/vendor/cakephp/cakephp/src/Filesystem/File.php on line 403.
  */
 class SiteShell extends Shell {
 
@@ -43,7 +43,7 @@ class SiteShell extends Shell {
 	}
 
 /**
- * Define `cakebox site` subcommands and their options `create` and `listall`.
+ * getOptionParser() is used to define subcommands, arguments and options
  *
  * @return void
  */
