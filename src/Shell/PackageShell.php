@@ -17,23 +17,32 @@ class PackageShell extends Shell {
 	];
 
 /**
+* _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
+* and is used to disable the welcome screen.
+*
+* @return void
+*/
+	protected function _welcome() {
+	}
+
+/**
  * Define `cakebox package` subcommands and their arguments and options
  *
  * @return void
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
+		$parser->description([__('Manage Ubuntu software pacakges.')]);
 
 		$parser->addSubcommand('add', [
 			'parser' => [
 				'description' => [
-					__("Installs additional software from the Ubuntu Package archive.")
+					__("Installs a software package from the Ubuntu Package archive.")
 				],
 				'arguments' => [
-					'name' => ['help' => __('Name of the package as used by `apt-get install`.'), 'required' => true]
+					'name' => ['help' => __('Name of the software package as used by `apt-get install`.'), 'required' => true]
 				]
 		]]);
-
 		return $parser;
 	}
 
@@ -44,8 +53,7 @@ class PackageShell extends Shell {
  * @return bool false on success, true when errors are encountered
  */
 	public function add($name) {
-		$this->log('', 'info');
-		$this->log("Installing additional software package $name", 'info');
+		$this->out("Installing additional software package $name", 'info');
 		$this->Exec->run("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
 		return (0);
 	}
