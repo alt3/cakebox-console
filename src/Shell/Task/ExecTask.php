@@ -9,7 +9,7 @@ use Cake\Console\Shell;
 class ExecTask extends Shell {
 
 /**
- * Executes a system command as root or given username.
+ * Execute a system command as root or using su with provided username.
  *
  * @param string $command Full path to the command with options and arguments
  * @param string $username Optional sudo user used to execute the command
@@ -40,7 +40,7 @@ class ExecTask extends Shell {
 	}
 
 /**
- * Checks if a directory is either non-existent or empty.
+ * Check if a directory is either non-existent or empty.
  *
  * @param string $directory Full path to directory to check
  * @return bool
@@ -56,7 +56,7 @@ class ExecTask extends Shell {
 	}
 
 /**
- * Exits PHP script with exit code 0 to inform bash about success.
+ * Exit PHP script with exit code 0 to inform bash about success.
  *
  * @return void
  */
@@ -65,7 +65,7 @@ class ExecTask extends Shell {
 	}
 
 /**
- * Exits PHP script with exit code 0 to inform bash about success.
+ * Exit PHP script with exit code 0 to inform bash about success.
  *
  * @return void
  */

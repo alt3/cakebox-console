@@ -34,7 +34,7 @@ class SiteShell extends Shell {
 		];
 
 /**
- * Overrides /cakephp/src/Shell/Bakeshell method to disable welcome screen.
+ * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
  *
  * @return void
  */
@@ -42,7 +42,7 @@ class SiteShell extends Shell {
 	}
 
 /**
- * Defines available subcommands, arguments and options.
+ * Define available subcommands, arguments and options.
  *
  * @return void
  */
@@ -75,7 +75,7 @@ class SiteShell extends Shell {
 	}
 
 /**
- * Creates a new website by generating a virtual host file, creating a symoblic
+ * Create a new website by generating a virtual host file, creating a symoblic
  * link and reloading the webserver.
  *
  * @param string $url Fully Qualified Domain Name used to expose the site
@@ -122,7 +122,7 @@ class SiteShell extends Shell {
 	}
 
 /**
- * Displays a list of all "available" websites, highlighting "enabled" websites
+ * Display a list of all "available" websites, highlighting "enabled" websites
  * with an <info> tag.
  *
  * @return void

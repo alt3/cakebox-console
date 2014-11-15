@@ -21,7 +21,7 @@ class ApplicationShell extends Shell {
 	];
 
 /**
- * Overrides /cakephp/src/Shell/Bakeshell method to disable welcome screen.
+ * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
  *
  * @return void
  */
@@ -44,7 +44,7 @@ class ApplicationShell extends Shell {
 		];
 
 /**
- * Defines available subcommands, arguments and options.
+ * Define available subcommands, arguments and options.
  *
  * @return void
  */
@@ -70,7 +70,7 @@ class ApplicationShell extends Shell {
 	}
 
 /**
- * Installs and configures a PHP framework application using Nginx and MySQL.
+ * Install and configure a PHP framework application using Nginx and MySQL.
  *
  * @param string $url Fully Qualified Domain Name used to expose the site
  * @return bool
@@ -106,7 +106,7 @@ class ApplicationShell extends Shell {
 	}
 
 /**
- * Determines and executes framework specific installer method.
+ * Determine and executes framework specific installer method.
  *
  * @param string $url Fully Qualified Domain Name used to expose the site
  * @param string $framework Name of the PHP framework (e.g. cakephp, laravel)
@@ -132,7 +132,7 @@ class ApplicationShell extends Shell {
 	}
 
 /**
- * CakePHP 2.x installer method.
+ * CakePHP 2.x specific installer.
  *
  * @param string $url Fully Qualified Domain Name used to expose the site
  * @return bool
@@ -196,7 +196,7 @@ class ApplicationShell extends Shell {
 	}
 
 /**
- * CakePHP 3.x installer method using CakePHP Application Skeleton.
+ * CakePHP 3.x specific installer using CakePHP Application Skeleton.
  *
  * @param string $url Fully Qualified Domain Name used to expose the site
  * @return bool

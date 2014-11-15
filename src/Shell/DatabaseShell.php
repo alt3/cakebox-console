@@ -19,7 +19,7 @@ class DatabaseShell extends Shell {
 	];
 
 /**
- * Overrides /cakephp/src/Shell/Bakeshell method to disable welcome screen.
+ * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
  *
  * @return void
  */
@@ -37,7 +37,7 @@ class DatabaseShell extends Shell {
 		];
 
 /**
- * Defines available subcommands, arguments and options.
+ * Define available subcommands, arguments and options.
  *
  * @return void
  */
@@ -70,7 +70,7 @@ class DatabaseShell extends Shell {
 	}
 
 /**
- * Creates two databases, one suffixed with '_test.
+ * Create two databases, one suffixed with '_test.
  *
  * @param string $database Name to be used for the databases
  * @return bool
@@ -107,7 +107,7 @@ class DatabaseShell extends Shell {
 	}
 
 /**
- * Returns an array list containing all databases.
+ * Return an array list containing all databases.
  *
  * @return void
  */

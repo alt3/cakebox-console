@@ -29,7 +29,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Checks if a database already exists by looking for a directory named after
+ * Check if a database already exists by looking for a directory named after
  * the normalized database name in /var/lib/mysql. Too be replaced with proper
  * detection method.
  *
@@ -46,7 +46,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Deletes an existing database.
+ * Delete an existing database.
  *
  * @param string $name Database name
  * @return bool
@@ -60,7 +60,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Creates two new databases, one suffixed with '_test'.
+ * Create two new databases, one suffixed with '_test'.
  *
  * @param string $name Name used for the new databases
  * @return bool
@@ -74,7 +74,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Grants localhost access to given database (and related _test database).
+ * Grant localhost access to given database (and related _test database).
  *
  * @param string $name Database name
  * @param string $username Name of user to grant localhost access
@@ -90,7 +90,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Returns an array with all available databases, excluding protected ones.
+ * Return an array with all available databases, excluding protected ones.
  *
  * @return void
  */

@@ -16,7 +16,7 @@ class PackageShell extends Shell {
 	];
 
 /**
- * Overrides /cakephp/src/Shell/Bakeshell method to disable welcome screen.
+ * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
  *
  * @return void
  */
@@ -24,7 +24,7 @@ class PackageShell extends Shell {
 	}
 
 /**
- * Defines available subcommands, arguments and options.
+ * Define available subcommands, arguments and options.
  *
  * @return void
  */
