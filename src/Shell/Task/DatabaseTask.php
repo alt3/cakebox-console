@@ -47,7 +47,7 @@ class DatabaseTask extends Shell {
  * @return bool true when the drop succeeded
  */
 	public function drop($name) {
-		if ($this->Exec->run("mysql -u root -e \"DROP DATABASE \`$name\`\"")) {
+		if ($this->Exec->runCommand("mysql -u root -e \"DROP DATABASE \`$name\`\"")) {
 			return true;
 		}
 		return false;
@@ -60,7 +60,7 @@ class DatabaseTask extends Shell {
  * @return bool true when created successfully
  */
 	public function create($name) {
-		if ($this->Exec->run("mysql -u root -e \"CREATE DATABASE \`$name\`\"")) {
+		if ($this->Exec->runCommand("mysql -u root -e \"CREATE DATABASE \`$name\`\"")) {
 			return true;
 		}
 
@@ -76,7 +76,7 @@ class DatabaseTask extends Shell {
  * @return bool true when permissions are granted successfully
  */
 	public function grant($database, $username, $password) {
-		if ($this->Exec->run("mysql -uroot -e \"GRANT ALL ON \`$database\`.* to  '$username'@'localhost' identified by '$password'\"")) {
+		if ($this->Exec->runCommand("mysql -uroot -e \"GRANT ALL ON \`$database\`.* to  '$username'@'localhost' identified by '$password'\"")) {
 			return true;
 		}
 		return false;
@@ -90,7 +90,7 @@ class DatabaseTask extends Shell {
 	public function getList() {
 		#$link = mysqli_connect('localhost', 'root');
 		#$listdbtables = array_column(mysqli_fetch_all($link->query('SHOW DATABASES')),0);
-		#$raw = $this->Exec->run("mysql -uroot -e \"SHOW DATABASES\"");
+		#$raw = $this->Exec->runCommand("mysql -uroot -e \"SHOW DATABASES\"");
 		#var_dump($raw);
 	}
 

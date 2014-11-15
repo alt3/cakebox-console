@@ -6,12 +6,12 @@ use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
 
 /**
- * Shell class for managing complete applications.
+ * Shell class for installing and configuring PHP framework applications.
  */
 class ApplicationShell extends Shell {
 
 /**
- * @var array containing tasks used by this shell
+ * @var array Shell Tasks used by this shell.
  */
 	public $tasks = [
 		'Installer',
@@ -20,7 +20,8 @@ class ApplicationShell extends Shell {
 	];
 
 /**
- * _welcome() override same class in /cakephp/src/Shell/Bakeshell to disable welcome screen
+ * Overrides same class in /cakephp/src/Shell/Bakeshell to disable Console
+ * welcome screen.
  *
  * @return void
  */
@@ -28,7 +29,7 @@ class ApplicationShell extends Shell {
 	}
 
 /**
- * @var array with installer required information
+ * @var array Settings used by the various installer methods.
  */
 	public $settings = [
 		'apps_dir' => '/home/vagrant/Apps',
@@ -43,7 +44,7 @@ class ApplicationShell extends Shell {
 		];
 
 /**
- * getOptionParser() is used to define shell subcommands, arguments and options
+ * Defines Shell subcommands, arguments and options
  *
  * @return void
  */
@@ -69,43 +70,49 @@ class ApplicationShell extends Shell {
 	}
 
 /**
- * add() installs a PHP framework application using Nginx and MySQL
+ * Installs and configures a PHP framework application using Nginx and MySQL.
  *
- * @param string $url containing fqdn used to expose the application's site
- * @return bool true when errors are encoutered, false on success
+ * @param string $url Fully Qualified Domain Name used to expose the site
+ * @return bool
  */
 	public function add($url) {
+		# Provide (vagrant provisioning) feedback
+		$this->out("Creating application $url");
+
 		# Prevent overwriting default Cakebox site
 		if ($url == 'default') {
 			$this->out("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
-			exit (1);
+			$this->Exec->exitBashError();
 		}
 
 		# Check if the target directory meets requirements for git cloning
+		# (non-existent or empty). Note: exits with success to allow vagrant
+		# re-provisioning.
 		$targetdir = $this->settings['apps_dir'] . DS . $url;
 		if (!$this->Exec->dirAvailable($targetdir)) {
-			$this->out("Error: target directory $targetdir is not empty.");
-			exit (1);
+			$this->out("* Skipping: target directory $targetdir not empty.");
+			$this->Exec->exitBashSuccess();
 		}
 
 		# Run framework/version specific installer method
 		if (!$this->__runFrameworkInstaller($url, $this->params['framework'], $this->params['majorversion'], $this->params['template'])) {
 			$this->out("Error: error running framework specific installer method.");
-			exit (0);
+			$this->Exec->exitBashError();
 		}
 
 		# Provide Vagrant feedback
 		$this->out("Application installation completed successfully");
+		$this->Exec->exitBashSuccess();
 	}
 
 /**
- * __runFrameworkInstaller() starts the required framework/version specific installer function.
+ * Determines and executes framework specific installer method.
  *
- * @param string $url containing fqdn used to expose the application's site
- * @param string $framework containing name of the framework to use (e.g. cakephp)
- * @param string $version containing major version of framework to use (e.g. 3)
- * @param string $template containing name of the template used to create the application (e.g. cakephp/friendsofcake)
- * @return bool true on success, false on errors
+ * @param string $url Fully Qualified Domain Name used to expose the site
+ * @param string $framework Name of the PHP framework (e.g. cakephp, laravel)
+ * @param string $version Major version of the PHP framework (e.g. 2, 3)
+ * @param string $template Template to use (e.g. cakephp/friendsofcake)
+ * @return bool
  */
 	private function __runFrameworkInstaller($url, $framework, $version, $template) {
 		switch ($framework) {
@@ -125,10 +132,10 @@ class ApplicationShell extends Shell {
 	}
 
 /**
- * _installCake2() installs and configures a CakePHP 2.x application.
+ * CakePHP 2.x installer method.
  *
- * @param string $url containing fqdn used to expose the application's site
- * @return bool true on success, false on errors
+ * @param string $url Fully Qualified Domain Name used to expose the site
+ * @return bool
  */
 	private function __installCake2($url) {
 		$this->out("Installing CakePHP 2.x application $url");
@@ -136,14 +143,14 @@ class ApplicationShell extends Shell {
 		# Clone the repository
 		$repository = $this->settings['cakephp2']['repository'];
 		$targetdir = $this->settings['apps_dir'] . DS . $url;
-		if ($this->Exec->Run("git clone $repository $targetdir", 'sudo')) {
+		if ($this->Exec->runCommand("git clone $repository $targetdir", 'vagrant')) {
 			$this->out("Error git cloning $url to $targetdir");
 		}
 
 		# Clone DebugKit plugin
 		$repository = 'https://github.com/cakephp/debug_kit.git';
 		$pluginDir = $targetdir . DS . 'app' . DS . 'Plugin' . DS . 'DebugKit';
-		if ($this->Exec->Run("git clone $repository $pluginDir", 'sudo')) {
+		if ($this->Exec->runCommand("git clone $repository $pluginDir", 'vagrant')) {
 			$this->out("Error git cloning $url to $targetdir");
 		}
 
@@ -189,17 +196,17 @@ class ApplicationShell extends Shell {
 	}
 
 /**
- * _installCake3() installs and configures a CakePHP 3.x application.
+ * CakePHP 3.x installer method using CakePHP Application Skeleton.
  *
- * @param string $url containing fqdn used to expose the application's site
- * @return bool true on success, false on errors
+ * @param string $url Fully Qualified Domain Name used to expose the site
+ * @return bool
  */
 	private function __installCake3($url) {
 		$this->out("Installing CakePHP 3.x application $url");
 
 		# Composer install Cake3 using Application Template
 		$targetdir = $this->settings['apps_dir'] . DS . $url;
-		if ($this->Exec->Run("composer create-project --prefer-dist -s dev cakephp/app $targetdir", 'vagrant')) {
+		if ($this->Exec->runCommand("composer create-project --prefer-dist -s dev cakephp/app $targetdir", 'vagrant')) {
 			$this->out("Error composer installing to $targetdir");
 		}
 

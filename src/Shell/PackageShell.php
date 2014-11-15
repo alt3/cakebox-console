@@ -53,7 +53,7 @@ class PackageShell extends Shell {
  */
 	public function add($name) {
 		$this->out("Installing additional software package $name", 'info');
-		$this->Exec->run("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
+		$this->Exec->runCommand("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
 		return (0);
 	}
 

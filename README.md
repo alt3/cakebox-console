@@ -2,7 +2,7 @@
 
 # TODO
 
-- return and exit codes
+- return codes for DatabaseShell, PackageShell, SiteShell
 - refactor ApplicationShell (and task function names in general)
 - alternative to shelling myql commands
 - finish placeholder `cakebox database listall`

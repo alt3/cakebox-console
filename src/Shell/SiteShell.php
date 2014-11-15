@@ -118,7 +118,7 @@ class SiteShell extends Shell {
 
 		# Reload webserver to effectuate changes
 		$this->out("Reloading webserver");
-		$this->Exec->run("service nginx reload");
+		$this->Exec->runCommand("service nginx reload");
 	}
 
 /**

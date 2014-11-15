@@ -9,34 +9,33 @@ use Cake\Console\Shell;
 class ExecTask extends Shell {
 
 /**
- * run() executes a command as either root or vagrant user.
+ * Executes a system command as root or given username.
  *
- * @param string $command containing full path and connabd arguments, options
- * @param bool $su set to false to run as root, true to run as vagrant user
- * @return int $err containing exit code of executed command
+ * @param string $command Full path to the command with options and arguments
+ * @param string $username Optional sudo user used to execute the command
+ * @return int $err Exit code of executed command
  */
-	public function run($command, $su = false) {
-		if ($su == false) {
+	public function runCommand($command, $username = "root") {
+		$this->out("Executing system command as $username");
+		if ($username == "root") {
 			$command = "$command 2>&1";
 		} else {
-			$command = "su vagrant -c \"$command\" 2>&1";
+			$command = "su $username -c \"$command\" 2>&1";
 		}
+		$this->out("  => $command");
 
-		# Execute the command
-		$this->out("Executing command '$command'");
+		# Execute the command, capture exit code, stdout and stderr
 		$ret = exec($command, $out, $err);
-
-		# Write stdout and stderr to log
 		foreach ($out as $line) {
 			if (!empty($line)) {
-				$this->out("=> $line");
+				$this->out("  => $line");
 			}
 		}
 
 		# Log exit-code if errors occured
 		if ($err) {
 			$this->out("Error: Non-zero exit code ($err)");
-			exit(1);
+			return false;
 		}
 	}
 
@@ -56,4 +55,23 @@ class ExecTask extends Shell {
 		}
 		return false;
 	}
+
+/**
+ * Exit PHP script with exit code 0 to inform bash about success.
+ *
+ * @return void
+ */
+	public function exitBashSuccess() {
+		exit (0);
+	}
+
+/**
+ * Exit PHP script with exit code 0 to inform bash about success.
+ *
+ * @return void
+ */
+	public function exitBashError() {
+		exit (1);
+	}
+
 }
