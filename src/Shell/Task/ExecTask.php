@@ -40,7 +40,8 @@ class ExecTask extends Shell {
 	}
 
 /**
- * Check if a directory is either non-existent or empty.
+ * Check if a directory is either non-existent or empty. Useful before running
+ * commands which require empty directories (like git clone).
  *
  * @param string $directory Full path to directory to check
  * @return bool
