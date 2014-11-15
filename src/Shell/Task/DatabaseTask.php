@@ -24,7 +24,7 @@ class DatabaseTask extends Shell {
 	public function normalizeName($name) {
 		$name = str_replace('.', '_', $name);		# replace dots
 		$name = (str_replace('\\', '_', $name));	# replace backslashes
-		$name = (str_replace('\/', '_', $name));	# replace forward slashes
+		$name = (str_replace('/', '_', $name));	# replace forward slashes
 		return ($name);
 	}
 
