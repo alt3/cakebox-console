@@ -15,7 +15,7 @@ use Cake\Filesystem\Folder;
 class SiteShell extends Shell {
 
 /**
- * @var array containing tasks used by this shell
+ * @var array Shell Tasks used by this shell.
  */
 	public $tasks = [
 		'Symlink',
@@ -24,7 +24,7 @@ class SiteShell extends Shell {
 	];
 
 /**
- * var @array containing webserver specific settings
+ * @var array Webserver specific settings.
  */
 	public $webservers = [
 		'nginx' => [
@@ -34,8 +34,7 @@ class SiteShell extends Shell {
 		];
 
 /**
- * _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
- * and is used to disable the welcome screen.
+ * Overrides /cakephp/src/Shell/Bakeshell method to disable welcome screen.
  *
  * @return void
  */
@@ -43,7 +42,7 @@ class SiteShell extends Shell {
 	}
 
 /**
- * getOptionParser() is used to define shell subcommands, arguments and options
+ * Defines available subcommands, arguments and options.
  *
  * @return void
  */
@@ -76,11 +75,12 @@ class SiteShell extends Shell {
 	}
 
 /**
- * add() generates, enables and loads a site configuration file.
+ * Creates a new website by generating a virtual host file, creating a symoblic
+ * link and reloading the webserver.
  *
- * @param string $url containing fqdn used to expose the site
- * @param string $webroot containing full path to site's webroot directory
- * @return bool false on success, true when errors are encountered
+ * @param string $url Fully Qualified Domain Name used to expose the site
+ * @param string $webroot Full path to the site's webroot directory
+ * @return bool
  */
 	public function add($url, $webroot) {
 		$this->out("Creating site configuration file:");
@@ -122,8 +122,8 @@ class SiteShell extends Shell {
 	}
 
 /**
- * listall() returns a list of all "available" site configuration files, enclosing
- * "enabled" sites with an <info> tag,
+ * Displays a list of all "available" websites, highlighting "enabled" websites
+ * with an <info> tag.
  *
  * @return void
  */

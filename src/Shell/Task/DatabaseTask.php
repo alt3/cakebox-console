@@ -4,7 +4,7 @@ namespace App\Shell\Task;
 use Cake\Console\Shell;
 
 /**
- * Task class for managing Cakebox databases
+ * Task class for managing Cakebox databases.
  */
 class DatabaseTask extends Shell {
 

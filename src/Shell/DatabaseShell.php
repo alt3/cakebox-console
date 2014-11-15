@@ -3,7 +3,6 @@ namespace App\Shell;
 
 use Cake\Console\Shell;
 use Cake\Core\Configure;
-# use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
 
 /**
@@ -12,7 +11,7 @@ use Cake\Filesystem\Folder;
 class DatabaseShell extends Shell {
 
 /**
- * @var array containing tasks used by this shell
+ * @var array Shell Tasks used by this shell.
  */
 	public $tasks = [
 		'Database',
@@ -20,7 +19,7 @@ class DatabaseShell extends Shell {
 	];
 
 /**
- * _welcome() override same class in /cakephp/src/Shell/Bakeshell to disable welcome screen
+ * Overrides /cakephp/src/Shell/Bakeshell method to disable welcome screen.
  *
  * @return void
  */
@@ -28,7 +27,7 @@ class DatabaseShell extends Shell {
 	}
 
 /**
- * @var array containing database specific settings
+ * @var array Database server specific settings.
  */
 	public $dbservers = [
 		'mysql' => [
@@ -38,7 +37,7 @@ class DatabaseShell extends Shell {
 		];
 
 /**
- * getOptionParser() is used to define shell subcommands, arguments and options
+ * Defines available subcommands, arguments and options.
  *
  * @return void
  */
@@ -71,10 +70,10 @@ class DatabaseShell extends Shell {
 	}
 
 /**
- * add() will create two databases, one suffixed with '_test
+ * Creates two databases, one suffixed with '_test.
  *
- * @param string $database to be used for the databases
- * @return bool true when errors are encoutered, false on success
+ * @param string $database Name to be used for the databases
+ * @return bool
  */
 	public function add($database) {
 		$database = $this->Database->normalizeName($database);
@@ -108,7 +107,7 @@ class DatabaseShell extends Shell {
 	}
 
 /**
- * listall() lists all database
+ * Returns an array list containing all databases.
  *
  * @return void
  */

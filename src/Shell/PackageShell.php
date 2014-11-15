@@ -9,15 +9,14 @@ use Cake\Console\Shell;
 class PackageShell extends Shell {
 
 /**
- * @var array containing tasks used by this shell
+ * @var array Shell Tasks used by this shell.
  */
 	public $tasks = [
 		'Exec'
 	];
 
 /**
- * _welcome() overrides the identical function found in core class /cakephp/src/Shell/Bakeshell
- * and is used to disable the welcome screen.
+ * Overrides /cakephp/src/Shell/Bakeshell method to disable welcome screen.
  *
  * @return void
  */
@@ -25,7 +24,7 @@ class PackageShell extends Shell {
 	}
 
 /**
- * getOptionParser() is used to define shell subcommands, arguments and options
+ * Defines available subcommands, arguments and options.
  *
  * @return void
  */
@@ -46,10 +45,10 @@ class PackageShell extends Shell {
 	}
 
 /**
- * add() installs a package from the Ubuntu Package archive.
+ * Install a software package from the Ubuntu Package archive.
  *
- * @param string $name Name of the package as used by `apt-get install`.
- * @return bool false on success, true when errors are encountered
+ * @param string $name Name of package to install  as used by `apt-get install`
+ * @return bool
  */
 	public function add($name) {
 		$this->out("Installing additional software package $name", 'info');

@@ -14,14 +14,14 @@ class ApplicationShell extends Shell {
  * @var array Shell Tasks used by this shell.
  */
 	public $tasks = [
+		'Comm',
 		'Installer',
 		'Exec',
 		'Database'
 	];
 
 /**
- * Overrides same class in /cakephp/src/Shell/Bakeshell to disable Console
- * welcome screen.
+ * Overrides /cakephp/src/Shell/Bakeshell method to disable welcome screen.
  *
  * @return void
  */
@@ -29,7 +29,7 @@ class ApplicationShell extends Shell {
 	}
 
 /**
- * @var array Settings used by the various installer methods.
+ * @var array Installer specific settings.
  */
 	public $settings = [
 		'apps_dir' => '/home/vagrant/Apps',
@@ -44,7 +44,7 @@ class ApplicationShell extends Shell {
 		];
 
 /**
- * Defines Shell subcommands, arguments and options
+ * Defines available subcommands, arguments and options.
  *
  * @return void
  */
