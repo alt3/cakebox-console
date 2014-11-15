@@ -40,11 +40,10 @@ class ExecTask extends Shell {
 	}
 
 /**
- * dirAvailable() checks if a directory is either non-existent or empty and can
- * be used before e.g. git cloning.
+ * Checks if a directory is either non-existent or empty.
  *
- * @param string $directory containing full path to the directory to check
- * @return bool true if the directory is non-existint or empty
+ * @param string $directory Full path to directory to check
+ * @return bool
  */
 	public function dirAvailable($directory) {
 		if (!file_exists($directory)) {
@@ -57,7 +56,7 @@ class ExecTask extends Shell {
 	}
 
 /**
- * Exit PHP script with exit code 0 to inform bash about success.
+ * Exits PHP script with exit code 0 to inform bash about success.
  *
  * @return void
  */
@@ -66,7 +65,7 @@ class ExecTask extends Shell {
 	}
 
 /**
- * Exit PHP script with exit code 0 to inform bash about success.
+ * Exits PHP script with exit code 0 to inform bash about success.
  *
  * @return void
  */

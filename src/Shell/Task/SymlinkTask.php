@@ -9,10 +9,10 @@ use Cake\Console\Shell;
 class SymlinkTask extends Shell {
 
 /**
- * create() will create a symbolic link unless it already exists
+ * Creates a symbolic link unless it already exists.
  *
- * @param string $target containing full path to an existing file
- * @param string $link containing full path of symbolic link to be created
+ * @param string $target Full path to the existing file
+ * @param string $link Full path where symbolic link will be created
  * @return void
  */
 	public function create($target, $link) {
@@ -25,10 +25,10 @@ class SymlinkTask extends Shell {
 	}
 
 /**
- * exists() checks if a symbolic link exists
+ * Checks if a symbolic link already exists.
  *
- * @param string $link containing full path to the symbolic link to check
- * @return bool true when the symbolic link exist
+ * @param string $link Full path to the file/link to check
+ * @return bool
  */
 	public function exists($link) {
 		if (is_link($link)) {

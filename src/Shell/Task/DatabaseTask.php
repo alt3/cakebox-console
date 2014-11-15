@@ -9,31 +9,36 @@ use Cake\Console\Shell;
 class DatabaseTask extends Shell {
 
 /**
- * @var array containing external tasks used by this task
+ * @var array Shell Tasks used by this task.
  */
 	public $tasks = [
 		'Exec'
 	];
 
 /**
- * normalizeName() replaces non-allowed dots (.) in database name with underscores.
+ * Replaces unsupported characters in passed database name with underscores.
  *
- * @param string $name of the database
- * @return string $name converted to safe format
+ * @param string $name Dirty database name
+ * @return string $name Cleaned database name
  */
 	public function normalizeName($name) {
-		return (str_replace('.', '_', $name));
+		$name = str_replace('.', '_', $name);		# replace dots
+		$name = (str_replace('\\', '_', $name));	# replace backslashes
+		$name = (str_replace('\/', '_', $name));	# replace forward slashes
+		return ($name);
 	}
 
 /**
- * exists() checks if a database already exists by looking for a directory named
- * after the database in /var/lib/mysql (to be replaced with proper detection method).
+ * Checks if a database already exists by looking for a directory named after
+ * the normalized database name in /var/lib/mysql. Too be replaced with proper
+ * detection method.
  *
- * @param string $name of the database to check
- * @return bool true when the database exists
+ * @param string $name Database name
+ * @return bool
  */
-	public function exists($name) {
-		$directory = "/var/lib/mysql/$name";
+	public function exists($database) {
+		$database = $this->normalizeName($database);
+		$directory = "/var/lib/mysql/$database";
 		if (file_exists($directory)) {
 			return true;
 		}
@@ -41,41 +46,43 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * drop() deletes an existing database.
+ * Deletes an existing database.
  *
- * @param string $name of the database to drop
- * @return bool true when the drop succeeded
+ * @param string $name Database name
+ * @return bool
  */
-	public function drop($name) {
-		if ($this->Exec->runCommand("mysql -u root -e \"DROP DATABASE \`$name\`\"")) {
+	public function drop($database) {
+		$database = $this->normalizeName($database);
+		if ($this->Exec->runCommand("mysql -u root -e \"DROP DATABASE \`$database\`\"")) {
 			return true;
 		}
 		return false;
 	}
 
 /**
- * create() creates two new databases, one suffixed with '_test';
+ * Creates two new databases, one suffixed with '_test'.
  *
- * @param string $name to use for the databases
- * @return bool true when created successfully
+ * @param string $name Name used for the new databases
+ * @return bool
  */
-	public function create($name) {
-		if ($this->Exec->runCommand("mysql -u root -e \"CREATE DATABASE \`$name\`\"")) {
+	public function create($database) {
+		$database = $this->normalizeName($database);
+		if ($this->Exec->runCommand("mysql -u root -e \"CREATE DATABASE \`$database\`\"")) {
 			return true;
 		}
-
 		return false;
 	}
 
 /**
- * grant() gives localhost access to the given database (and _test database).
+ * Grants localhost access to given database (and related _test database).
  *
- * @param string $database containing name of the database
- * @param string $username containing name of the user to grant localhost access
- * @param string $password for given $username
- * @return bool true when permissions are granted successfully
+ * @param string $name Database name
+ * @param string $username Name of user to grant localhost access
+ * @param string $password Password for given user
+ * @return bool
  */
 	public function grant($database, $username, $password) {
+		$database = $this->normalizeName($database);
 		if ($this->Exec->runCommand("mysql -uroot -e \"GRANT ALL ON \`$database\`.* to  '$username'@'localhost' identified by '$password'\"")) {
 			return true;
 		}
@@ -83,7 +90,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * getList() returns all available databases, excluding protected ones.
+ * Returns an array with all available databases, excluding protected ones.
  *
  * @return void
  */
