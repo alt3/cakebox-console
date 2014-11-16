@@ -2,7 +2,6 @@
 namespace App\Shell;
 
 use Cake\Console\Shell;
-use Cake\Core\Configure;
 use Cake\Filesystem\Folder;
 
 /**
@@ -14,8 +13,7 @@ class DatabaseShell extends Shell {
  * @var array Shell Tasks used by this shell.
  */
 	public $tasks = [
-		'Database',
-		'Exec'
+		'Database'
 	];
 
 /**

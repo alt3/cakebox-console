@@ -33,7 +33,7 @@ class DatabaseTask extends Shell {
  * the normalized database name in /var/lib/mysql. Too be replaced with proper
  * detection method.
  *
- * @param string $name Database name
+ * @param string $database Database name
  * @return bool
  */
 	public function exists($database) {
@@ -48,7 +48,7 @@ class DatabaseTask extends Shell {
 /**
  * Delete an existing database.
  *
- * @param string $name Database name
+ * @param string $database Database name
  * @return bool
  */
 	public function drop($database) {
@@ -62,7 +62,7 @@ class DatabaseTask extends Shell {
 /**
  * Create two new databases, one suffixed with '_test'.
  *
- * @param string $name Name used for the new databases
+ * @param string $database Name used for the new databases
  * @return bool
  */
 	public function create($database) {
@@ -76,7 +76,7 @@ class DatabaseTask extends Shell {
 /**
  * Grant localhost access to given database (and related _test database).
  *
- * @param string $name Database name
+ * @param string $database Database name
  * @param string $username Name of user to grant localhost access
  * @param string $password Password for given user
  * @return bool

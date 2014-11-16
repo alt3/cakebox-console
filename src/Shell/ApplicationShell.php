@@ -14,11 +14,15 @@ class ApplicationShell extends Shell {
  * @var array Shell Tasks used by this shell.
  */
 	public $tasks = [
-		'Comm',
 		'Installer',
 		'Exec',
 		'Database'
 	];
+
+/**
+ * @var string Full path to the installation directory.
+ */
+	public $path;
 
 /**
  * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
@@ -32,7 +36,7 @@ class ApplicationShell extends Shell {
  * @var array Installer specific settings.
  */
 	public $settings = [
-		'apps_dir' => '/home/vagrant/Apps',
+		#'apps_dir' => '/home/vagrant/Apps',
 		'cakephp2' => [
 			'repository' => 'https://github.com/cakephp/cakephp.git',
 			'webdir' => 'app/webroot',
@@ -61,6 +65,7 @@ class ApplicationShell extends Shell {
 					'url' => ['help' => __('Fully qualified domain name used to expose the application.'), 'required' => true],
 				],
 				'options' => [
+					'path' => ['short' => 'p', 'help' => __('Full path to installation directory. Defaults to ~/Apps of the user sudo-executing the cakebox command.'), 'required' => false],
 					'framework' => ['short' => 'f', 'help' => __('PHP framework used by the application.'), 'choices' => ['cakephp'], 'default' => 'cakephp'],
 					'majorversion' => ['short' => 'm', 'help' => __('Major version of the PHP framework used by the application.'), 'choices' => ['2', '3'], 'default' => '3'],
 					'template' => ['short' => 't', 'help' => __('Template used to generate the application.'), 'choices' => ['cakephp', 'friendsofcake'], 'default' => 'cakephp'],
@@ -85,12 +90,19 @@ class ApplicationShell extends Shell {
 			$this->Exec->exitBashError();
 		}
 
+		# Use default installation path unless --path option is given
+		if (isset($this->params['path'])) {
+			$this->path = $this->params['path'];
+		} else {
+			$this->path = $this->Installer->getSudoerHomeDirectory() . "/Apps/" . $url;
+		}
+		$this->out("Installing into $this->path");
+
 		# Check if the target directory meets requirements for git cloning
 		# (non-existent or empty). Note: exits with success to allow vagrant
 		# re-provisioning.
-		$targetdir = $this->settings['apps_dir'] . DS . $url;
-		if (!$this->Exec->dirAvailable($targetdir)) {
-			$this->out("* Skipping: target directory $targetdir not empty.");
+		if (!$this->Installer->dirAvailable($this->path)) {
+			$this->out("* Skipping: target directory $this->path not empty.");
 			$this->Exec->exitBashSuccess();
 		}
 
@@ -142,20 +154,19 @@ class ApplicationShell extends Shell {
 
 		# Clone the repository
 		$repository = $this->settings['cakephp2']['repository'];
-		$targetdir = $this->settings['apps_dir'] . DS . $url;
-		if ($this->Exec->runCommand("git clone $repository $targetdir", 'vagrant')) {
-			$this->out("Error git cloning $url to $targetdir");
+		if ($this->Exec->runCommand("git clone $repository $this->path", 'vagrant')) {
+			$this->out("Error git cloning $url to $this->path");
 		}
 
 		# Clone DebugKit plugin
 		$repository = 'https://github.com/cakephp/debug_kit.git';
-		$pluginDir = $targetdir . DS . 'app' . DS . 'Plugin' . DS . 'DebugKit';
+		$pluginDir = $this->path . DS . 'app' . DS . 'Plugin' . DS . 'DebugKit';
 		if ($this->Exec->runCommand("git clone $repository $pluginDir", 'vagrant')) {
-			$this->out("Error git cloning $url to $targetdir");
+			$this->out("Error git cloning $url to $pluginDir");
 		}
 
 		# Create nginx site
-		$webroot = $targetdir . DS . $this->settings['cakephp2']['webdir'];
+		$webroot = $this->path . DS . $this->settings['cakephp2']['webdir'];
 		$this->dispatchShell("site add $url $webroot --force");
 
 		# Create databases
@@ -163,23 +174,23 @@ class ApplicationShell extends Shell {
 
 		# Make required folders writable
 		foreach ($this->settings['cakephp2']['writable_dirs'] as $directory) {
-			$this->Installer->setFolderPermissions($targetdir . DS . $directory);
+			$this->Installer->setFolderPermissions($this->path . DS . $directory);
 		}
 
 		# Replace salt and cipher in core.php
-		$coreFile = $targetdir . DS . "app" . DS . "Config" . DS . "core.php";
+		$coreFile = $this->path . DS . "app" . DS . "Config" . DS . "core.php";
 		$this->Installer->setSecuritySalt($coreFile, 2);
 		$this->Installer->setSecurityCipher($coreFile, 2);
 
 		# Enable debugkit in bootstrap.php
-		$bootstrapFile = $targetdir . DS . "app" . DS . "Config" . DS . "bootstrap.php";
+		$bootstrapFile = $this->path . DS . "app" . DS . "Config" . DS . "bootstrap.php";
 		$fh = new File($bootstrapFile);
 		$fh->append('CakePlugin::loadAll();');
 		$this->out("Enabled DebugKit plugin in $bootstrapFile");
 
 		# Create database.php config
-		$dbDefault = $targetdir . DS . "app" . DS . "Config" . DS . "database.php.default";
-		$dbConfig = $targetdir . DS . "app" . DS . "Config" . DS . "database.php";
+		$dbDefault = $this->path . DS . "app" . DS . "Config" . DS . "database.php.default";
+		$dbConfig = $this->path . DS . "app" . DS . "Config" . DS . "database.php";
 		$this->Installer->createConfig($dbDefault, $dbConfig);
 
 		# Update database.php config
@@ -205,13 +216,12 @@ class ApplicationShell extends Shell {
 		$this->out("Installing CakePHP 3.x application $url");
 
 		# Composer install Cake3 using Application Template
-		$targetdir = $this->settings['apps_dir'] . DS . $url;
-		if ($this->Exec->runCommand("composer create-project --prefer-dist -s dev cakephp/app $targetdir", 'vagrant')) {
+		if ($this->Exec->runCommand("composer create-project --prefer-dist -s dev cakephp/app $this->path", 'vagrant')) {
 			$this->out("Error composer installing to $targetdir");
 		}
 
 		# Create nginx site
-		$webroot = $targetdir . DS . $this->settings['cakephp3']['webdir'];
+		$webroot = $this->path . DS . $this->settings['cakephp3']['webdir'];
 		$this->dispatchShell("site add $url $webroot --force");
 
 		# Create databases
@@ -219,7 +229,7 @@ class ApplicationShell extends Shell {
 
 		# Update database settings is app.php
 		$dbName = $this->Database->normalizeName($url);
-		$appConfig = $targetdir . DS . "config" . DS . "app.php";
+		$appConfig = $this->path . DS . "config" . DS . "app.php";
 
 		$oldUser = "'username' => 'my_app'";
 		$newUser = "'username' => 'cakebox'";

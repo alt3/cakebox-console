@@ -9,6 +9,15 @@ use Cake\Console\Shell;
 class InstallerTask extends Shell {
 
 /**
+ * Get full path to the home directory of user sudoing the cakebox command.
+ *
+ * @return string $homepath Full path to the sudo user's home directory
+ */
+	public function getSudoerHomeDirectory() {
+		return "/home/" . env("SUDO_USER");
+	}
+
+/**
  * Set globally writable permissions on the "tmp" and "logs" directory.
  *
  * This is not the most secure default, but it gets people up and running quickly.
@@ -154,4 +163,22 @@ class InstallerTask extends Shell {
 			}
 			$this->out("Unable to update `$oldValue` in $file");
 		}
+
+/**
+ * Check if a directory is either non-existent or empty. Useful before running
+ * commands which require empty directories (e.g. git clone).
+ *
+ * @param string $directory Full path to directory to check
+ * @return bool
+ */
+	public function dirAvailable($directory) {
+		if (!file_exists($directory)) {
+			return true;
+		}
+		if (($files = scandir($directory)) && count($files) <= 2) {
+			return true;
+		}
+		return false;
+	}
+
 }
