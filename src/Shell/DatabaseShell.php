@@ -63,7 +63,6 @@ class DatabaseShell extends Shell {
 						__("Lists all databases.")
 					]
 		]]);
-
 		return $parser;
 	}
 
