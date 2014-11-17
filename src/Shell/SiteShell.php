@@ -101,14 +101,11 @@ class SiteShell extends Shell {
 			$this->out("* Overwriting existing file");
 		}
 
-		# Set viewVars for the template
-		$this->Template->set([
+		# Write rendered templatte using viewVars to file
+		$contents = $this->Template->generate('config/vhost_nginx', [
 			'url' => $url,
 			'webroot' => $webroot
-			]);
-
-		# Write generated template to file
-		$contents = $this->Template->generate('config', 'vhost_nginx');
+		]);
 		$this->createFile($file, $contents);
 
 		# Enable site by creating symlink in sites-enabled

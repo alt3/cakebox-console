@@ -1,24 +1,26 @@
-<?php
+<%
 /**
  * Generic template for Nginx virtual hosts.
  */
-?>
+%>
 server {
     listen 80;
-    server_name www.<?php echo $url; ?>;
-    rewrite ^(.*) http://<?php echo $url; ?>$1 permanent;
+    server_name www.<%= $url %>;
+    rewrite ^(.*) http://<%= $url %>$1 permanent;
 }
 
+
+
 server {
     listen 80;
-    server_name <?php echo $url; ?>;
+    server_name <%= $url %>;
 
     # root directive should be global
-    root <?php echo $webroot; ?>;
+    root <%= $webroot %>;
     index index.php;
 
-    access_log /var/log/nginx/<?php echo $url; ?>.access.log;
-    error_log /var/log/nginx/<?php echo $url; ?>.error.log;
+    access_log /var/log/nginx/<%= $url %>.access.log;
+    error_log /var/log/nginx/<%= $url %>.error.log;
 
     location / {
         try_files $uri \$uri/ /index.php?\$args;
