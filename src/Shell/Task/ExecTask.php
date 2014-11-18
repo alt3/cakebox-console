@@ -35,8 +35,9 @@ class ExecTask extends Shell {
 		# Log exit-code if errors occured
 		if ($err) {
 			$this->out("Error: Non-zero exit code ($err)");
-			return false;
+			return $err;
 		}
+		return (0);
 	}
 
 /**

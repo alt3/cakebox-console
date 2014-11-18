@@ -51,9 +51,12 @@ class PackageShell extends Shell {
  * @return bool
  */
 	public function add($name) {
-		$this->out("Installing additional software package $name", 'info');
-		$this->Exec->runCommand("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
-		return (0);
+		$this->out("Installing additional software package $name");
+		$res = $this->Exec->runCommand("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
+		if (!$res) {
+			$this->Exec->exitBashSuccess();
+		}
+		$this->Exec->exitBashError();
 	}
 
 }
