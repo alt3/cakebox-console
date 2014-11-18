@@ -215,9 +215,9 @@ $config = [
 			* the following line and set the port accordingly
 			*/
 			//'port' => 'nonstandard_port_number',
-			'username' => 'my_app',
+			'username' => 'root',
 			'password' => 'secret',
-			'database' => 'my_app',
+			'database' => 'mysql',
 			'encoding' => 'utf8',
 			'timezone' => 'UTC',
 			'cacheMetadata' => true,
@@ -251,9 +251,9 @@ $config = [
 			'persistent' => false,
 			'host' => 'localhost',
 			//'port' => 'nonstandard_port_number',
-			'username' => 'my_app',
+			'username' => 'root',
 			'password' => 'secret',
-			'database' => 'test_myapp',
+			'database' => 'mysql',
 			'encoding' => 'utf8',
 			'timezone' => 'UTC',
 			'cacheMetadata' => true,
