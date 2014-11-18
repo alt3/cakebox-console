@@ -2,6 +2,8 @@
 namespace App\Shell\Task;
 
 use Cake\Console\Shell;
+use Cake\Datasource\ConnectionManager;
+use Cake\Utility\Hash;
 
 /**
  * Task class for managing Cakebox databases.
@@ -14,6 +16,19 @@ class DatabaseTask extends Shell {
 	public $tasks = [
 		'Exec'
 	];
+
+/**
+ * @var string Database connection
+ */
+	public $conn;
+
+/**
+ * Create a connection to the MySQL server (not database) during startup using
+ * database settings in app.php.
+ */
+	public function initialize(){
+		$this->conn = ConnectionManager::get('default');
+	}
 
 /**
  * Replaces unsupported characters in passed database name with underscores.
@@ -90,15 +105,14 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Return an array with all available databases, excluding protected ones.
+ * Return a list of all user created databases.
  *
  * @return void
  */
-	public function getList() {
-		#$link = mysqli_connect('localhost', 'root');
-		#$listdbtables = array_column(mysqli_fetch_all($link->query('SHOW DATABASES')),0);
-		#$raw = $this->Exec->runCommand("mysql -uroot -e \"SHOW DATABASES\"");
-		#var_dump($raw);
+	public function getDatabaseList() {
+		$stmt = $this->conn->query('SELECT dB FROM mysql.db');
+		$rows = $stmt->fetchall();
+		return Hash::flatten($rows);
 	}
 
 }

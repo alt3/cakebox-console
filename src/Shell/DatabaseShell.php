@@ -114,17 +114,12 @@ class DatabaseShell extends Shell {
  */
 	public function listall() {
 		$this->out('Databases on this system:');
-		$databases = $this->Database->getList();
-		var_dump($databases);
+		$databases = $this->Database->getDatabaseList();
 
-		#$files = $dir->find('.*', 'sort');
-		#foreach ($files as $file) {
-		#	if ($this->Symlink->exists($this->webservers['nginx']['sites_enabled'] . "/$file")) {
-		#		$this->out("  <info>$file</info>");
-		#	} else {
-		#		$this->out("  $file");
-		#	}
-		#}
+		foreach ($databases as $database) {
+			$this->out("  $database");
+		}
+
 	}
 
 }
