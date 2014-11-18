@@ -117,7 +117,7 @@ class SiteShell extends Shell {
 		$this->out("Reloading webserver");
 		$this->Exec->runCommand("service nginx reload");
 
-		# Exit bash script correctly
+		# Provide bash script with success exit code
 		$this->Exec->exitBashSuccess();
 	}
 
