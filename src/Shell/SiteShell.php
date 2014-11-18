@@ -88,7 +88,7 @@ class SiteShell extends Shell {
 		# Prevent overwriting default Cakebox site
 		if ($url == 'default') {
 			$this->out("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
-			return (1);
+			$this->Exec->exitBashError();
 		}
 
 		# Check for existing configuration file
@@ -96,7 +96,7 @@ class SiteShell extends Shell {
 		if (file_exists($file)) {
 			if ($this->params['force'] == false) {
 				$this->out("* Skipping: $file already exists. Use --force to overwrite.");
-				exit (0);
+				$this->Exec->exitBashSuccess();
 			}
 			$this->out("* Overwriting existing file");
 		}
@@ -116,6 +116,9 @@ class SiteShell extends Shell {
 		# Reload webserver to effectuate changes
 		$this->out("Reloading webserver");
 		$this->Exec->runCommand("service nginx reload");
+
+		# Exit bash script correctly
+		$this->Exec->exitBashSuccess();
 	}
 
 /**

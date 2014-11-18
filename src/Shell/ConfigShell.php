@@ -55,7 +55,7 @@ class ConfigShell extends Shell {
 
 		if (!isset($this->params['username']) && !isset($this->params['email'])) {
 			$this->out ("  => Skipping: no options passed");
-			return true;
+			$this->Exec->exitBashSuccess();
 		}
 
 		if (isset($this->params['username'])) {
@@ -69,7 +69,7 @@ class ConfigShell extends Shell {
 			$this->out("  => Setting user.email to $email");
 			$this->Exec->runCommand("git config --global user.email $email", "vagrant");
 		}
-		return true;
+		$this->Exec->exitBashSuccess();
 	}
 
 }

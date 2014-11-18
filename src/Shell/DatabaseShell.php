@@ -13,7 +13,8 @@ class DatabaseShell extends Shell {
  * @var array Shell Tasks used by this shell.
  */
 	public $tasks = [
-		'Database'
+		'Database',
+		'Exec'
 	];
 
 /**
@@ -80,14 +81,14 @@ class DatabaseShell extends Shell {
 		# Prevent processing protected databases
 		if ($database == 'information_schema') {
 			$this->out("Error: cannot drop protected database '$database'.");
-			return (1);
+			$this->Exec->exitBashError();
 		}
 
 		# Check for existing databases
 		if ($this->Database->exists($database)) {
 			if ($this->params['force'] == false) {
 				$this->out("* Skipping: databases already exists. Use --force to drop.");
-				exit (0);
+				$this->Exec->exitBashSuccess();
 			}
 			$this->out("* Dropping existing database");
 			$this->Database->drop($database);
@@ -101,6 +102,9 @@ class DatabaseShell extends Shell {
 		# Set permissions
 		$this->Database->grant($database, $this->params['username'], $this->params['password']);
 		$this->Database->grant($testDatabase, $this->params['username'], $this->params['password']);
+
+		# Provide bash script with success exit code
+		$this->Exec->exitBashSuccess();
 	}
 
 /**
