@@ -70,8 +70,8 @@ class ApplicationShell extends Shell {
 				],
 				'options' => [
 					'path' => ['short' => 'p', 'help' => __('Full path to installation directory. Defaults to ~/Apps of the user sudo-executing the cakebox command.'), 'required' => false],
-					'framework' => ['short' => 'f', 'help' => __('PHP framework used by the application.'), 'choices' => ['cakephp', 'laravel'], 'default' => 'cakephp'],
-					'majorversion' => ['short' => 'm', 'help' => __('Major version of the PHP framework used by the application.'), 'choices' => ['2', '3'], 'default' => '3'],
+					'framework' => ['short' => 'f', 'help' => __('PHP framework to use for the application.'), 'choices' => ['cakephp', 'laravel'], 'default' => 'cakephp'],
+					'majorversion' => ['short' => 'm', 'help' => __('Major CakePHP version to use for the application.'), 'choices' => ['2', '3'], 'default' => '3'],
 					'template' => ['short' => 't', 'help' => __('Template used to generate the application.'), 'choices' => ['cakephp', 'friendsofcake'], 'default' => 'cakephp'],
 				]
 		]]);
