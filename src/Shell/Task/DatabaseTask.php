@@ -85,7 +85,7 @@ class DatabaseTask extends Shell {
 		foreach ($this->getDatabaseNames($database) as $database){
 			$this->out("Creating database $database");
 			if ($this->exists($database)){
-				$this->out("  => Skipping: database $database already exists");
+				$this->out("* Skipping: database $database already exists");
 				return false;
 			}
 			$stmt = $this->conn->execute("CREATE DATABASE `$database`");
@@ -111,7 +111,7 @@ class DatabaseTask extends Shell {
 			if ($this->exists($database)){
 				$stmt = $this->conn->execute("DROP DATABASE `$database`");
 			} else {
-				$this->out("  => Skipping: database $database does not exist");
+				$this->out("* Skipping: database $database does not exist");
 			}
 		}
 	}

@@ -16,19 +16,19 @@ class ExecTask extends Shell {
  * @return int $err Exit code of executed command
  */
 	public function runCommand($command, $username = "root") {
-		$this->out("Executing system command as $username");
+		$this->out("Executing system command as $username", 1, Shell::VERBOSE);
 		if ($username == "root") {
 			$command = "$command 2>&1";
 		} else {
 			$command = "su $username -c \"$command\" 2>&1";
 		}
-		$this->out("  => $command");
+		$this->out(" => $command", 1, Shell::VERBOSE);
 
 		# Execute the command, capture exit code, stdout and stderr
 		$ret = exec($command, $out, $err);
 		foreach ($out as $line) {
 			if (!empty($line)) {
-				$this->out("  => $line");
+				$this->out(" => $line", 1, Shell::VERBOSE);
 			}
 		}
 

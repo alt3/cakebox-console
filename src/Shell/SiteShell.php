@@ -2,7 +2,7 @@
 namespace App\Shell;
 
 use Cake\Console\Shell;
-# use Cake\Filesystem\File;
+use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
 
 /**
@@ -83,7 +83,7 @@ class SiteShell extends Shell {
  * @return bool
  */
 	public function add($url, $webroot) {
-		$this->out("Creating site configuration file:");
+		$this->out("Creating Nginx configuration file for $url");
 
 		# Prevent overwriting default Cakebox site
 		if ($url == 'default') {
@@ -95,21 +95,23 @@ class SiteShell extends Shell {
 		$file = $this->webservers['nginx']['sites_available'] . "/" . $url;
 		if (file_exists($file)) {
 			if ($this->params['force'] == false) {
-				$this->out("* Skipping: $file already exists. Use --force to overwrite.");
+				$this->out("* Skipping: file already exists.");
 				$this->Exec->exitBashSuccess();
 			}
-			$this->out("* Overwriting existing file");
+			$this->out("* Overwriting existing file", 1, Shell::VERBOSE);
 		}
 
-		# Write rendered templatte using viewVars to file
+		# Render template using viewVars
 		$contents = $this->Template->generate('config/vhost_nginx', [
 			'url' => $url,
 			'webroot' => $webroot
 		]);
-		$this->createFile($file, $contents);
+
+		# Write to the file
+		$fh = new File($file, true);
+		$fh->write($contents);
 
 		# Enable site by creating symlink in sites-enabled
-		$this->out("Enabling site");
 		$symlink = $this->webservers['nginx']['sites_enabled'] . "/" . $url;
 		$this->Symlink->create($file, $symlink);
 
@@ -117,8 +119,6 @@ class SiteShell extends Shell {
 		$this->out("Reloading webserver");
 		$this->Exec->runCommand("service nginx reload");
 
-		# Provide bash script with success exit code
-		$this->Exec->exitBashSuccess();
 	}
 
 /**

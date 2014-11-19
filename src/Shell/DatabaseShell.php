@@ -88,7 +88,7 @@ class DatabaseShell extends Shell {
  * @return bool
  */
 	public function add($database) {
-		$database = $this->Database->normalizeName($database);
+		$this->out("Creating databases");
 
 		# Prevent processing protected databases
 		if ($database == 'information_schema') {
@@ -99,7 +99,7 @@ class DatabaseShell extends Shell {
 		# Check for existing databases
 		if ($this->Database->exists($database)) {
 			if ($this->params['force'] == false) {
-				$this->out("* Skipping: databases already exists. Use --force to drop.");
+				$this->out("* Skipping: databases already exists.");
 				$this->Exec->exitBashSuccess();
 			}
 			$this->Database->drop($database);
