@@ -26,6 +26,8 @@ class InstallerTask extends Shell {
  * @return void
  */
 	public function setFolderPermissions($dir) {
+		$this->out("Setting permissions on $dir");
+
 		// Change the permissions on a path and output the results.
 		$changePerms = function ($path, $perms) {
 			// Get current permissions in decimal format so we can bitmask it.
