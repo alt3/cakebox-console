@@ -113,10 +113,10 @@ class DatabaseShell extends Shell {
 /**
  * Remove/drop a database and related test-database.
  *
+ * @param string $database Name of main database
  * @return void
  */
 	public function remove($database) {
-
 		$res = $this->Database->drop($database);
 	}
 
@@ -132,7 +132,6 @@ class DatabaseShell extends Shell {
 		foreach ($databases as $database) {
 			$this->out("  $database");
 		}
-
 	}
 
 }

@@ -40,8 +40,10 @@ class DatabaseTask extends Shell {
 /**
  * Create a connection to the MySQL server (not database) during startup using
  * database settings in app.php.
+ *
+ * @return void
  */
-	public function initialize(){
+	public function initialize() {
 		$this->conn = ConnectionManager::get('default');
 	}
 
@@ -85,9 +87,9 @@ class DatabaseTask extends Shell {
  * @return bool
  */
 	public function create($database) {
-		foreach ($this->getDatabaseNames($database) as $database){
+		foreach ($this->__getDatabaseNames($database) as $database) {
 			$this->out("Creating database $database");
-			if ($this->exists($database)){
+			if ($this->exists($database)) {
 				$this->out("* Skipping: database $database already exists");
 				continue;
 			}
@@ -114,9 +116,9 @@ class DatabaseTask extends Shell {
 		}
 
 		# Process both main and test database
-		foreach ($this->getDatabaseNames($database) as $database){
+		foreach ($this->__getDatabaseNames($database) as $database) {
 			$this->out("Deleting database " . $this->normalizeName($database));
-			if (!$this->exists($database)){
+			if (!$this->exists($database)) {
 				$this->out("* Skipping: database $database does not exist");
 				continue;
 			}
@@ -138,7 +140,7 @@ class DatabaseTask extends Shell {
  * @return bool
  */
 	public function setGrants($database, $username, $password) {
-		foreach ($this->getDatabaseNames($database) as $database){
+		foreach ($this->__getDatabaseNames($database) as $database) {
 			$this->out("Granting user '$username' localhost access on database $database");
 			try {
 				$this->conn->execute("GRANTS ALL ON `$database`.* to  '$username'@'localhost' identified by '$password'");
@@ -173,7 +175,7 @@ class DatabaseTask extends Shell {
  * @param string $database Name of the main database
  * @return array List with database names for main and test
  */
-	private function getDatabaseNames($database) {
+	private function __getDatabaseNames($database) {
 		$database = $this->normalizeName($database);
 		return [$database, $database . $this->settings['test_suffix']];
 	}
