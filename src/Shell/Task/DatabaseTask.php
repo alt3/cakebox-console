@@ -46,7 +46,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Replaces unsupported characters in passed database name with underscores.
+ * Replace unsupported characters in databases name with underscores.
  *
  * @param string $name Dirty database name
  * @return string $name Cleaned database name
@@ -59,9 +59,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Check if a database already exists by looking for a directory named after
- * the normalized database name in /var/lib/mysql. Too be replaced with proper
- * detection method.
+ * Check if a database already exists.
  *
  * @param string $database Database name
  * @return bool
@@ -81,7 +79,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Create two new databases, one suffixed with '_test'.
+ * Create a main database and accompanying '_test' suffixed test database.
  *
  * @param string $database Name used for the new databases
  * @return bool
@@ -103,7 +101,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Delete an existing database.
+ * Delete existing databases (main and test).
  *
  * @param string $database Database name
  * @return bool
@@ -132,7 +130,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Grant localhost access to given database (and related _test database) to.
+ * Grant user localhost access to databases (main and test).
  *
  * @param string $database Database name
  * @param string $username Name of user to grant localhost access
@@ -154,7 +152,7 @@ class DatabaseTask extends Shell {
 /**
  * Return a list of all user created databases.
  *
- * @return array $stripped Array containing user databases
+ * @return array List with database names
  */
 	public function getDatabaseList() {
 		try {
@@ -166,13 +164,14 @@ class DatabaseTask extends Shell {
 
 		# Create flat array and remove system databases
 		$rows = Hash::extract($stmt->fetchall(), '{n}.{n}');
-		$stripped = array_diff($rows, $this->settings['mysql']['system_databases']);
-		return $stripped;
+		return (array_diff($rows, $this->settings['mysql']['system_databases']));
 	}
 
 /**
- * Get an array containing the normalized database name and normalized name of
- * the related test database.
+ * Fetch an array containing the normalized database names for main and test.
+ *
+ * @param string $database Name of the main database
+ * @return array List with database names for main and test
  */
 	private function getDatabaseNames($database) {
 		$database = $this->normalizeName($database);
