@@ -68,11 +68,16 @@ class DatabaseTask extends Shell {
  */
 	public function exists($database) {
 		$database = $this->normalizeName($database);
-		$stmt = $this->conn->execute("SHOW DATABASES LIKE '$database'");
-		if ($stmt->count()) {
-			return true;
+		try {
+			if ($this->conn->execute("SHOW DATABASES LIKE '$database'")->count()) {
+				$this->out("Database exists");
+				return true;
+			};
+			return false;
+		} catch (\Exception $e) {
+			$this->out("Error: " . $e->getMessage());
+			$this->Exec->exitBashError();
 		}
-		return false;
 	}
 
 /**
@@ -86,10 +91,15 @@ class DatabaseTask extends Shell {
 			$this->out("Creating database $database");
 			if ($this->exists($database)){
 				$this->out("* Skipping: database $database already exists");
-				return false;
+				continue;
 			}
-			$stmt = $this->conn->execute("CREATE DATABASE `$database`");
-		};
+			try {
+				$this->conn->execute("CREATE DATABASE `$database`");
+			} catch (\Exception $e) {
+				$this->out("Error: " . $e->getMessage());
+				$this->Exec->exitBashError();
+			}
+		}
 	}
 
 /**
@@ -105,13 +115,18 @@ class DatabaseTask extends Shell {
 			return false;
 		}
 
-		# Delete database and related test-database
+		# Process both main and test database
 		foreach ($this->getDatabaseNames($database) as $database){
 			$this->out("Deleting database " . $this->normalizeName($database));
-			if ($this->exists($database)){
-				$stmt = $this->conn->execute("DROP DATABASE `$database`");
-			} else {
+			if (!$this->exists($database)){
 				$this->out("* Skipping: database $database does not exist");
+				continue;
+			}
+			try {
+				$this->conn->execute("DROP DATABASE `$database`");
+			} catch (\Exception $e) {
+				$this->out("MyError: " . $e->getMessage());
+				$this->Exec->exitBashError();
 			}
 		}
 	}
@@ -127,17 +142,29 @@ class DatabaseTask extends Shell {
 	public function setGrants($database, $username, $password) {
 		foreach ($this->getDatabaseNames($database) as $database){
 			$this->out("Granting user '$username' localhost access on database $database");
-			$stmt = $this->conn->execute("GRANT ALL ON `$database`.* to  '$username'@'localhost' identified by '$password'");
+			try {
+				$this->conn->execute("GRANTS ALL ON `$database`.* to  '$username'@'localhost' identified by '$password'");
+			} catch (\Exception $e) {
+				$this->out("Error: " . $e->getMessage());
+				$this->Exec->exitBashError();
+			}
 		}
 	}
 
 /**
  * Return a list of all user created databases.
  *
- * @return void
+ * @return array $stripped Array containing user databases
  */
 	public function getDatabaseList() {
-		$stmt = $this->conn->execute('SHOW DATABASES');
+		try {
+			$stmt = $this->conn->execute('SHOW DATABASES');
+		} catch (\Exception $e) {
+			$this->out("Error: " . $e->getMessage());
+			$this->Exec->exitBashError();
+		}
+
+		# Create flat array and remove system databases
 		$rows = Hash::extract($stmt->fetchall(), '{n}.{n}');
 		$stripped = array_diff($rows, $this->settings['mysql']['system_databases']);
 		return $stripped;
