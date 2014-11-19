@@ -44,6 +44,7 @@ class DatabaseShell extends Shell {
 		$parser = parent::getOptionParser();
 		$parser->description([__('Easily manage your Cakebox databases.')]);
 
+		# add
 		$parser->addSubcommand('add', [
 			'parser' => [
 				'description' => [
@@ -54,10 +55,23 @@ class DatabaseShell extends Shell {
 				],
 				'options' => [
 					'username' => ['short' => 'u', 'help' => __('Username with localhost database access.'), 'default' => 'cakebox'],
-					'password' => ['short' => 'u', 'help' => __('Password for user with localhost access.'), 'default' => 'secret'],
+					'password' => ['short' => 'p', 'help' => __('Password for user with localhost access.'), 'default' => 'secret'],
 					'force' => ['short' => 'f', 'help' => __('Drop existing database.'), 'boolean' => true]
 				]
 		]]);
+
+		# remove
+		$parser->addSubcommand('remove', [
+			'parser' => [
+				'description' => [
+					__("Drops database and related '_test' suffixed database.")
+				],
+				'arguments' => [
+					'name' => ['help' => __('Name of database to be dropped.'), 'required' => true]
+				]
+		]]);
+
+		# listall
 		$parser->addSubcommand('listall', [
 			'parser' => [
 					'description' => [
@@ -75,8 +89,6 @@ class DatabaseShell extends Shell {
  */
 	public function add($database) {
 		$database = $this->Database->normalizeName($database);
-		$testDatabase = $database . "_test";
-		$this->out("Creating databases for $database");
 
 		# Prevent processing protected databases
 		if ($database == 'information_schema') {
@@ -90,21 +102,23 @@ class DatabaseShell extends Shell {
 				$this->out("* Skipping: databases already exists. Use --force to drop.");
 				$this->Exec->exitBashSuccess();
 			}
-			$this->out("* Dropping existing database");
 			$this->Database->drop($database);
-			$this->Database->drop($testDatabase);
 		}
 
-		# Create new databases
+		# Create databases, set permissions and exit to bash with correct exit code
 		$this->Database->create($database);
-		$this->Database->create($testDatabase);
-
-		# Set permissions
-		$this->Database->grant($database, $this->params['username'], $this->params['password']);
-		$this->Database->grant($testDatabase, $this->params['username'], $this->params['password']);
-
-		# Provide bash script with success exit code
+		$this->Database->setGrants($database, $this->params['username'], $this->params['password']);
 		$this->Exec->exitBashSuccess();
+	}
+
+/**
+ * Remove/drop a database and related test-database.
+ *
+ * @return void
+ */
+	public function remove($database) {
+
+		$res = $this->Database->drop($database);
 	}
 
 /**
@@ -113,7 +127,7 @@ class DatabaseShell extends Shell {
  * @return void
  */
 	public function listall() {
-		$this->out('Databases on this system:');
+		$this->out('User databases on this system:');
 		$databases = $this->Database->getDatabaseList();
 
 		foreach ($databases as $database) {
