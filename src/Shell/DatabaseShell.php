@@ -105,10 +105,9 @@ class DatabaseShell extends Shell {
 			$this->Database->drop($database);
 		}
 
-		# Create databases, set permissions and exit to bash with correct exit code
+		# Create databases and set permissions
 		$this->Database->create($database);
 		$this->Database->setGrants($database, $this->params['username'], $this->params['password']);
-		$this->Exec->exitBashSuccess();
 	}
 
 /**

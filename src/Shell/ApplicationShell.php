@@ -70,7 +70,7 @@ class ApplicationShell extends Shell {
 				],
 				'options' => [
 					'path' => ['short' => 'p', 'help' => __('Full path to installation directory. Defaults to ~/Apps of the user sudo-executing the cakebox command.'), 'required' => false],
-					'framework' => ['short' => 'f', 'help' => __('PHP framework used by the application.'), 'choices' => ['cakephp'], 'default' => 'cakephp'],
+					'framework' => ['short' => 'f', 'help' => __('PHP framework used by the application.'), 'choices' => ['cakephp', 'laravel'], 'default' => 'cakephp'],
 					'majorversion' => ['short' => 'm', 'help' => __('Major version of the PHP framework used by the application.'), 'choices' => ['2', '3'], 'default' => '3'],
 					'template' => ['short' => 't', 'help' => __('Template used to generate the application.'), 'choices' => ['cakephp', 'friendsofcake'], 'default' => 'cakephp'],
 				]
@@ -141,6 +141,8 @@ class ApplicationShell extends Shell {
 				}
 				$this->out("Error: reached undefined cakephp installer.");
 				return false;
+			case "laravel":
+				return ($this->__installLaravel($url));
 			default:
 				$this->out("Error: reached undefined framework installer.");
 				return false;
@@ -244,6 +246,34 @@ class ApplicationShell extends Shell {
 		$newDatabase = "'database' => '$dbName'";
 		$this->Installer->replaceConfigValue($appConfig, $oldDatabase, $newDatabase);
 
+		return true;
+	}
+
+/**
+ * Laravel specific installer.
+ *
+ * @param string $url Fully Qualified Domain Name used to expose the site
+ * @return bool
+ */
+	private function __installLaravel($url) {
+		$this->out("Installing Laravel application $url");
+
+		# Composer install Laravel
+		if ($this->Exec->runCommand("composer create-project --prefer-dist laravel/laravel $this->path", 'vagrant')) {
+			$this->out("Error composer installing to $targetdir");
+		}
+
+		# Create nginx site
+		$webroot = $this->path . DS . $this->settings['laravel']['webdir'];
+		$this->dispatchShell("site add $url $webroot --force");
+
+		# Create databases
+		$this->dispatchShell("database add $url --force");
+
+		# Make required folders writable
+		foreach ($this->settings['laravel']['writable_dirs'] as $directory) {
+			$this->Installer->setFolderPermissions($this->path . DS . $directory);
+		}
 		return true;
 	}
 
