@@ -44,8 +44,12 @@ class ApplicationShell extends Shell {
 		],
 		'cakephp3' => [
 			'webdir' => 'webroot'
-			]
-		];
+		],
+		'laravel' => [
+			'webdir' => 'public',
+			'writable_dirs' => ['app/storage']
+		]
+	];
 
 /**
  * Define available subcommands, arguments and options.
