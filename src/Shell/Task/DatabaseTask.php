@@ -143,7 +143,7 @@ class DatabaseTask extends Shell {
 		foreach ($this->__getDatabaseNames($database) as $database) {
 			$this->out("Granting user '$username' localhost access on database $database");
 			try {
-				$this->conn->execute("GRANTS ALL ON `$database`.* to  '$username'@'localhost' identified by '$password'");
+				$this->conn->execute("GRANT ALL ON `$database`.* to  '$username'@'localhost' identified by '$password'");
 			} catch (\Exception $e) {
 				$this->out("Error: " . $e->getMessage());
 				$this->Exec->exitBashError();
