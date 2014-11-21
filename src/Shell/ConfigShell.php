@@ -54,7 +54,7 @@ class ConfigShell extends Shell {
 		$this->out("Configuring git globals");
 
 		if (!isset($this->params['username']) && !isset($this->params['email'])) {
-			$this->out ("* Skipping: no options passed");
+			$this->out("* Skipping: no options passed");
 			$this->Exec->exitBashSuccess();
 		}
 
