@@ -86,7 +86,7 @@ class ApplicationShell extends Shell {
  */
 	public function add($url) {
 		# Provide (vagrant provisioning) feedback
-		$this->out("Creating application $url");
+		$this->out("Creating application http://$url");
 
 		# Prevent overwriting default Cakebox site
 		if ($url == 'default') {
