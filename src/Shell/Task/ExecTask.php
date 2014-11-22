@@ -25,19 +25,24 @@ class ExecTask extends Shell {
 		$this->out(" => $command", 1, Shell::VERBOSE);
 
 		# Execute the command, capture exit code, stdout and stderr
-		$ret = exec($command, $out, $exitCode);
-		foreach ($out as $line) {
+		$ret = exec($command, $stdout, $exitCode);
+		foreach ($stdout as $line) {
 			if (!empty($line)) {
 				$this->out(" => $line", 1, Shell::VERBOSE);
 			}
 		}
 
-		# Log exit-code if errors occured
+		# Return exit-code and write stdout to log if errors occured
 		if ($exitCode) {
 			$this->out("Error: Non-zero exit code ($exitCode)");
+			foreach ($stdout as $line) {
+				if (!empty($line)) {
+					$this->out(" => $line");
+				}
+			}
 			return $exitCode;
 		}
-		return (0);
+		return false;
 	}
 
 /**
