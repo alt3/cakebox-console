@@ -57,7 +57,7 @@ class PackageShell extends Shell {
 		}
 
 		# Not installed so install
-		$this->out("Installing additional software package $name");
+		$this->out("Please wait... installing additional software package $name.");
 		$res = $this->Exec->runCommand("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
 		if (!$res) {
 			$this->Exec->exitBashSuccess();
