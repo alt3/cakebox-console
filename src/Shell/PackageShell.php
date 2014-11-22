@@ -2,6 +2,7 @@
 namespace App\Shell;
 
 use Cake\Console\Shell;
+use Cake\Filesystem\File;
 
 /**
  * Shell class for managing software installation.
@@ -51,33 +52,34 @@ class PackageShell extends Shell {
  * @return bool
  */
 	public function add($name) {
-		if ($this->__installed($name)) {
+		if ($this->installed($name)) {
 			$this->out("* Skipping: package already installed.");
 			$this->Exec->exitBashSuccess();
 		}
 
 		# Not installed so install
-		$this->out("Please wait... installing additional software package $name.");
-		$res = $this->Exec->runCommand("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
-		if (!$res) {
-			$this->Exec->exitBashSuccess();
+		$this->out("Please wait... installing additional software package `$name`");
+		$exitCode = $this->Exec->runCommand("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
+		if ($exitCode) {
+			$this->Exec->exitBashError();
 		}
-		$this->Exec->exitBashError();
+		$this->Exec->exitBashSuccess();
 	}
 
 /**
- * Check if a software package is already installed.
+ * Check if a software package is already installed. We do not use ExecTask to
+ * shell `dpkg -` or `dpkg-query -l` since those generate exit-codes/errors for
+ * both non-installed and non-existing packages.
  *
- * @param string $name Name of package to check
+ * @param string $package Name of Ubuntu package to check
  * @return bool
  */
-	private function __installed($name) {
-		$res = $this->Exec->runCommand("dpkg -s $name");
-		if ($res) {
-			return false;	# package not installed
-		} else {
-			return true;	# pacakge already installed
+	public function installed($package) {
+		$file = "/var/lib/dpkg/info/$package.md5sums";
+		if (file_exists($file)) {
+			return true;
 		}
+		return false;
 	}
 
 }
