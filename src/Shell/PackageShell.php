@@ -51,12 +51,33 @@ class PackageShell extends Shell {
  * @return bool
  */
 	public function add($name) {
+		if ($this->__installed($name)) {
+			$this->out("* Skipping: package already installed.");
+			$this->Exec->exitBashSuccess();
+		}
+
+		# Not installed so install
 		$this->out("Installing additional software package $name");
 		$res = $this->Exec->runCommand("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
 		if (!$res) {
 			$this->Exec->exitBashSuccess();
 		}
 		$this->Exec->exitBashError();
+	}
+
+/**
+ * Check if a software package is already installed.
+ *
+ * @param string $name Name of package to check
+ * @return bool
+ */
+	private function __installed($name) {
+		$res = $this->Exec->runCommand("dpkg -s $name");
+		if ($res) {
+			return false;	# package not installed
+		} else {
+			return true;	# pacakge already installed
+		}
 	}
 
 }
