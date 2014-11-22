@@ -52,13 +52,14 @@ class PackageShell extends Shell {
  * @return bool
  */
 	public function add($name) {
+		$this->out("Please wait... installing additional software package `$name`");
+
 		if ($this->installed($name)) {
-			$this->out("* Skipping: package already installed.");
+			$this->out("* Skipping: already installed.");
 			$this->Exec->exitBashSuccess();
 		}
 
 		# Not installed so install
-		$this->out("Please wait... installing additional software package `$name`");
 		$exitCode = $this->Exec->runCommand("DEBIAN_FRONTEND=noninteractive apt-get install -y $name");
 		if ($exitCode) {
 			$this->Exec->exitBashError();
