@@ -156,7 +156,7 @@ class ApplicationShell extends Shell {
  * @return bool
  */
 	private function __installCake2($url) {
-		$this->out("Installing CakePHP 2.x application $url");
+		$this->out("Please wait... installing CakePHP 2.x application $url");
 
 		# Clone the repository
 		$repository = $this->settings['cakephp2']['repository'];
@@ -219,7 +219,7 @@ class ApplicationShell extends Shell {
  * @return bool
  */
 	private function __installCake3($url) {
-		$this->out("Installing CakePHP 3.x application $url");
+		$this->out("Please wait... installing CakePHP 3.x application $url");
 
 		# Composer install Cake3 using Application Template
 		if ($this->Exec->runCommand("composer create-project --prefer-dist -s dev cakephp/app $this->path", 'vagrant')) {
@@ -256,7 +256,7 @@ class ApplicationShell extends Shell {
  * @return bool
  */
 	private function __installLaravel($url) {
-		$this->out("Installing Laravel application $url");
+		$this->out("Please wait... installing Laravel application $url");
 
 		# Composer install Laravel
 		if ($this->Exec->runCommand("composer create-project --prefer-dist laravel/laravel $this->path", 'vagrant')) {
