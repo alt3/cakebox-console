@@ -41,7 +41,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <body class="home">
 	<header>
 		<div class="header-image">
-			<?= $this->Html->image('http://cakephp.org/img/cake-logo.png') ?>
+			<?= $this->Html->image('cake-logo.png') ?>
 			<h1>Welcome to your Cakebox!</h1>
 			<p>With some imagination this landing page could easily:</p>
 			<ul>
