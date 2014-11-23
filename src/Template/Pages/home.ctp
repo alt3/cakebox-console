@@ -43,15 +43,15 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 		<div class="header-image">
 			<?= $this->Html->image('http://cakephp.org/img/cake-logo.png') ?>
 			<h1>Welcome to your Cakebox!</h1>
-			<p>With a little imagination this landing page could:</p>
+			<p>With some imagination this landing page could easily:</p>
 			<ul>
-				<li>be a CakePHP showcase app</li>
-				<li>be an extremely user-friendly web-based wrapper around the console Shells/Tasks</li>
+				<li>become a CakePHP showcase app</li>
+				<li>become a user-friendly wrapper around the various console commands (Shells/Tasks)</li>
 				<li>integrate some of the "cool(est)" tools around like (Logstash, etc ?)</li>
-				<li>be a dashboard showing all databases, apps, sites, etc</li>
+				<li>become a dashboard showing all databases, apps, sites, etc</li>
 				<li>basically blow all "other" framework boxes away</li>
 				<li>win over new users... up-and-running using best practices in 2 minutes</li>
-				<li>be highly marketable</li>
+				<li>be something highly marketable</li>
 			</ul>
 		</div>
 	</header>
