@@ -93,5 +93,11 @@ class ConfigShell extends Shell {
 			$this->out("Error git pulling cakebox-console");
 		}
 
+		# Composer update cakebox-console
+		$this->out("* Updating composer");
+		if ($this->Exec->runCommand("cd /cakebox/console; composer update --prefer-dist", 'vagrant')) {
+			$this->out("Error composer updating");
+		}
 	}
+
 }
