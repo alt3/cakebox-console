@@ -30,7 +30,14 @@ class ConfigShell extends Shell {
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
-		$parser->description([__('Manage Ubuntu software pacakges.')]);
+		$parser->description([__('Manage various configuration settings.')]);
+
+		$parser->addSubcommand('update', [
+			'parser' => [
+				'description' => [
+					__("Update cakebox console and management website.")
+				],
+		]]);
 
 		$parser->addSubcommand('git', [
 			'parser' => [
@@ -72,4 +79,12 @@ class ConfigShell extends Shell {
 		$this->Exec->exitBashSuccess();
 	}
 
+	/**
+	* Update cakebox-command repository and Composer.
+	*
+	* @return bool
+	*/
+	public function update() {
+		$this->out("Updating cakebox console and management website");
+	}
 }
