@@ -95,7 +95,7 @@ class ConfigShell extends Shell {
 
 		# Composer update cakebox-console
 		$this->out("* Updating composer");
-		if ($this->Exec->runCommand("cd /cakebox/console; composer update --prefer-dist", 'vagrant')) {
+		if ($this->Exec->runCommand("cd /cakebox/console; composer update --prefer-dist --no-dev", 'vagrant')) {
 			$this->out("Error composer updating");
 		}
 	}
