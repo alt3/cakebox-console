@@ -79,11 +79,11 @@ class ConfigShell extends Shell {
 		$this->Exec->exitBashSuccess();
 	}
 
-	/**
-	* Update cakebox-console repository and run composer update.
-	*
-	* @return bool
-	*/
+/**
+ * Update cakebox-console repository and run composer update.
+ *
+ * @return bool
+ */
 	public function update() {
 		$this->out("Updating cakebox console and management website");
 
