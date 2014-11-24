@@ -7,7 +7,7 @@ use Cake\Filesystem\Folder;
 /**
  * Shell class for managing databases.
  */
-class DatabaseShell extends Shell {
+class DatabaseShell extends AppShell {
 
 /**
  * @var array Shell Tasks used by this shell.
@@ -16,14 +16,6 @@ class DatabaseShell extends Shell {
 		'Database',
 		'Exec'
 	];
-
-/**
- * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
- *
- * @return void
- */
-	protected function _welcome() {
-	}
 
 /**
  * @var array Database server specific settings.

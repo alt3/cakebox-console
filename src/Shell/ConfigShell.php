@@ -6,7 +6,7 @@ use Cake\Console\Shell;
 /**
  * Shell class for managing various personal configuration settings.
  */
-class ConfigShell extends Shell {
+class ConfigShell extends AppShell {
 
 /**
  * @var array Shell Tasks used by this shell.
@@ -14,14 +14,6 @@ class ConfigShell extends Shell {
 	public $tasks = [
 		'Exec'
 	];
-
-/**
- * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
- *
- * @return void
- */
-	protected function _welcome() {
-	}
 
 /**
  * Define available subcommands, arguments and options.

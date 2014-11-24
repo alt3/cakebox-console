@@ -4,9 +4,9 @@ namespace App\Shell;
 use Cake\Console\Shell;
 
 /**
-* Shell class for self-updating cakebox console and management website.
-*/
-class UpdateShell extends Shell {
+ * Shell class for self-updating cakebox console and management website.
+ */
+class UpdateShell extends AppShell {
 
 /**
  * @var array Shell Tasks used by this shell.

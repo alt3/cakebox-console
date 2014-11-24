@@ -7,7 +7,7 @@ use Cake\Filesystem\File;
 /**
  * Shell class for managing software installation.
  */
-class PackageShell extends Shell {
+class PackageShell extends AppShell {
 
 /**
  * @var array Shell Tasks used by this shell.
@@ -15,14 +15,6 @@ class PackageShell extends Shell {
 	public $tasks = [
 		'Exec'
 	];
-
-/**
- * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
- *
- * @return void
- */
-	protected function _welcome() {
-	}
 
 /**
  * Define available subcommands, arguments and options.

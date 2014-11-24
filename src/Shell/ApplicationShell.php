@@ -8,7 +8,7 @@ use Cake\Filesystem\Folder;
 /**
  * Shell class for installing and configuring PHP framework applications.
  */
-class ApplicationShell extends Shell {
+class ApplicationShell extends AppShell {
 
 /**
  * @var array Shell Tasks used by this shell.
@@ -23,14 +23,6 @@ class ApplicationShell extends Shell {
  * @var string Full path to the installation directory.
  */
 	public $path;
-
-/**
- * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
- *
- * @return void
- */
-	protected function _welcome() {
-	}
 
 /**
  * @var array Installer specific settings.

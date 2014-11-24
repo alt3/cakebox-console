@@ -12,7 +12,7 @@ use Cake\Filesystem\Folder;
  * App\Shell\SiteShell::clearStatCache() in
  * /cakebox/commands/vendor/cakephp/cakephp/src/Filesystem/File.php on line 403.
  */
-class SiteShell extends Shell {
+class SiteShell extends AppShell {
 
 /**
  * @var array Shell Tasks used by this shell.
@@ -32,14 +32,6 @@ class SiteShell extends Shell {
 			'sites_enabled' => '/etc/nginx/sites-enabled'
 			]
 		];
-
-/**
- * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
- *
- * @return void
- */
-	protected function _welcome() {
-	}
 
 /**
  * Define available subcommands, arguments and options.
