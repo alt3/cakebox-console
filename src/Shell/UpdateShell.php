@@ -14,7 +14,7 @@ class UpdateShell extends Shell {
 	public $tasks = [
 		'Exec'
 	];
-	
+
 /**
  * Update cakebox-console repository and run composer update.
  *
@@ -34,6 +34,9 @@ class UpdateShell extends Shell {
 		if ($this->Exec->runCommand("cd /cakebox/console; composer update --prefer-dist --no-dev", 'vagrant')) {
 			$this->out("Error composer updating");
 		}
+
+		# User feedback
+		$this->out("* cakebox self-updated successfully");
 	}
 
 }
