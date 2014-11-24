@@ -80,11 +80,20 @@ class ConfigShell extends Shell {
 	}
 
 	/**
-	* Update cakebox-command repository and Composer.
+	* Update cakebox-console repository and run composer update.
 	*
 	* @return bool
 	*/
 	public function update() {
 		$this->out("Updating cakebox console and management website");
+
+		# Git pull cakebox-console
+		$this->out("* Updating repository");
+		if ($this->Exec->runCommand("cd /cakebox/console; git pull", 'vagrant')) {
+			$this->out("Error git pulling cakebox-console");
+		}
+
+
+
 	}
 }
