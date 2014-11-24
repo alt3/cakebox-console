@@ -36,7 +36,7 @@ class UpdateShell extends Shell {
 		}
 
 		# User feedback
-		$this->out("* cakebox self-updated successfully");
+		$this->out("* Updates completed successfully");
 	}
 
 }
