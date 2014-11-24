@@ -89,11 +89,9 @@ class ConfigShell extends Shell {
 
 		# Git pull cakebox-console
 		$this->out("* Updating repository");
-		if ($this->Exec->runCommand("cd /cakebox/console; git pull", 'vagrant')) {
+		if ($this->Exec->runCommand("cd /cakebox/console; git fetch; git reset --hard origin/master", 'vagrant')) {
 			$this->out("Error git pulling cakebox-console");
 		}
-
-
 
 	}
 }
