@@ -24,19 +24,19 @@ class UpdateShell extends AppShell {
 		$this->out("Updating cakebox console and management website");
 
 		# Git pull cakebox-console
-		$this->out("* Updating repository");
+		$this->out("Updating repository");
 		if ($this->Exec->runCommand("cd /cakebox/console; git fetch; git reset --hard origin/master", 'vagrant')) {
 			$this->out("Error git pulling cakebox-console");
 		}
 
 		# Composer update cakebox-console
-		$this->out("* Updating composer");
+		$this->out("Updating composer");
 		if ($this->Exec->runCommand("cd /cakebox/console; composer update --prefer-dist --no-dev", 'vagrant')) {
 			$this->out("Error composer updating");
 		}
 
 		# User feedback
-		$this->out("* Updates completed successfully");
+		$this->out("Update completed successfully");
 	}
 
 }
