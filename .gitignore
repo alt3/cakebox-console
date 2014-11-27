@@ -1,5 +1,6 @@
-/vendor/*
 /config/app.php
-/tmp/*
 /logs/*
+/plugins/*
+/tmp/*
+/vendor/*
 composer.lock
