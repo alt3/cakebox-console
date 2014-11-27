@@ -135,6 +135,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 		</div>
 	</div>
 	<footer>
+		<?php echo $this->element('fork-me'); ?>
 	</footer>
 </body>
 </html>
