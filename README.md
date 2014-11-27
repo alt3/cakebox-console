@@ -1,5 +1,5 @@
 # Cakebox Console
 
-CakePHP 3.x sources for the cakebox shell commands and catchall website.
+CakePHP 3.x sources for the cakebox shell commands and management dashboard.
 
-> Under construction, docs will follow.
+> Work in progress, docs will follow.
