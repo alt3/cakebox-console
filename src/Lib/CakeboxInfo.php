@@ -195,8 +195,6 @@ class CakeboxInfo {
 		return $specs;
 	}
 
-
-
 /**
  * Returns an array holding all Nginx sites files found in /etc/nginx/sites-available
  * enriched with information.
