@@ -214,7 +214,7 @@ class ApplicationShell extends AppShell {
 		$this->out("Please wait... installing CakePHP 3.x application $url");
 
 		# Composer install Cake3 using Application Template
-		if ($this->Exec->runCommand("composer create-project --prefer-dist -s dev cakephp/app $this->path", 'vagrant')) {
+		if ($this->Exec->runCommand("composer create-project --prefer-dist --no-interaction -s dev cakephp/app $this->path", 'vagrant')) {
 			$this->out("Error composer installing to $targetdir");
 		}
 
@@ -251,7 +251,7 @@ class ApplicationShell extends AppShell {
 		$this->out("Please wait... installing Laravel application $url");
 
 		# Composer install Laravel
-		if ($this->Exec->runCommand("composer create-project --prefer-dist laravel/laravel $this->path", 'vagrant')) {
+		if ($this->Exec->runCommand("composer create-project --prefer-dist --no-interaction laravel/laravel $this->path", 'vagrant')) {
 			$this->out("Error composer installing to $targetdir");
 		}
 
