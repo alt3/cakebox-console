@@ -1,0 +1,28 @@
+body {
+    background-color: #15848f;
+}
+
+
+.header {
+    text-align: center;
+}
+
+
+.header img {
+    padding-top: 80px;
+}
+
+h1{
+    color: #fff;
+    font-family: "Gill Sans MT", Calibri, sans-serif;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.panel {
+    background-color: #f0f0f0;
+}
+
+.control-group {
+    text-align: right;
+}

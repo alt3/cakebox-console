@@ -14,7 +14,9 @@
  */
 namespace App\Controller;
 
+use App\Lib\CakeboxInfo;
 use Cake\Controller\Controller;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * Application Controller
@@ -27,14 +29,31 @@ use Cake\Controller\Controller;
 class AppController extends Controller {
 
 /**
- * Initialization hook method.
+ * @var Our Controllers do not use tables
+ */
+	var $uses = false;
+
+/**
+ * @var Helpers made available to all Views
+ */
+	public $helpers = ['Cakebox'];
+
+/**
+ * CakeboxInfo instance available to all Controllers
  *
- * Use this method to add common initialization code like loading components.
+ * @var \App\Lib\CakeboxInfo
+ */
+	public $cbi;
+
+/**
+ * Initialization hook method.
  *
  * @return void
  */
 	public function initialize() {
 		$this->loadComponent('Flash');
+		
+		$this->cbi = new CakeboxInfo;
 	}
 
 }

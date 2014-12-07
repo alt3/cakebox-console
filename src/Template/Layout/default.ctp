@@ -1,59 +1,58 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         0.10.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * Default Bootstrap 3.x layout
  */
+$cakeDescription = 'Cakebox Admin';
 
-$cakeDescription = 'CakePHP: the rapid development php framework';
 ?>
-<!DOCTYPE html>
+<?= $this->Html->docType('html5') ?>
+
 <html>
 <head>
 	<?= $this->Html->charset() ?>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>
 		<?= $cakeDescription ?>:
 		<?= $this->fetch('title') ?>
 	</title>
 	<?= $this->Html->meta('icon') ?>
 
-	<?= $this->Html->css('base.css') ?>
-	<?= $this->Html->css('cake.css') ?>
+	<!-- Bootstrap Core CSS (v3.3.1)-->
+	<?= $this->Html->css('bootstrap.min.css') ?>
+	<?= $this->Html->css('fonts/font-awesome-4.1.0/css/font-awesome.min.css') ?>
 
+	<!-- Cakebox CSS overrides -->
+	<?= $this->Html->css('default.css') ?>
+
+	<!-- Bootstrap Core JS (v3.3.1) -->
+	<?= $this->Html->script('jquery.js') ?>
+	<?= $this->Html->script('bootstrap.min.js') ?>
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<!-- Load extra meta, css and scripts IF defined in the used View as blocks -->
 	<?= $this->fetch('meta') ?>
 	<?= $this->fetch('css') ?>
 	<?= $this->fetch('script') ?>
 </head>
 <body>
-	<header>
-		<div class="header-title">
-			<span><?= $this->fetch('title') ?></span>
-		</div>
-		<div class="header-help">
-			<span><a target="_blank" href="http://book.cakephp.org/3.0/">Documentation</a></span>
-			<span><a target="_blank" href="http://api.cakephp.org/3.0/">API</a></span>
-		</div>
-	</header>
-	<div id="container">
-		
+	<!-- @todo: hook into Auth -->
+	<?php if ($this->request->here != '/') echo $this->element('top-navigation') ?>
+
+	<div class="container">
 		<div id="content">
 			<?= $this->Flash->render() ?>
-
-			<div class="row">
+			<div id="row">
 				<?= $this->fetch('content') ?>
 			</div>
 		</div>
-		<footer>
-		</footer>
 	</div>
+
 </body>
 </html>
