@@ -24,6 +24,23 @@
 	</div>
 </div>
 
+<!-- Usage: Updates -->
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+			<div class="panel-heading danger"><?= __("Self-update") ?></div>
+			<div class="panel-body">
+				<p>
+					Update your Cakebox console and dashboard to the latest version by running:
+				</p>
+				<ul class="list-unstyled">
+					<li><em>cakebox update</em></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Usage: YAML provisioning -->
 <div class="row">
 	<div class="col-sm-12">
