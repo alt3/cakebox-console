@@ -45,17 +45,4 @@ class CakeboxUtility {
 		return (implode(Hash::extract($json, "packages.{n}[name=/$package/].version")));
 	}
 
-/**
- * Detect if a directory exists (since Folder class does not support it)
- * @todo check if this passes when file is found instead of dir
- *
- * @param string Full path to check for
- * @return bool True when the directory exists
- */
-	public function isDir($path) {
-		if (file_exists($path)) {
-			return true;
-		}
-		return false;
-	}
 }

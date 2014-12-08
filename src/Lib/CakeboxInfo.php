@@ -479,7 +479,7 @@ class CakeboxInfo {
  */
 	public function getAppDirFromWebroot($webroot){
 		$cake3base = substr($webroot, 0, strrpos( $webroot, '/'));
-		if ($this->cbu->isDir($cake3base)) {
+		if (is_dir($cake3base)) {
 			return ($cake3base);
 		}
 		return false;
@@ -505,10 +505,10 @@ class CakeboxInfo {
  * @return array|bool Single dimensional array with key/value pair collections, false on fails
  */
 	public function getFrameworkName($appdir){
-		if ($this->cbu->isDir("$appdir/vendor/cakephp")){
+		if (is_dir("$appdir/vendor/cakephp")){
 			return ("cakephp");
 		}
-		if ($this->cbu->isDir("$appdir/public")) {
+		if (is_dir("$appdir/public")) {
 			return ("laravel");
 		}
 		return false;
