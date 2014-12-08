@@ -42,7 +42,7 @@ class CakeboxUtility {
 		// escape / in package name to not break Xpath query
 		$package = str_replace('/', '\/', $package);
 		$json = json_decode(file_get_contents($lockfile), true);
-		return (implode(Hash::extract($json, "packages.{n}[name=/$package/].version")));
+		return implode(Hash::extract($json, "packages.{n}[name=/$package/].version"));
 	}
 
 /**

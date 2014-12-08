@@ -167,7 +167,7 @@ class CakeboxInfo {
 		public static function getMemory() {
 			$meminfo = file_get_contents('/proc/meminfo');
 			preg_match_all('/^MemTotal:\\s++(\\d*) kB/m', $meminfo, $matches);
-			return (round($matches[1][0] / 1024));
+			return round($matches[1][0] / 1024);
 		}
 
 /**
@@ -284,14 +284,14 @@ class CakeboxInfo {
 		$stdout = `2>&1 $package --version`;
 		preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
 		if (!empty($matches[1])) {
-			return ($matches[1]);
+			return $matches[1];
 		}
 
 		// No match on --version so let's try --v
 		$stdout = `2>&1 $package -v`;
 		preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
 		if (!empty($matches[1])) {
-			return ($matches[1]);
+			return $matches[1];
 		}
 		return false;
 	}
@@ -307,7 +307,7 @@ class CakeboxInfo {
 			$m = new Memcached();
 			$m->addServer('localhost', 11211);
 			$version = $m->getVersion();
-			return ($version['localhost:11211']);
+			return $version['localhost:11211'];
 		} catch (\Exception $e) {
 			return false;
 		}
@@ -335,7 +335,7 @@ class CakeboxInfo {
 				'link' => $link
 			];
 		}
-		return ($result);
+		return $result;
 	}
 
 /**
@@ -401,7 +401,7 @@ class CakeboxInfo {
 				];
 			}
 		}
-		return ($result);
+		return $result;
 	}
 
 /**
@@ -479,17 +479,17 @@ class CakeboxInfo {
 
 		$cake2base = substr($webroot, 0, strrpos( $webroot, '/app/webroot'));
 		if (is_dir($cake2base)) {
-			return ($cake2base);
+			return $cake2base;
 		}
 
 		$cake3base = substr($webroot, 0, strrpos( $webroot, '/webroot'));
 		if (is_dir($cake3base)) {
-			return ($cake3base);
+			return $cake3base;
 		}
 
 		$laravelbase = substr($webroot, 0, strrpos( $webroot, '/public'));
 		if (is_dir($laravelbase)) {
-			return ($laravelbase);
+			return $laravelbase;
 		}
 		return false;
 	}
@@ -515,13 +515,13 @@ class CakeboxInfo {
  */
 	public function getFrameworkName($appdir){
 		if (is_dir("$appdir/vendor/cakephp")){
-			return ("cakephp");
+			return "cakephp";
 		}
 		if (file_exists("$appdir/lib/Cake/VERSION.txt")){
-			return ("cakephp");
+			return "cakephp";
 		}
 		if (is_dir("$appdir/public")) {
-			return ("laravel");
+			return "laravel";
 		}
 		return false;
 	}
@@ -551,13 +551,13 @@ class CakeboxInfo {
 		$cake3file = "$appdir/vendor/cakephp/cakephp/VERSION.txt";
 		if (file_exists($cake3file)){
 			$lines = file($cake3file);
-			return (trim($lines[count($lines)-1]));
+			return trim($lines[count($lines)-1]);
 		}
 
 		$cake2file = "$appdir/lib/Cake/VERSION.txt";
 		if (file_exists($cake2file)){
 			$lines = file($cake2file);
-			return (trim($lines[count($lines)-1]));
+			return trim($lines[count($lines)-1]);
 		}
 
 		// Use composer.lock for Laravel

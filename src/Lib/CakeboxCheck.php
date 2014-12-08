@@ -61,7 +61,7 @@ class CakeboxCheck {
 		foreach ($this->_requirements['global']['php_modules'] as $module) {
 			$result[$module] = $this->validatePhpModule($module);
 		}
-		return ($result);
+		return $result;
 	}
 
 /**
@@ -73,7 +73,7 @@ class CakeboxCheck {
 		if (version_compare(PHP_VERSION, $this->_requirements['global']['php_min_version'], '>=')) {
 			return (['message' => "System version of PHP is 5.4.16 or higher", "pass" => true]);
 		}
-		return (['message' => "System version of PHP is too low. You need PHP 5.4.16 or higher to use CakePHP", "pass" => false]);
+		return ['message' => "System version of PHP is too low. You need PHP 5.4.16 or higher to use CakePHP", "pass" => false];
 	}
 
 /**
@@ -84,9 +84,9 @@ class CakeboxCheck {
 */
 	public function validatePhpModule($module) {
 		if (extension_loaded($module)) {
-			return (['message' => "System version of PHP has the $module extension loaded", "pass" => true]);
+			return ['message' => "System version of PHP has the $module extension loaded", "pass" => true];
 		}
-		return (['message' => "Our version of PHP does NOT have the $module extension loaded", "pass" => false]);
+		return ['message' => "Our version of PHP does NOT have the $module extension loaded", "pass" => false];
 	}
 
 /**
@@ -115,9 +115,9 @@ class CakeboxCheck {
  */
 	public function getWriteableDirectoryCheck($path) {
 		if (is_writable($path)) {
-			return (['message' => "Directory $path is writable", "pass" => true]);
+			return ['message' => "Directory $path is writable", "pass" => true];
 		}
-		return (['message' => "Directory $path is NOT writable", "pass" => false]);
+		return ['message' => "Directory $path is NOT writable", "pass" => false];
 	}
 
 /**
@@ -130,9 +130,9 @@ class CakeboxCheck {
 	public function getApplicationCacheCheck(){
 		$settings = Cache::config('_cake_core_');
 		if (!empty($settings)) {
-			return (['message' => "The <em>" . $settings['className'] . " Engine</em> is being used for core caching.", "pass" => true]);
+			return ['message' => "The <em>" . $settings['className'] . " Engine</em> is being used for core caching.", "pass" => true];
 		}
-		return (['message' => "Our cache is NOT working. Please check the settings in config/app.php", "pass" => false]);
+		return ['message' => "Our cache is NOT working. Please check the settings in config/app.php", "pass" => false];
 	}
 
 /**
@@ -142,9 +142,9 @@ class CakeboxCheck {
  */
 	public function getApplicationDatabaseCheck(){
 		if ($this->validateDatabaseConnection()) {
-			return (['message' => "CakePHP is able to connect to the database", "pass" => true]);
+			return ['message' => "CakePHP is able to connect to the database", "pass" => true];
 		}
-		return (['message' => "CakePHP is NOT able to connect to the database", "pass" => false]);
+		return ['message' => "CakePHP is NOT able to connect to the database", "pass" => false];
 	}
 
 /**
@@ -164,12 +164,12 @@ class CakeboxCheck {
 		} catch (Exception $connectionError) {
 			$connected = false;
 			$errorMsg = $connectionError->getMessage();
-			if (method_exists($connectionError, 'getAttributes')):
-			$attributes = $connectionError->getAttributes();
-			if (isset($errorMsg['message'])):
-			$errorMsg .= '<br />' . $attributes['message'];
-			endif;
-			endif;
+			if (method_exists($connectionError, 'getAttributes')) {
+				$attributes = $connectionError->getAttributes();
+				if (isset($errorMsg['message'])) {
+					$errorMsg .= '<br />' . $attributes['message'];
+				}
+			}
 		}
 		return false;
 	}
@@ -183,7 +183,7 @@ class CakeboxCheck {
 		$result = [];
 		$result['website']['message'] = "Your cakebox management website is NOT using a password!";
 		$result['website']['pass'] = false;
-		return ($result);
+		return $result;
 	}
 
 }
