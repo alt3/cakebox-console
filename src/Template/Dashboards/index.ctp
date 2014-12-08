@@ -3,6 +3,7 @@
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 
+//pr($data);
 ?>
 
 <!-- left column -->
@@ -172,7 +173,7 @@ use Cake\Utility\Inflector;
 							<div class="panel-heading"><?= __("Software") ?></div>
 							<div class="panel-body">
 								<div class="row">
-									<?php $columns = $this->Cakebox->columnize($data['packages'], 3) ?>
+									<?php $columns = $this->Cakebox->divideEvenly($data['packages'], 3) ?>
 									<?php foreach ($columns as $column): ?>
 										<div class="col-sm-4">
 											<ul class="list-unstyled">
@@ -200,7 +201,7 @@ use Cake\Utility\Inflector;
 							<div class="panel-heading"><?= __("PHP Modules") ?></div>
 							<div class="panel-body">
 								<div class="row">
-									<?php $columns = $this->Cakebox->columnize($data['php_modules'], 3) ?>
+									<?php $columns = $this->Cakebox->divideEvenly($data['php_modules'], 3) ?>
 									<?php foreach ($columns as $column): ?>
 										<div class="col-sm-4">
 											<ul class="list-unstyled">
