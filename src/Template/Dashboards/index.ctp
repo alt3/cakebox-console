@@ -3,7 +3,6 @@
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 
-//pr($data);
 ?>
 
 <!-- left column -->
@@ -267,7 +266,7 @@ use Cake\Utility\Inflector;
 </div>
 <!-- EOF left column-->
 
-<!-- Right column -->
+<!-- right column -->
 <div class="col-sm-3 column">
 
 	<!-- VM Box -->
