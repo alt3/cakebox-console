@@ -20,9 +20,12 @@ class CakeboxCheck {
 	protected $_cbi;
 
 /**
- * @var array Hash containing (cumulative) system wide framework requirements.
+ * Global box requirements. Basically the sum of the most demanding minimal
+ * requirements for ANY framework's latest version.
+ *
+ * @var array Hash
  */
-	protected $_requirements = [
+	protected $_boxRequirements = [
 		'global' => [
 			'php_min_version' => '5.4.16',
 			'php_modules' => ['mbstring', 'mcrypt', 'intl']
@@ -58,7 +61,7 @@ class CakeboxCheck {
 	public function getSystemChecks() {
 		$result = [];
 		$result['php_version'] = $this->validatePhpVersion();
-		foreach ($this->_requirements['global']['php_modules'] as $module) {
+		foreach ($this->_boxRequirements['global']['php_modules'] as $module) {
 			$result[$module] = $this->validatePhpModule($module);
 		}
 		return $result;
@@ -70,10 +73,11 @@ class CakeboxCheck {
 * @return array Named array containing "messsage" string and "pass" boolean
 */
 	public function validatePhpVersion(){
-		if (version_compare(PHP_VERSION, $this->_requirements['global']['php_min_version'], '>=')) {
-			return (['message' => "System version of PHP is 5.4.16 or higher", "pass" => true]);
+		$minversion = $this->_boxRequirements['global']['php_min_version'];
+		if (version_compare(PHP_VERSION, $minversion, '>=')) {
+			return ['message' => "System version of PHP is $minversion or higher", "pass" => true];
 		}
-		return ['message' => "System version of PHP is too low. You need PHP 5.4.16 or higher to use CakePHP", "pass" => false];
+		return ['message' => "System version of PHP is too low. We need PHP $minversion or higher to support all frameworks", "pass" => false];
 	}
 
 /**
