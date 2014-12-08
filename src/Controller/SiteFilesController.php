@@ -16,7 +16,7 @@ class SiteFilesController extends AppController {
                 'sites-available' => '/etc/nginx/sites-available',
                 'sites-enabled' => '/etc/nginx/sites-enabled'
             ],
-            'sitefiles' => $this->cbi->getNginxFiles(),
+            'sitefiles' => $this->cbi->getRichNginxFiles(),
         ]);
     }
 
