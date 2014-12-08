@@ -23,7 +23,7 @@ $cakeDescription = 'Cakebox Admin';
 	<?= $this->Html->css('fonts/font-awesome-4.1.0/css/font-awesome.min.css') ?>
 
 	<!-- Cakebox CSS overrides -->
-	<?= $this->Html->css('default.css') ?>
+	<?= $this->Html->css('cakebox.css') ?>
 
 	<!-- Bootstrap Core JS (v3.3.1) -->
 	<?= $this->Html->script('jquery.js') ?>

@@ -5,8 +5,7 @@
  * @todo move once hooked into Auth
  */
 ?>
-
-<div id="login" class="row col-md-4 col-md-offset-4">
+<div id="loginbox" class="row col-md-4 col-md-offset-4">
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="panel-title"><?= __('Unleash your box!') ?></div>
