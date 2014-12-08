@@ -2,6 +2,7 @@
 namespace App\Lib;
 
 use App\Lib\CakeboxInfo;
+use App\Lib\CakeboxUtility;
 use Cake\Cache\Cache;
 use Cake\Datasource\ConnectionManager;
 use Cake\Utility\Hash;
@@ -95,10 +96,12 @@ class CakeboxCheck {
  * @return array Named array
  */
 	public function getApplicationChecks($appdir) {
-		$framework = $this->_cbi->getFrameworkName($appdir) . $this->_cbi->getFrameworkMajorVersion($appdir);
+		$framework = $this->_cbi->getFrameworkName($appdir);
+		$majorVersion = CakeboxUtility::getMajorVersion($this->_cbi->getFrameworkVersion($appdir));
+		$lookupKey = $framework . $majorVersion;
 
 		$checks = [];
-		foreach ($this->_frameworkRequirements[$framework]['writeables'] as $dir) {
+		foreach ($this->_frameworkRequirements[$lookupKey]['writeables'] as $dir) {
 			$checks[$dir] = $this->getWriteableDirectoryCheck($appdir . DS . $dir);
 		}
 		$checks['cache'] = $this->getApplicationCacheCheck();

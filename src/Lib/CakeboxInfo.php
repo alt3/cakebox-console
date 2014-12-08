@@ -22,13 +22,6 @@ class CakeboxInfo {
 	protected $_conn;
 
 /**
- * CakeboxUtility instance
- *
- * @var App\Lib\CakeboxUtility
- */
-	private $cbu;
-
-/**
  * @var array Hash with webserver specific information.
  */
 	public $webserverMeta = [
@@ -112,7 +105,6 @@ class CakeboxInfo {
  */
 	public function __construct() {
 		$this->_conn = ConnectionManager::get('default');
-		$this->cbu = new CakeboxUtility;
 	}
 
 /**
@@ -196,16 +188,22 @@ class CakeboxInfo {
 	}
 
 /**
- * Returns an array holding all Nginx sites files found in /etc/nginx/sites-available
- * enriched with information.
+ * Return an simple array with all Nginx site files found in /etc/nginx/sites-available.
  *
- * @return array List of found filenames
+ * @return array Simple array with found filenames
  */
 	public function getNginxFiles() {
 		$dir = new Folder($this->webserverMeta['nginx']['sites-available']);
-		$files = $dir->find('.*', 'sort');
-
-		foreach ($files as $file) {
+		return $dir->find('.*', 'sort');
+	}
+/**
+ * Returns an array holding all Nginx site files found in /etc/nginx/sites-available
+ * enriched with information.
+ *
+ * @return array Enriched array with found filenames
+ */
+	public function getRichNginxFiles() {
+		foreach ($this->getNginxFiles() as $file) {
 			$result[] = [
 				'name' => $file,
 				'enabled' => is_link($this->webserverMeta['nginx']['sites-enabled'] . DS . $file),
@@ -221,7 +219,7 @@ class CakeboxInfo {
  * @return int Number of files
  */
 	public function getNginxFileCount() {
-		return count($this->getNginxFiles());
+		return count($this->getRichNginxFiles());
 	}
 
 /**
@@ -426,35 +424,33 @@ class CakeboxInfo {
  */
 	public function getApps() {
 		$result = [];
-		foreach ($this->getNginxFiles() as $file) {
+		foreach ($this->getNginxFiles() as $sitefile) {
+			$appname = $this->getAppName($sitefile);
+			$appdir = $this->getAppBase($sitefile);
 
-			$appname = $this->getAppNameFromSite($file);
-			$appdir = $this->getAppDirFromSite($file);
-			$webroot = $this->cbu->getNginxFileSetting($file, 'root');
-
-			if ($this->isFrameworkDirectory($appdir)) {
+			if ($appdir) {
+				$framework_version = $this->getFrameworkVersion($appdir);
 				$result[] = [
 					'name' => $appname,
 					'framework' => $this->getFrameworkName($appdir),
-					'framework_major_version' => $this->getFrameworkMajorVersion($appdir),
-					'framework_version' => $this->getFrameworkVersion($appdir),
+					'framework_major_version' => CakeboxUtility::getMajorVersion($framework_version),
+					'framework_version' => $framework_version,
 					'appdir' => $appdir,
-					'webroot' => $webroot
+					'webroot' => $this->getAppWebRoot($sitefile)
 				];
-
 			}
 		}
 		return $result;
 	}
 
 /**
- * Get the "name" of the application by using Nginx server_name directive.
+ * Get the application name by retrieving it's Nginx "server_name" directive
  *
  * @param string Full path to application's Nginx site configuration file
  * @return mixed Containing application name
  */
-	public function getAppNameFromSite($sitefile){
-		$name = $this->cbu->getNginxFileSetting($sitefile, 'server_name');
+	public function getAppName($sitefile) {
+		$name = CakeboxUtility::getNginxFileSetting($sitefile, 'server_name');
 		if ($name == '_') {
 			return "cakebox";
 		}
@@ -462,25 +458,38 @@ class CakeboxInfo {
 	}
 
 /**
- * Returns the application's root directory
+ * Get the application's webroot directory by retrieving it's Nginx "root" directive
  *
- * @param string $appName fqdn as used in the Nginx server_name directive
+ * @param string Full path to application's Nginx site configuration file
+ * @return mixed Containing application name
  */
-	public function getAppDirFromSite($appname){
-		$webroot = $this->cbu->getNginxFileSetting($appname, 'root');
-		return $this->getAppDirFromWebroot($webroot);
+	public function getAppWebroot($sitefile){
+		$webroot = CakeboxUtility::getNginxFileSetting($sitefile, 'root');
+		return $webroot;
 	}
 
 /**
- * Determine an application's root directory based on it's Nginx webroot.
+ * Get the application's root/base directory by parsing it's Nginx "root" directive
  *
- * @param string Full path to application's webroot
- * @return mixed String containing value or false when key lookup fails
+ * @param string Full path to application's Nginx site configuration file
+ * @return mixed Containing application name
  */
-	public function getAppDirFromWebroot($webroot){
-		$cake3base = substr($webroot, 0, strrpos( $webroot, '/'));
+	public function getAppBase($sitefile){
+		$webroot = $this->getAppWebRoot($sitefile);
+
+		$cake2base = substr($webroot, 0, strrpos( $webroot, '/app/webroot'));
+		if (is_dir($cake2base)) {
+			return ($cake2base);
+		}
+
+		$cake3base = substr($webroot, 0, strrpos( $webroot, '/webroot'));
 		if (is_dir($cake3base)) {
 			return ($cake3base);
+		}
+
+		$laravelbase = substr($webroot, 0, strrpos( $webroot, '/public'));
+		if (is_dir($laravelbase)) {
+			return ($laravelbase);
 		}
 		return false;
 	}
@@ -508,6 +517,9 @@ class CakeboxInfo {
 		if (is_dir("$appdir/vendor/cakephp")){
 			return ("cakephp");
 		}
+		if (file_exists("$appdir/lib/Cake/VERSION.txt")){
+			return ("cakephp");
+		}
 		if (is_dir("$appdir/public")) {
 			return ("laravel");
 		}
@@ -520,44 +532,27 @@ class CakeboxInfo {
  * @todo harden file read (prevent break when not found)
  *
  * @param string Full path to application directory
- * @return string Version of the framework
+ * @return string|bool Version of the framework, false if not found
  */
 	function getFrameworkVersion($appdir) {
-		if (!$this->isFrameworkDirectory($appdir)){
-			return false;
-		}
-
 		$cake3file = "$appdir/vendor/cakephp/cakephp/VERSION.txt";
 		if (file_exists($cake3file)){
 			$lines = file($cake3file);
 			return (trim($lines[count($lines)-1]));
 		}
 
+		$cake2file = "$appdir/lib/Cake/VERSION.txt";
+		if (file_exists($cake2file)){
+			$lines = file($cake2file);
+			return (trim($lines[count($lines)-1]));
+		}
+
 		// Use composer.lock for Laravel
 		$laravelfile = "$appdir/composer.lock";
 		if (file_exists($laravelfile)){
-
-			return $this->cbu->getComposerLockVersion($laravelfile, 'laravel/framework');
-
-			$json = json_decode($laravelfile, true);
-			return (implode(Hash::extract($json, 'packages.{n}[name=/laravel/].version')));
+			return CakeboxUtility::getComposerLockVersion($laravelfile, 'laravel/framework');
 		}
 		return false;
-	}
-
-/**
- * Retrieve the framework major-version of an application.
- *
- * @param string Full path to application directory
- * @return int Framework major version
- */
-	function getFrameworkMajorVersion($appdir) {
-		if (!$this->getFrameworkVersion($appdir)){
-			return false;
-		}
-		$version = $this->getFrameworkVersion($appdir);
-		preg_match('/\d/m', $version, $matches);
-		return $matches[0];
 	}
 
 }

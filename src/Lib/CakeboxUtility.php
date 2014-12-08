@@ -17,8 +17,8 @@ class CakeboxUtility {
  * @param string Keyname to extract the value for
  * @return mixed String containing value or false when key lookup fails
  */
-	public function getNginxFileSetting($file, $key) {
-		$content = file_get_contents("/etc/nginx/sites-available/" . $file['name']);
+	public static function getNginxFileSetting($file, $key) {
+		$content = file_get_contents("/etc/nginx/sites-available/" . $file);
 		preg_match_all("/^\\s++$key\\s++(.*);/m", $content, $matches);
 		$lastKey = end($matches);
 		$value = end($lastKey);
@@ -35,7 +35,7 @@ class CakeboxUtility {
  * @param string Name of the package to get the version for
  * @return mixed String containing value or false when key lookup fails
  */
-	public function getComposerLockVersion($lockfile, $package) {
+	public static function getComposerLockVersion($lockfile, $package) {
 		if (!file_exists($lockfile)) {
 			return false;
 		}
@@ -43,6 +43,20 @@ class CakeboxUtility {
 		$package = str_replace('/', '\/', $package);
 		$json = json_decode(file_get_contents($lockfile), true);
 		return (implode(Hash::extract($json, "packages.{n}[name=/$package/].version")));
+	}
+
+/**
+ * Get the major version by returning first digit of a given full-version string.
+ *
+ * @param string Full version (e.g. 3.0.1-beta, v4.0.1, 1.0)
+ * @return int|bool Integer holding major version, false on fail
+ */
+	public static function getMajorVersion($version) {
+		preg_match('/\d/m', $version, $matches);
+		if (isset($matches[0])) {
+			return $matches[0];
+		}
+		return false;
 	}
 
 }
