@@ -283,6 +283,7 @@ use Cake\Utility\Inflector;
 					<li><strong><?= __("IP address") ?>:</strong> <?= $data['vm']['ip_address'] ?></li>
 					<li><strong><?= __("CPUs") ?>:</strong> <?= $data['vm']['cpus'] ?></li>
 					<li><strong><?= __("Memory") ?>:</strong> <?= $data['vm']['memory'] ?>MB</li>
+					<li><strong><?= __("Uptime") ?>:</strong> <?= $this->Cakebox->getUptimeString($data['vm']['uptime']) ?></li>
 				</ul>
 			</div>
 		</div>

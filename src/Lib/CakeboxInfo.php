@@ -126,7 +126,8 @@ class CakeboxInfo {
 			'hostname' => $this->getHostname(),
 			'ip_address' => $this->getPrimaryIpAddress(),
 			'cpus' => $this->getCpuCount(),
-			'memory' => $this->getMemory()
+			'memory' => $this->getMemory(),
+			'uptime' => $this->getUptime()
 			]);
 		}
 
@@ -185,6 +186,21 @@ class CakeboxInfo {
 		// no need to determine the architecture for our box, just add
 		$specs['architecture'] = "64-bit (x86_64)";
 		return $specs;
+	}
+
+/**
+ * Returns the amount of virtual memory assigned to the vm in MBs.
+ *
+ * @return int Virtual memory in MB
+ */
+	public static function getUptime() {
+		$stdout = `2>&1 cut -d. -f1 /proc/uptime`;
+		return [
+			'days'  => floor($stdout/60/60/24),
+			'hours' => $stdout/60/60%24,
+			'minutes'  => $stdout/60%60,
+			'seconds' => $stdout%60
+		];
 	}
 
 /**

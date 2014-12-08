@@ -2,6 +2,8 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
+use Cake\Utility\Inflector;
+
 
 class CakeboxHelper extends Helper {
 
@@ -37,6 +39,28 @@ class CakeboxHelper extends Helper {
 			return [$data];
 		}
 		return array_chunk($data, ceil(count($data) / $parts));
+	}
+
+/**
+ * Construct a readable uptime string.
+ *
+ * @param array Array with uptime parts
+ * @return string Uptime
+ */
+	public function getUptimeString($uptimeParts) {
+		// skip the seconds
+		array_pop($uptimeParts);
+
+		// fill array with singular/plurar strings
+		foreach($uptimeParts as $key => $value) {
+			if ($value && $value == 1) {
+				$strings[] = "$value " . __(Inflector::singularize($key));
+			}
+			if ($value && $value > 1) {
+				$strings[] = "$value " . __($key);
+			}
+		}
+		return implode(', ', $strings);
 	}
 
 }
