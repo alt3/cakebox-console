@@ -527,6 +527,19 @@ class CakeboxInfo {
 	}
 
 /**
+ * Get the common framework name used by an application by concatenating it's
+ * framework name and major version (e.g. cakephp2, cakephp3, laravel4)
+ *
+ * @param string Full path to the application's root directory
+ * @return array|bool Single dimensional array with key/value pair collections, false on fails
+ */
+	public function getFrameworkCommonName($appdir){
+		$framework = $this->getFrameworkName($appdir);
+		$majorVersion = CakeboxUtility::getMajorVersion($this->getFrameworkVersion($appdir));
+		return $framework . $majorVersion;
+	}
+
+/**
  * Retrieve the specific framework version of an application.
  *
  * @todo harden file read (prevent break when not found)

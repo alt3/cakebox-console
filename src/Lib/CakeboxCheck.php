@@ -96,17 +96,15 @@ class CakeboxCheck {
  * @return array Named array
  */
 	public function getApplicationChecks($appdir) {
-		$framework = $this->_cbi->getFrameworkName($appdir);
-		$majorVersion = CakeboxUtility::getMajorVersion($this->_cbi->getFrameworkVersion($appdir));
-		$lookupKey = $framework . $majorVersion;
+		$framework = $this->_cbi->getFrameworkCommonName($appdir);
 
 		$checks = [];
-		foreach ($this->_frameworkRequirements[$lookupKey]['writeables'] as $dir) {
+		foreach ($this->_frameworkRequirements[$framework]['writeables'] as $dir) {
 			$checks[$dir] = $this->getWriteableDirectoryCheck($appdir . DS . $dir);
 		}
 		$checks['cache'] = $this->getApplicationCacheCheck();
 		$checks['database'] = $this->getApplicationDatabaseCheck();
-		return ($checks);
+		return $checks;
 	}
 
 /**
