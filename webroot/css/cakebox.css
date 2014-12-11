@@ -6,8 +6,6 @@
 }
 
 .login-credits {
-    border-top: 1px solid #888;
-    padding-top: 15px;
     font-size: 85%;
 }
 
@@ -26,9 +24,9 @@
 /*
  * Dashboard box-info panel
  */
- .panel-default > .panel-heading {
+ .panel-default > .panel-heading, {
      /*background-color: #15848f;
-     color: #fff;*/
+     color: #fff; */
  }
 
 /*

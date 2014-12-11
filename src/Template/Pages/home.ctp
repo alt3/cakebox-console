@@ -32,20 +32,20 @@
 						<?= $this->Html->link(__('Login'), 'dashboards', ['id' => 'btn-login', 'class' => 'btn btn-success']) ?>
 					</div>
 				</div>
-
-				<!-- Credits -->
-				<div class="form-group">
-					<div class="col-md-12 control">
-						<div class="login-credits">
-							Powered by <?= $this->Html->link('CakePHP 3', 'http://cakephp.org') ?>
-						</div>
-					</div>
-				</div>
-
 			</form>
 			<!-- End of login form -->
+
 		</div>
 		<!-- EOF panel-body -->
+
+		<!-- Panel footer -->
+		<div class="panel-footer clearfix">
+			<div class="login-credits">
+				Powered by <?= $this->Html->link('CakePHP 3', 'http://cakephp.org') ?>
+			</div>
+		</div>
+		<!-- EOF panel-footer -->
+
 	</div>
 	<!-- EOF panel -->
 </div>
