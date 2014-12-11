@@ -248,7 +248,11 @@ class CakeboxInfo {
 			$stmt = $this->_conn->execute('SHOW DATABASES');
 			$rows = Hash::extract($stmt->fetchall(), '{n}.{n}');
 			$stripped = array_diff($rows, $this->databaseMeta['mysql']['system_databases']);
-			return $stripped;
+			$result = [];
+			foreach ($stripped as $databaseName) {
+				$result[] = ['name' => $databaseName];
+			}
+			return $result;
 		} catch (\Exception $e) {
 			throw new \Exception("Error generating database list: " . $e->getMessage());
 		}

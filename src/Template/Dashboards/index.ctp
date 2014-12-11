@@ -99,9 +99,11 @@ use Cake\Utility\Inflector;
 								<!-- Each app a dedicated panel -->
 								<?php foreach ($column as $app): ?>
 									<div class="col-sm-6">
-										<div class="panel panel-default">
+										<div class="panel panel-primary">
 											<div class="panel-heading app <?= $app['framework'] ?>">
-												<?= $this->Html->link($app['name'], "http://" . $app['name']) ?>
+												<h3 class="panel-title">
+													<?= $this->Html->link($app['name'], "http://" . $app['name']) ?>
+												</h3>
 											</div>
 											<div class="panel-body">
 												<ul class="list-unstyled">
@@ -125,9 +127,11 @@ use Cake\Utility\Inflector;
 					<?php foreach ($data['checks'] as $category => $checks): ?>
 
 						<div class="col-sm-12">
-							<div class="panel panel-default">
-								<?php $failCount = count(Hash::extract($checks, '{s}[pass=0]')) ?>
-								<div class="panel-heading <?= $failCount ? 'danger' : 'success' ?>"><?= __(Inflector::humanize($category)) ?></div>
+							<?php $failCount = count(Hash::extract($checks, '{s}[pass=0]')) ?>
+							<div class="panel panel-<?= $failCount ? 'danger' : 'primary' ?>">
+								<div class="panel-heading <?= $failCount ? 'danger' : 'success' ?>">
+									<h3 class="panel-title"><?= __(Inflector::humanize($category)) ?></h3>
+								</div>
 								<div class="panel-body">
 									<ul class="list-unstyled">
 										<?php foreach ($checks as $check): ?>
@@ -152,8 +156,10 @@ use Cake\Utility\Inflector;
 
 					<!-- Operating System -->
 					<div class="col-sm-12">
-						<div class="panel panel-default">
-							<div class="panel-heading"><?= __("Operating System") ?></div>
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title"><?= __("Operating System") ?></h3>
+							</div>
 							<div class="panel-body">
 								<ul class="list-unstyled">
 									<li><strong>Description</strong>:
@@ -168,8 +174,10 @@ use Cake\Utility\Inflector;
 
 					<!-- Package information -->
 					<div class="col-sm-12">
-						<div class="panel panel-default">
-							<div class="panel-heading"><?= __("Software") ?></div>
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title"><?= __("Software") ?></h3>
+							</div>
 							<div class="panel-body">
 								<div class="row">
 									<?php $columns = $this->Cakebox->divideEvenly($data['packages'], 3) ?>
@@ -196,8 +204,10 @@ use Cake\Utility\Inflector;
 
 					<!-- PHP modules -->
 					<div class="col-sm-12">
-						<div class="panel panel-default">
-							<div class="panel-heading"><?= __("PHP Modules") ?></div>
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title"><?= __("PHP Modules") ?></h3>
+							</div>
 							<div class="panel-body">
 								<div class="row">
 									<?php $columns = $this->Cakebox->divideEvenly($data['php_modules'], 3) ?>
@@ -226,8 +236,10 @@ use Cake\Utility\Inflector;
 
 					<!-- Nginx modules -->
 					<div class="col-sm-12">
-						<div class="panel panel-default">
-							<div class="panel-heading"><?= __("Nginx Modules") ?></div>
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title"><?= __("Nginx Modules") ?></h3>
+							</div>
 							<div class="panel-body">
 								<div class="row">
 									<?php foreach($data['nginx_modules'] as $category => $modules): ?>
@@ -271,7 +283,7 @@ use Cake\Utility\Inflector;
 
 	<!-- VM Box -->
 	<div class="col-sm-12 column">
-		<div class="panel panel-default">
+		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<h3 class="panel-title">
 					Virtual Machine

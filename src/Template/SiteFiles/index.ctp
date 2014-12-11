@@ -2,15 +2,17 @@
 <div class="col-sm-12 column">
 
 	<!-- Main site files panel -->
-	<div class="panel panel-default">
-		<div class="panel-heading"><?= __("Nginx site configuration files") ?></div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title"><?= __("Nginx site configuration files") ?></h3>
+		</div>
 		<div class="panel-body">
 			<table class="table">
 				<caption><?= __('As found in ') . $data['directories']['sites-available'] ?></caption>
 				<thead>
 					<tr>
 						<th>#</th>
-						<th><?= __("File name") ?></th>
+						<th><?= __("Filename") ?></th>
 						<th><?= __("Enabled") ?></th>
 						<th><?= __("Last Modified") ?></th>
 					</tr>
