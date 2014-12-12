@@ -11,9 +11,9 @@
 				<h3 class="panel-title"><?= __("Cakebox console") ?></div></h3>
 			<div class="panel-body">
 				<p>
-					Use the command line to create databases, Nginx virtual hosts and completely pre-configured applications.
-					For usage instructions run the following commands inside your box:
+					Use simple <em><strong>cakebox commands</strong></em> to create databases, Nginx virtual hosts and even fully pre-configured applications.
 				</p>
+				<p>For usage instructions see:<p>
 				<ul>
 					<li><em>cakebox application --help</em></li>
 					<li><em>cakebox site --help</em></li>
@@ -34,11 +34,8 @@
 			</div>
 			<div class="panel-body">
 				<p>
-					Update your Cakebox console and dashboard to the latest version by running:
+					Update this dashboard and your console commands to the latest version by running <em><strong>cakebox update</strong></em>.
 				</p>
-				<ul class="list-unstyled">
-					<li><em>cakebox update</em></li>
-				</ul>
 			</div>
 		</div>
 	</div>
@@ -51,7 +48,7 @@
 			<div class="panel-heading">
 				<h3 class="panel-title"><?= __("YAML provisioned virtual machine") ?></div></h3>
 			<div class="panel-body">
-				<p>Your box is highly customizable and uses your personal settings in the <em>Cakebox.yaml</em> file to:</p>
+				<p>Configure personal box customizations in the <em>Cakebox.yaml</em> file to:</p>
 				<ul>
 					<li>change virtual machine settings (hostname, IP address, CPUs, memory)</li>
 					<li>secure SSH access using your own key pair</li>
@@ -72,15 +69,14 @@
 			<div class="panel-heading">
 				<h3 class="panel-title"><?= __("Vagrant commands") ?></div></h3>
 			<div class="panel-body">
-				<p>Vagrant commands:</p>
 				<ul>
-					<li><em>`vagrant up`</em>: start your box</li>
-					<li><em>`vagrant ssh`</em>: ssh into your box</li>
-					<li><em>`vagrant reload --provision`</em>: restart and reconfigure your box using settings in your Cakebox.yaml</li>
-					<li><em>`vagrant suspend`</em>: pause your box</li>
-					<li><em>`vagrant resume`</em>: continus your box from paused state</li>
-					<li><em>`vagrant halt`</em>: shut down your box</li>
-					<li><em>`vagrant destroy`</em>: delete your box</li>
+					<li><em>vagrant up</em> : start your box</li>
+					<li><em>vagrant ssh</em> : ssh into your box</li>
+					<li><em>vagrant reload --provision</em> : restart and reconfigure your box using settings in your Cakebox.yaml</li>
+					<li><em>vagrant suspend</em> : pause your box</li>
+					<li><em>vagrant resume</em> : continue your box from paused state</li>
+					<li><em>vagrant halt</em> : shut down your box</li>
+					<li><em>vagrant destroy</em> : delete your box</li>
 				</ul>
 			</div>
 		</div>
