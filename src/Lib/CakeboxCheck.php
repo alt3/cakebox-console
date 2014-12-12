@@ -228,11 +228,28 @@ class CakeboxCheck {
  * @return array Named array
  */
 	public function getSecurityChecks() {
-		return [[
-			'name' => 'dashboard_password',
-			'message' => 'Your cakebox management website is NOT using a password!',
-			'pass' => false
-		]];
+		return [
+			[
+				'name' => 'dashboard_password',
+				'message' => 'Your cakebox dashboard is NOT using a password!',
+				'pass' => false
+			],
+			[
+				'name' => 'ssh_keypair',
+				'message' => 'SSH access to your cakebox is protected by your personal key pair',
+				'pass' => true
+			],
+			[
+				'name' => 'database_root',
+				'message' => 'Your database server is using the default root password!',
+				'pass' => false
+			],
+			[
+				'name' => 'database_remote',
+				'message' => 'Your remote database user is using the default password!',
+				'pass' => false
+			]
+		];
 	}
 
 }
