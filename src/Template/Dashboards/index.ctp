@@ -84,14 +84,14 @@ use Cake\Utility\Inflector;
 		<div class="tabbable" id="tabs-299824">
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#panel-apps" data-toggle="tab"><?= __("Apps") ?></a></li>
-				<li><a href="#panel-status" data-toggle="tab"><?= __("Box status") ?></a></li>
+				<li id="tab-status"><a href="#panel-status" data-toggle="tab"><?= __("Box status") ?></a></li>
 				<li><a href="#panel-software" data-toggle="tab"><?= __("Box software") ?></a></li>
 				<li><a href="#panel-usage" data-toggle="tab"><?= __("Pro tips!") ?></a></li>
 			</ul>
 			<div class="tab-content">
 
 				<!-- Apps tab -->
-				<div role="tabpanel" class="tab-pane active" id="panel-apps">
+				<div role="tabpanel" id="panel-apps" class="tab-pane active">
 					<div class="col-sm-12">
 						<?php $columns = $this->Cakebox->columnize($data['apps'], 2) ?>
 						<?php foreach ($columns as $column): ?>
@@ -123,36 +123,62 @@ use Cake\Utility\Inflector;
 				<!-- EOF Apps tab -->
 
 				<!-- Status tab -->
-				<div class="tab-pane" id="panel-status">
-					<?php foreach ($data['checks'] as $category => $checks): ?>
+				<div role="tabpanel" id="panel-status" class="tab-pane">
 
-						<div class="col-sm-12">
-							<?php $failCount = count(Hash::extract($checks, '{s}[pass=0]')) ?>
-							<div class="panel panel-<?= $failCount ? 'danger' : 'primary' ?>">
-								<div class="panel-heading <?= $failCount ? 'danger' : 'success' ?>">
-									<h3 class="panel-title"><?= __(Inflector::humanize($category)) ?></h3>
-								</div>
-								<div class="panel-body">
-									<ul class="list-unstyled">
-										<?php foreach ($checks as $check): ?>
-											<li>
-												<i class="fa <?= $check['pass'] ? 'fa-check' : 'fa-times' ?>"></i>
-												<?= $check['message'] ?>
-											</li>
-										<?php endforeach; ?>
-									</ul>
-								</div>
+					<div class="ajax-loader text-center">
+						<i class="fa fa-spinner fa-spin"></i>
+					</div>
+
+					<!-- Tab content -->
+					<div class="panel-content col-sm-12 hidden">
+
+						<!-- System panel -->
+						<div class="panel panel-primary" id="status-system">
+							<div class="panel-heading">
+								<h3 class="panel-title"><?= __('System') ?></h3>
+							</div>
+							<div class="panel-body">
+								<ul class="list-unstyled">
+									<!-- ajax loaded list -->
+								</ul>
 							</div>
 						</div>
+						<!-- EOF system panel -->
 
-					<?php endforeach ?>
+						<!-- Application panel -->
+						<div class="panel panel-primary" id="status-application">
+							<div class="panel-heading">
+								<h3 class="panel-title"><?= __('Application') ?></h3>
+							</div>
+							<div class="panel-body">
+								<ul class="list-unstyled">
+									<!-- ajax loaded list -->
+								</ul>
+							</div>
+						</div>
+						<!-- EOF system panel -->
 
+						<!-- Security panel -->
+						<div class="panel panel-primary" id="status-security">
+							<div class="panel-heading">
+								<h3 class="panel-title"><?= __('Security') ?></h3>
+							</div>
+							<div class="panel-body">
+								<ul class="list-unstyled">
+									<!-- ajax loaded list -->
+								</ul>
+							</div>
+						</div>
+						<!-- EOF system panel -->
+
+					</div>
+					<!-- EOF tab content -->
 				</div>
 				<!-- EOF Status tab -->
 
 
 				<!-- Software tab -->
-				<div class="tab-pane" id="panel-software">
+				<div role="tab-panel" id="panel-software" class="tab-pane">
 
 					<!-- Operating System -->
 					<div class="col-sm-12">
@@ -263,7 +289,7 @@ use Cake\Utility\Inflector;
 				<!-- EOF Software tab -->
 
 				<!-- Usage tab -->
-				<div role="tabpanel" class="tab-pane" id="panel-usage">
+				<div role="tabpanel" id="panel-usage" class="tab-pane">
 					<?= $this->element('usage-panel') ?>
 				</div>
 				<!-- EOF Usage tab -->

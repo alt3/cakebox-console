@@ -21,6 +21,13 @@
     /*color: #fff;*/
 }
 
+/**
+ * Ajax loader
+ */
+.ajax-loader > i {
+    /*color: #337AB7;*/
+}
+
 /*
  * Dashboard box-info panel
  */

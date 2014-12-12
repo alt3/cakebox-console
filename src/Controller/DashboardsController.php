@@ -41,4 +41,16 @@ class DashboardsController extends AppController {
         ]);
     }
 
+/**
+ * Serve cakebox checks as json
+ */
+    public function checks() {
+        $this->set([
+            'system' => $this->cbc->getSystemChecks(),
+            'application' => $this->cbc->getApplicationChecks('/cakebox/console'),
+            'security' =>$this->cbc->getSecurityChecks(),
+            '_serialize' => ['system', 'application', 'security']
+        ]);
+    }
+
 }
