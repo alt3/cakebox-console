@@ -28,6 +28,7 @@ $cakeDescription = 'Cakebox Admin';
 	<!-- Bootstrap Core JS (v3.3.1) -->
 	<?= $this->Html->script('jquery.js') ?>
 	<?= $this->Html->script('bootstrap.js') ?>
+	<?= $this->Html->script('cakebox.js') ?>
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
