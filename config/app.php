@@ -108,6 +108,17 @@ $config = [
 			'serialize' => true,
 			'duration' => '+2 minutes',
 		],
+
+	/**
+	 * Short configuration for for e.g. API calls
+	 */
+		'short' => [
+			'className' => 'File',
+			'duration' => '+5 minutes',
+			'path' => CACHE,
+			'prefix' => 'cake_short_'
+		]
+
 	],
 
 /**
