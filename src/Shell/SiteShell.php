@@ -110,6 +110,9 @@ class SiteShell extends AppShell {
 		# Reload webserver to effectuate changes
 		$this->out("Reloading webserver");
 		$this->Exec->runCommand("service nginx reload");
+
+		# Provisioning feedback
+		$this->out("* Note: don't forget to update your localhosts file");
 	}
 
 /**
