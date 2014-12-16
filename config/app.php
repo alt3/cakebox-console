@@ -80,7 +80,7 @@ $config = [
  */
 	'Cache' => [
 		'default' => [
-			'className' => 'File',
+			'className' => 'Redis',
 		],
 
 	/**
@@ -89,8 +89,8 @@ $config = [
 	 * configuration.
 	 */
 		'_cake_core_' => [
-			'className' => 'File',
-			'prefix' => 'myapp_cake_core_',
+			'className' => 'Redis',
+			'prefix' => 'cakebox_cake_core_',
 			'path' => CACHE . 'persistent/',
 			'serialize' => true,
 			'duration' => '+2 minutes',
@@ -102,8 +102,8 @@ $config = [
 	 * in connections.
 	 */
 		'_cake_model_' => [
-			'className' => 'File',
-			'prefix' => 'myapp_cake_model_',
+			'className' => 'Redis',
+			'prefix' => 'cakebox_cake_model_',
 			'path' => CACHE . 'models/',
 			'serialize' => true,
 			'duration' => '+2 minutes',
@@ -113,10 +113,10 @@ $config = [
 	 * Short configuration for for e.g. API calls
 	 */
 		'short' => [
-			'className' => 'File',
+			'className' => 'Redis',
 			'duration' => '+5 minutes',
 			'path' => CACHE,
-			'prefix' => 'cake_short_'
+			'prefix' => 'cakebox_short_'
 		]
 
 	],
