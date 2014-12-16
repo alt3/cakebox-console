@@ -533,16 +533,63 @@ class CakeboxInfo {
  *
  * @param string Full path to the application's root directory
  * @return array|bool Single dimensional array with key/value pair collections, false on fails
+ * @throws exception Exception
  */
 	public function getFrameworkName($appdir){
-		if (is_dir("$appdir/vendor/cakephp")){
-			return "cakephp";
+
+		// Cake applications should contain a valid VERSION.txt
+		if ($this->getCakeVersionFile($appdir)) {
+			return 'cakephp';
 		}
-		if (file_exists("$appdir/lib/Cake/VERSION.txt")){
-			return "cakephp";
-		}
+
+		// Simply detected Laravel by webroot for now
 		if (is_dir("$appdir/public")) {
 			return "laravel";
+		}
+		throw new \Exception('Unable to determine framework name');
+	}
+
+/**
+ * Get the full path to an application's CakePHP VERSION.txt file.
+ *
+ * @param string Full path to the application's root directory
+ * @return string|bool Full path to the CakePHP VERSION.txt if found
+ */
+	public function getCakeVersionFile($appdir) {
+		$versionFile = $this->findVersionFile($appdir);
+		if ($versionFile) {
+			if ($this->isCakeVersionFile($versionFile)) {
+				return $versionFile;
+			}
+		}
+		return false;
+	}
+
+/**
+ * Recursively check an application directory for a(ny) VERSION.txt file.
+ *
+ * @param string Full path to the application's root directory
+ * @return string|bool Strubg containing full path to VERSION.txt if found
+ */
+	public function findVersionFile($appdir) {
+		$folder = new Folder($appdir);
+		$files = $folder->findRecursive('VERSION.txt');
+		if (count($files) != 0) {
+			return $files[0];
+		}
+		return false;
+	}
+
+/**
+ * Checks if VERSION.txt file is a valid CakePHP version file.
+ *
+ * @param string $file Full path to the VERSION.txt file
+ * @return bool True if file is found
+ */
+	public function isCakeVersionFile($file) {
+		$content = (new File($file))->read();
+		if (strpos($content, 'CakePHP') == true) {
+			return true;
 		}
 		return false;
 	}
@@ -556,6 +603,7 @@ class CakeboxInfo {
  */
 	public function getFrameworkCommonName($appdir){
 		$framework = $this->getFrameworkName($appdir);
+		$framework_version = $this->getFrameworkVersion($appdir);
 		$majorVersion = CakeboxUtility::getMajorVersion($this->getFrameworkVersion($appdir));
 		return $framework . $majorVersion;
 	}
@@ -566,18 +614,13 @@ class CakeboxInfo {
  * @todo harden file read (prevent break when not found)
  *
  * @param string Full path to application directory
- * @return string|bool Version of the framework, false if not found
+ * @return string Version of the framework
+ * @throws exception Exception
  */
 	function getFrameworkVersion($appdir) {
-		$cake3file = "$appdir/vendor/cakephp/cakephp/VERSION.txt";
-		if (file_exists($cake3file)){
-			$lines = file($cake3file);
-			return trim($lines[count($lines)-1]);
-		}
-
-		$cake2file = "$appdir/lib/Cake/VERSION.txt";
-		if (file_exists($cake2file)){
-			$lines = file($cake2file);
+		$versionFile = $this->getCakeVersionFile($appdir);
+		if ($versionFile) {
+			$lines = file($versionFile);
 			return trim($lines[count($lines)-1]);
 		}
 
@@ -586,7 +629,7 @@ class CakeboxInfo {
 		if (file_exists($laravelfile)){
 			return CakeboxUtility::getComposerLockVersion($laravelfile, 'laravel/framework');
 		}
-		return false;
+		throw new \Exception('Unable to determine framework version');
 	}
 
 /**
