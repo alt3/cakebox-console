@@ -38,7 +38,7 @@ class InstallerTask extends Shell {
 
 			$res = chmod($path, $currentPerms | $perms);
 			if ($res) {
-				$this->out('Permissions set on ' . $path);
+				$this->out('Permissions set on ' . $path, 1, Shell::VERBOSE);
 			} else {
 				$this->out('Failed to set permissions on ' . $path);
 			}
