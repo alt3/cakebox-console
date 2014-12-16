@@ -1,6 +1,8 @@
 <?php
 namespace App\Shell;
 
+use App\Lib\CakeboxInfo;
+use App\Lib\CakeboxUtility;
 use Cake\Console\Shell;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
@@ -31,14 +33,14 @@ class ApplicationShell extends AppShell {
 		#'apps_dir' => '/home/vagrant/Apps',
 		'cakephp2' => [
 			'repository' => 'https://github.com/cakephp/cakephp.git',
-			'webdir' => 'app/webroot',
+			'webroot' => 'app/webroot',
 			'writable_dirs' => ['app/tmp']
 		],
 		'cakephp3' => [
-			'webdir' => 'webroot'
+			'webroot' => 'webroot'
 		],
 		'laravel' => [
-			'webdir' => 'public',
+			'webroot' => 'public',
 			'writable_dirs' => ['app/storage']
 		]
 	];
@@ -65,6 +67,7 @@ class ApplicationShell extends AppShell {
 					'framework' => ['short' => 'f', 'help' => __('PHP framework to use for the application.'), 'choices' => ['cakephp', 'laravel'], 'default' => 'cakephp'],
 					'majorversion' => ['short' => 'm', 'help' => __('Major CakePHP version to use for the application.'), 'choices' => ['2', '3'], 'default' => '3'],
 					'template' => ['short' => 't', 'help' => __('Template used to generate the application.'), 'choices' => ['cakephp', 'friendsofcake'], 'default' => 'cakephp'],
+					'repository' => ['short' => 'r', 'help' => __('Provision using your own application repository, framework will be autodetected.'), 'required' => false]
 				]
 		]]);
 		return $parser;
@@ -102,14 +105,20 @@ class ApplicationShell extends AppShell {
 			$this->Exec->exitBashSuccess();
 		}
 
+		// Run user-application installer
+		if (isset($this->params['repository'])) {
+			if (!$this->__runRepositoryInstaller($url, $this->params['repository'])) {
+				$this->out("Error: error completing user specified repository installation.");
+				$this->Exec->exitBashError();
+			}
 		# Run framework/version specific installer method
-		if (!$this->__runFrameworkInstaller($url, $this->params['framework'], $this->params['majorversion'], $this->params['template'])) {
-			$this->out("Error: error running framework specific installer method.");
-			$this->Exec->exitBashError();
+		} elseif (!$this->__runFrameworkInstaller($url, $this->params['framework'], $this->params['majorversion'], $this->params['template'])) {
+				$this->out("Error: error running framework specific installer method.");
+				$this->Exec->exitBashError();
 		}
 
 		# Provide Vagrant feedback
-		$this->out("Application installation completed successfully");
+		$this->out("Installation completed successfully");
 		$this->Exec->exitBashSuccess();
 	}
 
@@ -164,7 +173,7 @@ class ApplicationShell extends AppShell {
 		}
 
 		# Create nginx site
-		$webroot = $this->path . DS . $this->settings['cakephp2']['webdir'];
+		$webroot = $this->path . DS . $this->settings['cakephp2']['webroot'];
 		$this->dispatchShell("site add $url $webroot --force");
 
 		# Create databases
@@ -219,7 +228,7 @@ class ApplicationShell extends AppShell {
 		}
 
 		# Create nginx site
-		$webroot = $this->path . DS . $this->settings['cakephp3']['webdir'];
+		$webroot = $this->path . DS . $this->settings['cakephp3']['webroot'];
 		$this->dispatchShell("site add $url $webroot --force");
 
 		# Create databases
@@ -256,7 +265,7 @@ class ApplicationShell extends AppShell {
 		}
 
 		# Create nginx site
-		$webroot = $this->path . DS . $this->settings['laravel']['webdir'];
+		$webroot = $this->path . DS . $this->settings['laravel']['webroot'];
 		$this->dispatchShell("site add $url $webroot --force");
 
 		# Create databases
@@ -266,6 +275,54 @@ class ApplicationShell extends AppShell {
 		foreach ($this->settings['laravel']['writable_dirs'] as $directory) {
 			$this->Installer->setFolderPermissions($this->path . DS . $directory);
 		}
+		return true;
+	}
+
+/**
+ * User specified repository installer.
+ *
+ * @param string $url
+ * @param string $repository
+ * @return bool
+ */
+	private function __runRepositoryInstaller($url, $repository) {
+		$cbi = new CakeboxInfo();
+
+		# Clone the repository
+		$this->out("Please wait... cloning user repository $repository");
+		if ($this->Exec->runCommand("git clone $repository $this->path", 'vagrant')) {
+			$this->out("Note: make sure your SSH agent is forwarding the required identity key if this is a private repository");
+			$this->out("Note: Windows users MUST use Pageant or SSH Agent Forwarding will simply not work");
+			throw new \Exception('Fatal error git cloning repository');
+		}
+
+		# Composer install if needed
+		if (file_exists($this->path . DS . 'composer.json')) {
+			$this->out("Please wait... installing detected composer file");
+			if ($this->Exec->runCommand("cd " . $this->path . "; composer install --prefer-dist --no-interaction", 'vagrant')) {
+				$this->out("Error composer installing to $targetdir");
+			}
+		}
+
+		# Detect framework
+		$framework = $cbi->getFrameworkCommonName($this->path);
+		$this->out("Detected framework $framework");
+
+		# Create nginx site
+		$webroot = $cbi->getWebrootFromDirectory($this->path);
+		$this->dispatchShell("site add $url $webroot --force");
+
+		# Create databases
+		$this->dispatchShell("database add $url --force");
+
+		# Make required folders writable
+		foreach ($this->settings[$framework]['writable_dirs'] as $directory) {
+			$this->Installer->setFolderPermissions($this->path . DS . $directory);
+		}
+
+		# Provisioning feedback
+		$this->out("* Note: application settings are not automatically configured for user repositories,");
+		$this->out("  make sure to update your database credentials, etc. manually.");
 		return true;
 	}
 

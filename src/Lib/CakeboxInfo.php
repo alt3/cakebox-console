@@ -146,8 +146,8 @@ class CakeboxInfo {
  *
  * @return string Hostname
  */
-		public static function getPrimaryIpAddress() {
-			return $_SERVER['SERVER_ADDR'];
+		public function getPrimaryIpAddress() {
+			return (getenv('SERVER_ADDR'));
 		}
 
 /**
@@ -457,7 +457,7 @@ class CakeboxInfo {
 					'framework_major_version' => CakeboxUtility::getMajorVersion($framework_version),
 					'framework_version' => $framework_version,
 					'appdir' => $appdir,
-					'webroot' => $this->getAppWebRoot($sitefile)
+					'webroot' => $this->getWebrootFromSite($sitefile)
 				];
 			}
 		}
@@ -465,7 +465,7 @@ class CakeboxInfo {
 	}
 
 /**
- * Get the application name by retrieving it's Nginx "server_name" directive
+ * Get the application name by retrieving it's Nginx "server_name" directive.
  *
  * @param string Full path to application's Nginx site configuration file
  * @return mixed Containing application name
@@ -479,24 +479,47 @@ class CakeboxInfo {
 	}
 
 /**
- * Get the application's webroot directory by retrieving it's Nginx "root" directive
+ * Get the application's webroot directory by retrieving it's Nginx "root" directive.
  *
  * @param string Full path to application's Nginx site configuration file
  * @return mixed Containing application name
  */
-	public function getAppWebroot($sitefile){
+	public function getWebrootFromSite($sitefile){
 		$webroot = CakeboxUtility::getNginxFileSetting($sitefile, 'root');
 		return $webroot;
 	}
 
 /**
- * Get the application's root/base directory by parsing it's Nginx "root" directive
+ * Get an application's webroot by looking for known webroot directories.
+ *
+ * @param string Full path to the application's root directory
+ * @return mixed String containing full path to found webroot directory
+ */
+	public function getWebrootFromDirectory($appdir){
+
+		if (is_dir($appdir . DS . 'webroot')) {
+			return $appdir . DS . 'webroot';
+		}
+
+		if (is_dir($appdir . DS . 'app' . DS . 'webroot')) {
+			return $appdir . DS . 'app' . DS . 'webroot';
+		}
+
+		if (is_dir($appdir . DS . 'public')) {
+			return $appdir . DS . 'public';
+		}
+
+		throw new \Exception('Unable to determine webroot from application directory');
+	}
+
+/**
+ * Get the application's root/base directory by parsing it's Nginx "root" directive.
  *
  * @param string Full path to application's Nginx site configuration file
  * @return mixed Containing application name
  */
 	public function getAppBase($sitefile){
-		$webroot = $this->getAppWebRoot($sitefile);
+		$webroot = $this->getWebrootFromSite($sitefile);
 
 		$cake2base = substr($webroot, 0, strrpos( $webroot, '/app/webroot'));
 		if (is_dir($cake2base)) {
@@ -533,12 +556,14 @@ class CakeboxInfo {
  *
  * @param string Full path to the application's root directory
  * @return array|bool Single dimensional array with key/value pair collections, false on fails
- * @throws exception Exception
  */
 	public function getFrameworkName($appdir){
 
-		// Cake applications should contain a valid VERSION.txt
-		if ($this->getCakeVersionFile($appdir)) {
+		// Check for known CakePHP "fingerprint" directories first to keep things fast
+		if (is_dir($appdir . DS . 'webroot')) {
+			return 'cakephp';
+		}
+		if (is_dir($appdir . DS . 'app' . DS . 'webroot')) {
 			return 'cakephp';
 		}
 
@@ -546,51 +571,128 @@ class CakeboxInfo {
 		if (is_dir("$appdir/public")) {
 			return "laravel";
 		}
-		throw new \Exception('Unable to determine framework name');
+
+		// Initial checks failed, try detecting (legacy) Cake applications by searching for valid VERSION.txt
+		if ($this->getCakeVersionFile($appdir)) {
+			return 'cakephp';
+		}
+		return false;
 	}
 
 /**
- * Get the full path to an application's CakePHP VERSION.txt file.
+ * Retrieve the specific framework version of an application.
  *
- * @param string Full path to the application's root directory
- * @return string|bool Full path to the CakePHP VERSION.txt if found
+ * @param string Full path to application directory
+ * @return string|bool String containing version
  */
-	public function getCakeVersionFile($appdir) {
-		$versionFile = $this->findVersionFile($appdir);
-		if ($versionFile) {
-			if ($this->isCakeVersionFile($versionFile)) {
-				return $versionFile;
+	public function getFrameworkVersion($appdir) {
+		// Look for version in composer.lock first
+		$version = $this->getFrameworkVersionFromComposer($appdir);
+		if ($version) {
+			return $version;
+		}
+
+		// Look for CakePHP VERSION.txt next
+		$version = $this->getCakeVersionFromFile($appdir);
+		if ($version) {
+			return $version;
+		}
+		return false;
+	}
+
+/**
+ * Get the framework version frm an application's composer.lock file.
+ *
+ * @param string Full path to application directory
+ * @return string|bool String containing version
+ */
+	public function getFrameworkVersionFromComposer($appdir) {
+		$lockfile = $appdir . DS . 'composer.lock';
+		if (!file_exists($lockfile)) {
+			return false;
+		}
+
+		$packages = [
+			'cakephp/cakephp',
+			'pear-pear.cakephp.org',
+			'laravel/framework'
+		];
+
+		foreach ($packages as $package) {
+			$version = CakeboxUtility::getComposerLockVersion($lockfile, $package);
+			if ($version) {
+				return $version;
 			}
 		}
 		return false;
 	}
 
 /**
- * Recursively check an application directory for a(ny) VERSION.txt file.
+ * Get the CakePHP framework version by parsing the application's VERSION.txt.
+ *
+ * Checks are done against "fingerprint" locations first to keep things fast
+ * since the fallback method recursively searching the complete directory for
+ * a (legacy?) VERSION.txt is a serious performance killer.
  *
  * @param string Full path to the application's root directory
- * @return string|bool Strubg containing full path to VERSION.txt if found
+ * @return string|bool Full path to the CakePHP VERSION.txt if found
  */
-	public function findVersionFile($appdir) {
-		$folder = new Folder($appdir);
-		$files = $folder->findRecursive('VERSION.txt');
-		if (count($files) != 0) {
-			return $files[0];
+	public function getCakeVersionFromFile($appdir) {
+		$cake3file = $appdir . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'VERSION.txt';
+		if (file_exists($cake3file)) {
+			$lines = file($cake3file);
+			return trim($lines[count($lines)-1]);
+		}
+
+		$cake2file = $appdir . DS . 'lib' . DS . 'Cake' . DS . 'VERSION.txt';
+		if (file_exists($cake2file)) {
+			$lines = file($cake2file);
+			return trim($lines[count($lines)-1]);
+		}
+
+		// nothing found, recursively search the application tree for VERSION.txt
+		$versionFiles = $this->findVersionFilesRecursive($appdir);
+		if (!$versionFiles) {
+			return false;
+		}
+
+		foreach($versionFiles as $versionFile) {
+			if ($this->isCakeVersionFile($versionFile)) {
+				$lines = file($versionFile);
+				return trim($lines[count($lines)-1]);
+			}
 		}
 		return false;
 	}
 
 /**
- * Checks if VERSION.txt file is a valid CakePHP version file.
+ * Recursively search an application directory for all VERSION.txt files.
+ *
+ * @param string Full path to the application's root directory
+ * @return string|bool Strubg containing full path to VERSION.txt if found
+ */
+	public function findVersionFilesRecursive($appdir) {
+		$folder = new Folder($appdir);
+		$files = $folder->findRecursive('VERSION.txt');
+		if (count($files) != 0) {
+			return $files;
+		}
+		return false;
+	}
+
+/**
+ * Checks if the given VERSION.txt file is a valid CakePHP version file.
  *
  * @param string $file Full path to the VERSION.txt file
  * @return bool True if file is found
  */
 	public function isCakeVersionFile($file) {
-		$content = (new File($file))->read();
+		$fh = new File($file);
+		$content = $fh->read();
 		if (strpos($content, 'CakePHP') == true) {
 			return true;
 		}
+		$fh->close();
 		return false;
 	}
 
@@ -606,30 +708,6 @@ class CakeboxInfo {
 		$framework_version = $this->getFrameworkVersion($appdir);
 		$majorVersion = CakeboxUtility::getMajorVersion($this->getFrameworkVersion($appdir));
 		return $framework . $majorVersion;
-	}
-
-/**
- * Retrieve the specific framework version of an application.
- *
- * @todo harden file read (prevent break when not found)
- *
- * @param string Full path to application directory
- * @return string Version of the framework
- * @throws exception Exception
- */
-	function getFrameworkVersion($appdir) {
-		$versionFile = $this->getCakeVersionFile($appdir);
-		if ($versionFile) {
-			$lines = file($versionFile);
-			return trim($lines[count($lines)-1]);
-		}
-
-		// Use composer.lock for Laravel
-		$laravelfile = "$appdir/composer.lock";
-		if (file_exists($laravelfile)){
-			return CakeboxUtility::getComposerLockVersion($laravelfile, 'laravel/framework');
-		}
-		throw new \Exception('Unable to determine framework version');
 	}
 
 /**
