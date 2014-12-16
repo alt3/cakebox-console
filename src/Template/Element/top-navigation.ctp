@@ -13,13 +13,14 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
 					<li>
-						<?= $this->Html->link('', [
-							'title' => __('Settings'),
-							'class' => 'fa fa-gear'
-						]) ?>
+						<?= $this->Html->link('', '#', ['title' => __('Settings'), 'class' => 'fa fa-gear']) ?>
 					</li>
-					<li><a title="<?= __('Settings') ?>" href="#" class="fa fa-gear"></a></li>
-					<li><a title="<?= __('Logout') ?>" href="#" class="fa fa-sign-out"></a></li>
+					<li>
+						<?= $this->Html->link('', 'http://cakebox.readthedocs.org/en/latest/', ['title' => __('Help'), 'class' => 'fa fa-question-circle']) ?>
+					</li>
+					<li>
+						<?= $this->Html->link('', '#', ['title' => __('Logout'), 'class' => 'fa fa-sign-out']) ?>
+					</li>
 				</ul>
 			</div>
 		</div>
