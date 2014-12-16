@@ -1,10 +1,12 @@
 <?php
 namespace App\Lib;
 
+use Cake\Cache\Cache;
 use Cake\Core\App;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
+use Cake\Network\Http\Client;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Memcached;
@@ -96,7 +98,6 @@ class CakeboxInfo {
 		'ruby'		 => ['link' => 'https://www.ruby-lang.org/en'],
 		'memcached'	 => ['link' => 'http://memcached.org']
 	];
-
 
 /**
  * Class constructor
@@ -586,6 +587,25 @@ class CakeboxInfo {
 			return CakeboxUtility::getComposerLockVersion($laravelfile, 'laravel/framework');
 		}
 		return false;
+	}
+
+/**
+ * Fetch contributor statistics for a repository from the Github API.
+ *
+ * @param string Github repository shortname (owner/repo)
+ * @return array Array
+ */
+	public function getRepositoryContributors($repository){
+		$contributors = Cache::read('contributors', 'short');
+		if ($contributors) {
+			return $contributors;
+		}
+
+		$http = new Client();
+		$response = $http->get("https://api.github.com/repos/$repository/stats/contributors");
+		$result = json_decode($response->body(), true);
+		Cache::write('contributors', $result, 'short');
+		return $result;
 	}
 
 }

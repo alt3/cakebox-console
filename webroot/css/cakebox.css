@@ -9,6 +9,16 @@
     font-size: 85%;
 }
 
+/**
+ * Contributors
+ */
+.contributor img{
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+    vertical-align: top;
+}
+
 /*
  * Top navigation
  */

@@ -32,7 +32,8 @@ class DashboardsController extends AppController {
             'operating_system' => $this->cbi->getOperatingSystem(),
             'packages' => $this->cbi->getPackages(),
             'php_modules' => $this->cbi->getPhpModules(),
-            'nginx_modules' => $this->cbi->getNginxModules()
+            'nginx_modules' => $this->cbi->getNginxModules(),
+            'contributors' => $this->cbi->getRepositoryContributors('alt3/cakebox-console')
         ]);
     }
 

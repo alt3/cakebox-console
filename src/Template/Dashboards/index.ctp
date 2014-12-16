@@ -86,7 +86,8 @@ use Cake\Utility\Inflector;
 				<li class="active"><a href="#panel-apps" data-toggle="tab"><?= __("Apps") ?></a></li>
 				<li id="tab-status"><a href="#panel-status" data-toggle="tab"><?= __("Box status") ?></a></li>
 				<li><a href="#panel-software" data-toggle="tab"><?= __("Box software") ?></a></li>
-				<li><a href="#panel-usage" data-toggle="tab"><?= __("Pro tips!") ?></a></li>
+				<li><a href="#panel-usage" data-toggle="tab"><?= __("Usage") ?></a></li>
+				<li><a href="#panel-credits" data-toggle="tab"><?= __("Credits") ?></a></li>
 			</ul>
 			<div class="tab-content">
 
@@ -213,7 +214,7 @@ use Cake\Utility\Inflector;
 												<?php foreach ($column as $package): ?>
 													<?php if(!empty($package['link'])): ?>
 														<li>
-															<a href="<?= $package['link'] ?>" title="<?= $package['name'] ?>" target="blank"><?= $package['name'] ?> <?php echo $package['version'] ? $package['version'] : '<i class="fa fa-times" title="Could not detect version"></i>'; ?></a>
+															<a href="<?= $package['link'] ?>" title="<?= $package['name'] ?>"><?= $package['name'] ?> <?php echo $package['version'] ? $package['version'] : '<i class="fa fa-times" title="Could not detect version"></i>'; ?></a>
 														</li>
 													<?php else: ?>
 														<li><?= $package['name'] ?></li>
@@ -288,6 +289,41 @@ use Cake\Utility\Inflector;
 				</div>
 				<!-- EOF Software tab -->
 
+				<!-- Credits tab -->
+				<div role="tabpanel" id="panel-credits" class="tab-pane">
+
+					<!-- Contributors -->
+					<div class="col-sm-12">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title"><?= __("Contributors") ?></h3>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<?php $columns = $this->Cakebox->divideEvenly($data['contributors'], 3) ?>
+									<?php foreach ($columns as $column): ?>
+										<div class="col-sm-4">
+											<ul class="list-unstyled">
+												<?php foreach ($column as $contributor): ?>
+													<li class="contributor">
+														<span>
+															<?= $this->Html->image($contributor['author']['avatar_url']) ?>
+															<?= $this->Html->link($contributor['author']['login'], $contributor['author']['html_url'], ['title' => $contributor['total'] . " commits"]) ?>
+														</span>
+													</li>
+												<?php endforeach ?>
+											</ul>
+										</div>
+									<?php endforeach ?>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- EOF Contributors -->
+				</div>
+				<!-- EOF Credits -->
+
+
 				<!-- Usage tab -->
 				<div role="tabpanel" id="panel-usage" class="tab-pane">
 					<?= $this->element('usage-panel') ?>
@@ -297,7 +333,7 @@ use Cake\Utility\Inflector;
 			</div>
 			<!-- EOF tab-content -->
 		</div>
-		<!-- EOF .tabeale -->
+		<!-- EOF .tabbable -->
 	</div>
 	<!-- EOF #tabs -->
 
