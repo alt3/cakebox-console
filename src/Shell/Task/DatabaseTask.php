@@ -26,7 +26,7 @@ class DatabaseTask extends Shell {
  * @var array Cakebox specific settings
  */
 	public $settings = [
-		"test_suffix" => '_test',
+		"test_prefix" => 'test_',
 		"mysql" => [
 			'system_databases' => [
 				'mysql',
@@ -81,7 +81,7 @@ class DatabaseTask extends Shell {
 	}
 
 /**
- * Create a main database and accompanying '_test' suffixed test database.
+ * Create a main database and accompanying 'test_' prefixed test database.
  *
  * @param string $database Name used for the new databases
  * @return bool
@@ -177,7 +177,7 @@ class DatabaseTask extends Shell {
  */
 	private function __getDatabaseNames($database) {
 		$database = $this->normalizeName($database);
-		return [$database, $database . $this->settings['test_suffix']];
+		return [$database, $this->settings['test_prefix'] . $database ];
 	}
 
 }

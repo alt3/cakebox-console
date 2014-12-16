@@ -193,7 +193,7 @@ class ApplicationShell extends AppShell {
 
 		# Update database.php config
 		$dbName = $this->Database->normalizeName($url);
-		$this->Installer->replaceConfigValue($dbConfig, 'test_database_name', $dbName . '_test');
+		$this->Installer->replaceConfigValue($dbConfig, 'test_database_name', 'test_' . $dbName);
 		$this->Installer->replaceConfigValue($dbConfig, 'database_name', $dbName);
 		$this->Installer->replaceConfigValue($dbConfig, 'user', 'cakebox');
 
@@ -232,7 +232,7 @@ class ApplicationShell extends AppShell {
 		$oldUser = "'username' => 'my_app'";
 		$newUser = "'username' => 'cakebox'";
 		$this->Installer->replaceConfigValue($appConfig, $oldUser, $newUser);
-		$this->Installer->replaceConfigValue($appConfig, 'test_myapp', $dbName . '_test');
+		$this->Installer->replaceConfigValue($appConfig, 'test_myapp', 'test_' . $dbName);
 
 		$oldDatabase = "'database' => 'my_app'";
 		$newDatabase = "'database' => '$dbName'";
