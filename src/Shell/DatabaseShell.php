@@ -40,7 +40,7 @@ class DatabaseShell extends AppShell {
 		$parser->addSubcommand('add', [
 			'parser' => [
 				'description' => [
-					__("Creates two MySQL databases, one suffixed with '_test'.")
+					__("Creates two MySQL databases, one prefixed with 'test_'.")
 				],
 				'arguments' => [
 					'name' => ['help' => __('Name to be used for the databases.'), 'required' => true]
@@ -56,7 +56,7 @@ class DatabaseShell extends AppShell {
 		$parser->addSubcommand('remove', [
 			'parser' => [
 				'description' => [
-					__("Drops database and related '_test' suffixed database.")
+					__("Drops database and related 'test_' prefixed database.")
 				],
 				'arguments' => [
 					'name' => ['help' => __('Name of database to be dropped.'), 'required' => true]
@@ -74,7 +74,7 @@ class DatabaseShell extends AppShell {
 	}
 
 /**
- * Create two databases, one suffixed with '_test.
+ * Create two databases, one prefixed with 'test_'.
  *
  * @param string $database Name to be used for the databases
  * @return bool
