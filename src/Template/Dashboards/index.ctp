@@ -364,5 +364,11 @@ use Cake\Utility\Inflector;
 	</div>
 	<!-- EOF box-info -->
 
+	<?php
+		if ($data['update']){
+			echo $this->element('update-notification');
+		}
+	?>
+
 </div>
 <!-- EOF right column -->

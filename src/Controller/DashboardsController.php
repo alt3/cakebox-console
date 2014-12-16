@@ -22,7 +22,7 @@ class DashboardsController extends AppController {
  * @return void
  */
     public function index(){
-        $this->set('data', [
+        $data = [
             'vm' => $this->cbi->getVmInfo(),
             'apps' => $this->cbi->getApps(),
             'counters' => [
@@ -34,7 +34,13 @@ class DashboardsController extends AppController {
             'php_modules' => $this->cbi->getPhpModules(),
             'nginx_modules' => $this->cbi->getNginxModules(),
             'contributors' => $this->cbi->getRepositoryContributors('alt3/cakebox-console')
-        ]);
+        ];
+
+        if ($this->cbi->getLatestCommitLocal() != $this->cbi->getLatestCommitRemote()) {
+            $data['update'] = true;
+        }
+
+        $this->set('data', $data);
     }
 
 /**

@@ -608,4 +608,42 @@ class CakeboxInfo {
 		return $result;
 	}
 
+/**
+ * Fetch commits for a repository from the Github API.
+ *
+ * @param string Github repository shortname (owner/repo)
+ * @return array Array
+ */
+	public function getRepositoryCommits($repository){
+		$commits = Cache::read('commits', 'short');
+		if ($commits) {
+			return $commits;
+		}
+
+		$http = new Client();
+		$response = $http->get("https://api.github.com/repos/$repository/commits");
+		$result = json_decode($response->body(), true);
+		Cache::write('commits', $result, 'short');
+		return $result;
+	}
+
+/**
+ * Get latest commit header from Github api.
+ *
+ * @return string String containing git sha
+ */
+	public function getLatestCommitRemote(){
+		$commits = $this->getRepositoryCommits('alt3/cakebox-console');
+		return $commits[0]['sha'];
+	}
+
+/**
+ * Get local commit header.
+ *
+ * @return string String containing git sha
+ */
+	public function getLatestCommitLocal(){
+		return file_get_contents('/cakebox/console/.git/refs/heads/master');
+	}
+
 }
