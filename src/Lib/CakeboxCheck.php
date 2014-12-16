@@ -107,7 +107,7 @@ class CakeboxCheck {
 		}
 		return [
 			'name' => "php_module_$module",
-			'message' => "Our version of PHP does NOT have the $module extension loaded",
+			'message' => "System version of PHP does NOT have the $module extension loaded",
 			'pass' => false
 		];
 	}
@@ -142,12 +142,12 @@ class CakeboxCheck {
 		if (is_writable($path)) {
 			return [
 				'name' => 'writeable_' . str_replace('/', '_', $path),
-				'message' => "Directory $path is writable",
+				'message' => "Application directory $path is writable",
 				'pass' => true];
 		}
 		return [
 			'name' => 'writeable_' . str_replace('/', '_', $path),
-			'message' => "Directory $path is NOT writable",
+			'message' => "Application directory $path is NOT writable",
 			'pass' => false
 		];
 	}
@@ -164,13 +164,13 @@ class CakeboxCheck {
 		if (!empty($settings)) {
 			return [
 				'name' => 'cache_engine',
-				'message' => 'The <em>' . $settings['className'] . ' Engine</em> is being used for core caching.',
+				'message' => 'Application uses the <em>' . $settings['className'] . ' Engine</em> for core caching',
 				'pass' => true
 			];
 		}
 		return [
 			'name' => 'cache_engine',
-			'message' => 'Our cache is NOT working. Please check the settings in config/app.php',
+			'message' => 'Application cache is NOT working. Please check the settings in config/app.php',
 			'pass' => false
 		];
 	}
@@ -184,13 +184,13 @@ class CakeboxCheck {
 		if ($this->validateDatabaseConnection()) {
 			return [
 				'name' => 'database_connection',
-				'message' => 'CakePHP is able to connect to the database',
+				'message' => 'Application is able to connect to the database',
 				'pass' => true
 			];
 		}
 		return [
 			'name' => 'database_connection',
-			'message' => 'CakePHP is NOT able to connect to the database',
+			'message' => 'Application is NOT able to connect to the database',
 			'pass' => false
 		];
 	}
