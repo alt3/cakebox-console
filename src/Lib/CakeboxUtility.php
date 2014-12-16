@@ -59,4 +59,17 @@ class CakeboxUtility {
 		return false;
 	}
 
+/**
+ * Get a (recursive) list of all directories and subdirectories for a given
+ * using SPL.
+ *
+ * @param string Full path to the directory
+ * @return object SplIterator containing directories
+ */
+	public static function getDirectoriesRecursive($dir) {
+		return new \RecursiveIteratorIterator(
+			new \ParentIterator(new \RecursiveDirectoryIterator($dir)),
+			\RecursiveIteratorIterator::SELF_FIRST);
+	}
+
 }
