@@ -78,25 +78,26 @@ class CakeboxInfo {
  * @var array Hash
  */
 	protected $_packages = [
+		'composer'   => ['link' => 'https://getcomposer.org'],
+		'curl'       => ['link' => 'http://curl.haxx.se'],
 		'git'        => ['link' => 'https://launchpad.net/~git-core'],
+		'heroku'     => ['link' => 'https://toolbelt.heroku.com]'],
+		'mysql'      => ['link' => 'http://www.percona.com/software/percona-server'],
+		'memcached'	 => ['link' => 'http://memcached.org'],
 		'nginx'      => ['link' => 'https://launchpad.net/nginx'],
 		'php'        => ['link' => 'https://launchpad.net/~ondrej/+archive/ubuntu/php5-5.6'],
-		'mysql'      => ['link' => 'http://www.percona.com/software/percona-server'],
-		'redis'      => [
-			'link'  => 'https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server',
-			'alias' => 'redis-server'
-		],
+		'phpunit'    => ['link' => 'https://phpunit.de'],
+		'phpcs'      => ['link' => 'https://github.com/squizlabs/PHP_CodeSniffer'],
 		'postgresql' => [
 			'link'  => 'http://www.postgresql.org',
 			'alias' => 'psql'
 		],
-		'curl'       => ['link' => 'http://curl.haxx.se'],
-		'composer'   => ['link' => 'https://getcomposer.org'],
-		'phpunit'    => ['link' => 'https://phpunit.de'],
-		'phpcs'      => ['link' => 'https://github.com/squizlabs/PHP_CodeSniffer'],
-		'heroku'     => ['link' => 'https://toolbelt.heroku.com]'],
-		'ruby'		 => ['link' => 'https://www.ruby-lang.org/en'],
-		'memcached'	 => ['link' => 'http://memcached.org']
+		'python'     => ['link' => 'https://www.python.org'],
+		'redis'      => [
+			'link'  => 'https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server',
+			'alias' => 'redis-server'
+		],
+		'ruby'		 => ['link' => 'https://www.ruby-lang.org/en']
 	];
 
 /**
