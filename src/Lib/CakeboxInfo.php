@@ -81,6 +81,7 @@ class CakeboxInfo {
 		'composer'   => ['link' => 'https://getcomposer.org'],
 		'curl'       => ['link' => 'http://curl.haxx.se'],
 		'git'        => ['link' => 'https://launchpad.net/~git-core'],
+		'java'       => ['link' => 'http://http://openjdk.java.net'],
 		'heroku'     => ['link' => 'https://toolbelt.heroku.com]'],
 		'mysql'      => ['link' => 'http://www.percona.com/software/percona-server'],
 		'memcached'	 => ['link' => 'http://memcached.org'],
