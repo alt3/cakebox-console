@@ -84,7 +84,7 @@ class CakeboxInfo {
 		'git'           => ['link' => 'https://launchpad.net/~git-core'],
 		'java'          => ['link' => 'http://openjdk.java.net'],
 		'heroku'        => ['link' => 'https://toolbelt.heroku.com]'],
-		'kibana'        => ['link' => 'http://http://www.elasticsearch.org/overview/kibana]'],
+		'kibana'        => ['link' => 'https://www.elasticsearch.org/overview/kibana'],
 		'logstash'      => ['link' => 'http://logstash.net]'],
 		'mysql'         => ['link' => 'http://www.percona.com/software/percona-server'],
 		'memcached'	    => ['link' => 'http://memcached.org'],
@@ -282,15 +282,34 @@ class CakeboxInfo {
 	public function getPackages() {
 		$result = [];
 		foreach ($this->_packages as $package => $details) {
-			if ($package == "memcached") {
-				$version = $this->_getPackageVersionMemcached();
-			} else {
-				if (array_key_exists('alias', $details)){
-					$version = $this->_getPackageVersionGeneric($details['alias']);
-				} else {
-					$version = $this->_getPackageVersionGeneric($package);
-				}
+
+			switch($package) {
+				case 'memcached':
+					$version = $this->_getPackageVersionMemcached();
+					break;
+				case 'kibana':
+					$version = $this->_getPackageVersionKibana();
+					break;
+				default:
+					if (array_key_exists('alias', $details)){
+						$version = $this->_getPackageVersionGeneric($details['alias']);
+					} else {
+						$version = $this->_getPackageVersionGeneric($package);
+					}
+
 			}
+
+
+
+#			if ($package == "memcached") {
+#				$version = $this->_getPackageVersionMemcached();
+#			} else {
+#				if (array_key_exists('alias', $details)){
+#					$version = $this->_getPackageVersionGeneric($details['alias']);
+#				} else {
+#					$version = $this->_getPackageVersionGeneric($package);
+#				}
+#			}
 			$result[] = [
 				'name' => $package,
 				'version' => $version,
@@ -330,8 +349,8 @@ class CakeboxInfo {
 	}
 
 /**
- * Returns the Memcached version by connecting locally (since Memcached does not
- * support the generic --version method.
+ * Returns the Memcached version by connecting to the service locally (since
+ * Memcached does not support any of the generic version methods).
  *
  * @return string Installed Memcached version
  */
@@ -344,6 +363,20 @@ class CakeboxInfo {
 		} catch (\Exception $e) {
 			return false;
 		}
+	}
+
+/**
+ * Fetch the Kibana version from the version in app.js
+ *
+ * @return string Installed Kibana version
+ */
+	protected function _getPackageVersionKibana() {
+		$lines = file_get_contents('/opt/kibana/current/app/app.js');
+		preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $lines, $matches);
+		if (!empty($matches[1])) {
+			return $matches[1];
+		}
+		return false;
 	}
 
 /**
