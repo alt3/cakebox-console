@@ -22,7 +22,7 @@ use Cake\Utility\Inflector;
 					</div>
 				</div>
 			</div>
-			<a href="#">
+			<a href="#" title="Not implemented">
 				<div class="panel-footer">
 					<span class="pull-left"><?= __('New Application') ?></span>
 					<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
