@@ -282,10 +282,13 @@ class CakeboxInfo {
 	public function getPackages() {
 		$result = [];
 		foreach ($this->_packages as $package => $details) {
-
+			// fetch version
 			switch($package) {
 				case 'memcached':
 					$version = $this->_getPackageVersionMemcached();
+					break;
+				case 'elasticsearch':
+					$version = $this->_getPackageVersionElasticsearch();
 					break;
 				case 'kibana':
 					$version = $this->_getPackageVersionKibana();
@@ -299,17 +302,6 @@ class CakeboxInfo {
 
 			}
 
-
-
-#			if ($package == "memcached") {
-#				$version = $this->_getPackageVersionMemcached();
-#			} else {
-#				if (array_key_exists('alias', $details)){
-#					$version = $this->_getPackageVersionGeneric($details['alias']);
-#				} else {
-#					$version = $this->_getPackageVersionGeneric($package);
-#				}
-#			}
 			$result[] = [
 				'name' => $package,
 				'version' => $version,
@@ -349,8 +341,8 @@ class CakeboxInfo {
 	}
 
 /**
- * Returns the Memcached version by connecting to the service locally (since
- * Memcached does not support any of the generic version methods).
+ * Returns the Memcached version by connecting to the service locally since
+ * Memcached does not support any of the generic version detection methods.
  *
  * @return string Installed Memcached version
  */
@@ -366,7 +358,7 @@ class CakeboxInfo {
 	}
 
 /**
- * Fetch the Kibana version from the version in app.js
+ * Return the Kibana version as found in app.js
  *
  * @return string Installed Kibana version
  */
@@ -377,6 +369,19 @@ class CakeboxInfo {
 			return $matches[1];
 		}
 		return false;
+	}
+
+/**
+ * Request the Elasticsearch version directly (since Elasticsearch does not
+ * support any of the generic version detection methods.
+ *
+ * @return string Installed Elasticsearch version
+ */
+	public function _getPackageVersionElasticsearch(){
+		$http = new Client();
+		$response = $http->get("http://10.33.10.10:9200");
+		$result = json_decode($response->body(), true);
+		return $result['version']['number'];
 	}
 
 /**
