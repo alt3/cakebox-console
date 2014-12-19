@@ -366,10 +366,14 @@ class CakeboxInfo {
  * @return string Installed Elasticsearch version
  */
 	public function _getPackageVersionElasticsearch(){
-		$http = new Client();
-		$response = $http->get('http://' . $this->getPrimaryIpAddress() . ':9200');
-		$result = json_decode($response->body(), true);
-		return $result['version']['number'];
+		try {
+			$http = new Client();
+			$response = $http->get('http://' . $this->getPrimaryIpAddress() . ':9200');
+			$result = json_decode($response->body(), true);
+			return $result['version']['number'];
+		} catch (\Exception $e) {
+			return false;
+		}
 	}
 
 /**
