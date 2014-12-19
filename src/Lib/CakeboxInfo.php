@@ -78,27 +78,30 @@ class CakeboxInfo {
  * @var array Hash
  */
 	protected $_packages = [
-		'composer'   => ['link' => 'https://getcomposer.org'],
-		'curl'       => ['link' => 'http://curl.haxx.se'],
-		'git'        => ['link' => 'https://launchpad.net/~git-core'],
-		'java'       => ['link' => 'http://http://openjdk.java.net'],
-		'heroku'     => ['link' => 'https://toolbelt.heroku.com]'],
-		'mysql'      => ['link' => 'http://www.percona.com/software/percona-server'],
-		'memcached'	 => ['link' => 'http://memcached.org'],
-		'nginx'      => ['link' => 'https://launchpad.net/nginx'],
-		'php'        => ['link' => 'https://launchpad.net/~ondrej/+archive/ubuntu/php5-5.6'],
-		'phpunit'    => ['link' => 'https://phpunit.de'],
-		'phpcs'      => ['link' => 'https://github.com/squizlabs/PHP_CodeSniffer'],
-		'postgresql' => [
+		'composer'      => ['link' => 'https://getcomposer.org'],
+		'curl'          => ['link' => 'http://curl.haxx.se'],
+		'elasticsearch' => ['link' => 'https://www.elasticsearch.org'],
+		'git'           => ['link' => 'https://launchpad.net/~git-core'],
+		'java'          => ['link' => 'http://openjdk.java.net'],
+		'heroku'        => ['link' => 'https://toolbelt.heroku.com]'],
+		'kibana'        => ['link' => 'http://http://www.elasticsearch.org/overview/kibana]'],
+		'logstash'      => ['link' => 'http://logstash.net]'],
+		'mysql'         => ['link' => 'http://www.percona.com/software/percona-server'],
+		'memcached'	    => ['link' => 'http://memcached.org'],
+		'nginx'         => ['link' => 'https://launchpad.net/nginx'],
+		'php'           => ['link' => 'https://launchpad.net/~ondrej/+archive/ubuntu/php5-5.6'],
+		'phpunit'       => ['link' => 'https://phpunit.de'],
+		'phpcs'         => ['link' => 'https://github.com/squizlabs/PHP_CodeSniffer'],
+		'postgresql'    => [
 			'link'  => 'http://www.postgresql.org',
 			'alias' => 'psql'
 		],
-		'python'     => ['link' => 'https://www.python.org'],
-		'redis'      => [
+		'python'        => ['link' => 'https://www.python.org'],
+		'redis'         => [
 			'link'  => 'https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server',
 			'alias' => 'redis-server'
 		],
-		'ruby'		 => ['link' => 'https://www.ruby-lang.org/en']
+		'ruby'		    => ['link' => 'https://www.ruby-lang.org/en']
 	];
 
 /**
@@ -312,6 +315,13 @@ class CakeboxInfo {
 
 		// No match on --version so let's try --v
 		$stdout = `2>&1 $package -v`;
+		preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
+		if (!empty($matches[1])) {
+			return $matches[1];
+		}
+
+		// Edge case for e.g. java using -version
+		$stdout = `2>&1 $package -version`;
 		preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
 		if (!empty($matches[1])) {
 			return $matches[1];
