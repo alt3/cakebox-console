@@ -383,7 +383,11 @@ class CakeboxInfo {
  * @return string Installed Kibana version
  */
 	protected function _getPackageVersionLogstash() {
-		$lines = file_get_contents('/opt/logstash/server/lib/logstash/version.rb');
+		$file = '/opt/logstash/server/lib/logstash/version.rb';
+		if (!file_exists($file)) {
+			return false;
+		}
+		$lines = file_get_contents($file);
 		preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $lines, $matches);
 		if (!empty($matches[1])) {
 			return $matches[1];
@@ -397,7 +401,11 @@ class CakeboxInfo {
  * @return string Installed Kibana version
  */
 	protected function _getPackageVersionKibana() {
-		$lines = file_get_contents('/opt/kibana/current/app/app.js');
+		$file = '/opt/kibana/current/app/app.js';
+		if (!file_exists($file)) {
+			return false;
+		}
+		$lines = file_get_contents($file);
 		preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $lines, $matches);
 		if (!empty($matches[1])) {
 			return $matches[1];
