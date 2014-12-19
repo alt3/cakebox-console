@@ -83,9 +83,9 @@ class CakeboxInfo {
 		'elasticsearch' => ['link' => 'https://www.elasticsearch.org'],
 		'git'           => ['link' => 'https://launchpad.net/~git-core'],
 		'java'          => ['link' => 'http://openjdk.java.net'],
-		'heroku'        => ['link' => 'https://toolbelt.heroku.com]'],
+		'heroku'        => ['link' => 'https://toolbelt.heroku.com'],
 		'kibana'        => ['link' => 'https://www.elasticsearch.org/overview/kibana'],
-		'logstash'      => ['link' => 'http://logstash.net]'],
+		'logstash'      => ['link'  => 'http://logstash.net'],
 		'mysql'         => ['link' => 'http://www.percona.com/software/percona-server'],
 		'memcached'	    => ['link' => 'http://memcached.org'],
 		'nginx'         => ['link' => 'https://launchpad.net/nginx'],
@@ -290,6 +290,9 @@ class CakeboxInfo {
 				case 'elasticsearch':
 					$version = $this->_getPackageVersionElasticsearch();
 					break;
+				case 'logstash':
+					$version = $this->_getPackageVersionLogstash();
+					break;
 				case 'kibana':
 					$version = $this->_getPackageVersionKibana();
 					break;
@@ -299,7 +302,6 @@ class CakeboxInfo {
 					} else {
 						$version = $this->_getPackageVersionGeneric($package);
 					}
-
 			}
 
 			$result[] = [
@@ -358,6 +360,34 @@ class CakeboxInfo {
 	}
 
 /**
+ * Request the Elasticsearch version directly (since Elasticsearch does not
+ * support any of the generic version detection methods.
+ *
+ * @return string Installed Elasticsearch version
+ */
+	public function _getPackageVersionElasticsearch(){
+		$http = new Client();
+		$response = $http->get('http://' . $this->getPrimaryIpAddress() . ':9200');
+		$result = json_decode($response->body(), true);
+		return $result['version']['number'];
+	}
+
+/**
+ * Return the Logstash version as found in version.rb file since requesting the
+ * version using /bin/logstash --version takes way too long (known issue)
+ *
+ * @return string Installed Kibana version
+ */
+	protected function _getPackageVersionLogstash() {
+		$lines = file_get_contents('/opt/logstash/server/lib/logstash/version.rb');
+		preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $lines, $matches);
+		if (!empty($matches[1])) {
+			return $matches[1];
+		}
+		return false;
+	}
+
+/**
  * Return the Kibana version as found in app.js
  *
  * @return string Installed Kibana version
@@ -369,19 +399,6 @@ class CakeboxInfo {
 			return $matches[1];
 		}
 		return false;
-	}
-
-/**
- * Request the Elasticsearch version directly (since Elasticsearch does not
- * support any of the generic version detection methods.
- *
- * @return string Installed Elasticsearch version
- */
-	public function _getPackageVersionElasticsearch(){
-		$http = new Client();
-		$response = $http->get('http://' . $this->getPrimaryIpAddress() . ':9200');
-		$result = json_decode($response->body(), true);
-		return $result['version']['number'];
 	}
 
 /**
