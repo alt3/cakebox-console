@@ -379,7 +379,7 @@ class CakeboxInfo {
  */
 	public function _getPackageVersionElasticsearch(){
 		$http = new Client();
-		$response = $http->get("http://10.33.10.10:9200");
+		$response = $http->get('http://' . $this->getPrimaryIpAddress() . ':9200');
 		$result = json_decode($response->body(), true);
 		return $result['version']['number'];
 	}
