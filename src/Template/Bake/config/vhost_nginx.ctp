@@ -1,6 +1,6 @@
 <%
 /**
- * Generic template for Nginx virtual hosts.
+ * Cakebox-generated Nginx virtual host using generic template.
  */
 %>
 server {
@@ -19,7 +19,7 @@ server {
     root <%= $webroot %>;
     index index.php;
 
-    access_log /var/log/nginx/<%= $url %>.access.log;
+    access_log /var/log/nginx/<%= $url %>.access.log logstash;
     error_log /var/log/nginx/<%= $url %>.error.log;
 
     location / {
