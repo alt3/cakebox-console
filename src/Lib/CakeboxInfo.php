@@ -401,16 +401,17 @@ class CakeboxInfo {
  * @return string Installed Kibana version
  */
 	protected function _getPackageVersionKibana() {
-		$file = '/opt/kibana/current/app/app.js';
-		if (!file_exists($file)) {
+		try {
+			$http = new Client();
+			$response = $http->get('http://localhost:5601');
+			preg_match('/window\.KIBANA_VERSION=\'(.*)\'/m', $response->body(), $matches);
+			if (!empty($matches[1])) {
+				return $matches[1];
+			}
+			return false;
+		} catch (\Exception $e) {
 			return false;
 		}
-		$lines = file_get_contents($file);
-		preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $lines, $matches);
-		if (!empty($matches[1])) {
-			return $matches[1];
-		}
-		return false;
 	}
 
 /**
