@@ -345,7 +345,7 @@ use Cake\Utility\Inflector;
 
 	<!-- VM Box -->
 	<div class="col-sm-12 column">
-		<div class="panel panel-primary">
+		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">
 					Virtual Machine
@@ -362,13 +362,30 @@ use Cake\Utility\Inflector;
 			</div>
 		</div>
 	</div>
-	<!-- EOF box-info -->
+	<!-- EOF VM box -->
 
-	<?php
-		if ($data['update']){
-			echo $this->element('update-notification');
-		}
-	?>
+	<!-- Toolbox -->
+	<div class="col-sm-12 column">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Toolbox
+				</h3>
+			</div>
+			<div class="panel-body">
+				<ul class="list-unstyled">
+					<li><?= $this->Html->link(__("Kibana"), ['_port' => '5601', 'controller' => false, 'action' => false]) ?></li>
+					<li><?= $this->Html->link(__("Elasticsearch"), ['_port' => '6900', 'controller' => false, 'action' => false]) ?></li>
+					<? if ($data['update']): ?>
+							<li>
+								<p class="text-danger"><?= __('Cakebox update') ?> <i class="fa fa-exclamation-circle"></i></p>
+							</li>
+					<? endif ?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- EOF toolbox -->
 
 </div>
 <!-- EOF right column -->
