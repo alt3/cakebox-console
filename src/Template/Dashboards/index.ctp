@@ -378,7 +378,7 @@ use Cake\Utility\Inflector;
 					<li><?= $this->Html->link(__("Elasticsearch"), ['_port' => '6900', 'controller' => false, 'action' => false]) ?></li>
 					<? if ($data['update']): ?>
 							<li>
-								<p class="text-danger"><?= __('Cakebox update') ?> <i class="fa fa-exclamation-circle"></i></p>
+								<p class="text-danger"><?= __('Cakebox update available') ?> <i class="fa fa-exclamation-circle"></i></p>
 							</li>
 					<? endif ?>
 				</ul>

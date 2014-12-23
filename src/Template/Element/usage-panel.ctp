@@ -11,7 +11,7 @@
 				<h3 class="panel-title"><?= __("Cakebox console") ?></div></h3>
 			<div class="panel-body">
 				<p>
-					Use simple <em><strong>cakebox commands</strong></em> to create databases, Nginx virtual hosts and even fully pre-configured applications.
+					Use the <em><strong>cakebox commands</strong></em> to create databases, Nginx virtual hosts and fully pre-configured applications.
 				</p>
 				<p>For usage instructions see:<p>
 				<ul>
@@ -51,11 +51,12 @@
 				<p>Configure personal box customizations in the <em>Cakebox.yaml</em> file to:</p>
 				<ul>
 					<li>change virtual machine settings (hostname, IP address, CPUs, memory)</li>
-					<li>secure SSH access using your own key pair</li>
+					<li>provision databases, sites and applications</li>
+					<li>provision your personal repository applications (both public and private)</li>
+					<li>secure SSH access to your box using a private key pair</li>
 					<li>auto configure your Git credentials</li>
-					<li>automatically provision databases, sites and applications</li>
 					<li>create unlimited <?= $this->Html->link('Vagrant Synced Folders', 'https://docs.vagrantup.com/v2/synced-folders') ?></li>
-					<li>install additional software</li>
+					<li>provision additional software</li>
 				</ul>
 			</div>
 		</div>
