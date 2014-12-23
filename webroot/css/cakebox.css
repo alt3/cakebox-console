@@ -1,3 +1,16 @@
+/**
+ * Beta
+ */
+.beta {
+     position: fixed;
+     top: 0;
+     right: 0;
+     width: 72px;
+     height: 72px;
+     border: 0;
+     z-index: 101;
+ }
+
 /*
  * Login form
  */

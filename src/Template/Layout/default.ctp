@@ -45,9 +45,7 @@ $cakeDescription = 'Cakebox Admin';
 <body>
 	<!-- @todo: hook into Auth -->
 	<?php
-	 	if ($this->request->here == '/') {
-			echo $this->element('fork-me');
-		} else {
+	 	if ($this->request->here != '/') {
 			echo $this->element('top-navigation');
 		}
 	?>
@@ -60,6 +58,8 @@ $cakeDescription = 'Cakebox Admin';
 			</div>
 		</div>
 	</div>
+
+	<?= $this->element('beta') ?>
 
 </body>
 </html>
