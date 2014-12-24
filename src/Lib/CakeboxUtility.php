@@ -1,6 +1,7 @@
 <?php
 namespace App\Lib;
 
+use Cake\Filesystem\File;
 use Cake\Utility\Hash;
 
 /**
@@ -70,6 +71,20 @@ class CakeboxUtility {
 		return new \RecursiveIteratorIterator(
 			new \ParentIterator(new \RecursiveDirectoryIterator($dir)),
 			\RecursiveIteratorIterator::SELF_FIRST);
+	}
+
+/**
+ * Returns the content of a(ny) file as html-escaped string.
+ *
+ * @param string name of the site file
+ * @return string html-escaped file contents
+ */
+	public function getFileContent($file){
+		if (!file_exists($file)) {
+			return false;
+		}
+		$fh = new File($file);
+		return htmlentities($fh->read());
 	}
 
 }

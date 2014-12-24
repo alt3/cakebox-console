@@ -1,7 +1,8 @@
 <?php
 namespace App\Controller;
 
-use App\Lib\CakeboxInfo;
+use App\Lib\CakeboxUtility;
+use Cake\Network\Exception\NotFoundException;
 
 class SiteFilesController extends AppController {
 
@@ -17,6 +18,20 @@ class SiteFilesController extends AppController {
                 'sites-enabled' => '/etc/nginx/sites-enabled'
             ],
             'sitefiles' => $this->cbi->getRichNginxFiles(),
+        ]);
+    }
+
+/**
+ * Serve nginx site configuration file as html
+ */
+    public function file($filename) {
+        $content = CakeboxUtility::getFileContent("/etc/nginx/sites-available/$filename");
+        if (!$content) {
+            throw new NotFoundException();
+        }
+        $this->set([
+            'content' => $content,
+            '_serialize' => ['content']
         ]);
     }
 

@@ -15,15 +15,21 @@
 						<th><?= __("Filename") ?></th>
 						<th><?= __("Enabled") ?></th>
 						<th><?= __("Last Modified") ?></th>
+
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($data['sitefiles'] as $key => $file): ?>
 						<tr>
 							<td><?= $key + 1 ?></td>
-							<td><?= $file['name'] ?></td>
+							<td class="filename"><?= $file['name'] ?></td>
 							<td><?= $file['enabled'] ? __('Yes') : __('No') ?></td>
 							<td><?= $this->Time->format($file['modified'], 'YYYY-MM-dd'); ?></td>
+							<td>
+								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#fileModal">
+									View file
+								</button>
+							</td>
 						</tr>
 					<?php endforeach ?>
 				</tbody>
@@ -34,3 +40,37 @@
 	<!-- EOF main site files panel -->
 
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">ajax-loaded-title</h4>
+			</div>
+			<div class="modal-body">
+				ajax-loaded-content
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$('#fileModal').on('show.bs.modal', function (event) {
+	var modal = $(this)
+	var button = $(event.relatedTarget) // Button that triggered the modal
+	var filename = button.closest('tr').find('td.filename').html()
+	$('.modal-title').html('/etc/nginx/sites-available/' + filename)
+	var jqxhr = $.getJSON( 'sitefiles/file/' + filename + '.json', function(data) {
+		console.log(modal)
+		modal.find('.modal-body').html('<pre>' + data.content + '</pre>')
+	})
+})
+.fail(function() {
+	alert( 'So sorry, something went wrong fetching the file...' )
+})
+</script>
