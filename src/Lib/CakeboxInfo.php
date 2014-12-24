@@ -187,7 +187,7 @@ class CakeboxInfo {
 		$specs = [];
 		foreach ($lines as $line) {
 			$pair = explode("=", $line);
-			$specs[$pair[0]] = $pair[1];
+			$specs[$pair[0]] = str_replace('"', '', $pair[1]);
 		}
 		// no need to determine the architecture for our box, just add
 		$specs['architecture'] = "64-bit (x86_64)";
