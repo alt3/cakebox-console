@@ -111,7 +111,6 @@ use Cake\Utility\Inflector;
 													<li><strong><?= __("Framework") ?>:</strong> <?= Inflector::humanize($app['framework']) ?> <?= $app['framework_version'] ?></li>
 													<li><strong><?= __("Directory") ?>:</strong> <?= $app['appdir'] ?></li>
 													<li><strong><?= __("Webroot") ?>:</strong> <?= $app['webroot']  ?></li>
-													<li><strong><?= __("Database") ?>:</strong>To be implemented</li>
 												</ul>
 											</div>
 										</div>
@@ -318,28 +317,7 @@ use Cake\Utility\Inflector;
 	</div>
 	<!-- EOF VM box -->
 
-	<!-- Toolbox -->
-	<div class="col-sm-12 column">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">
-					Toolbox
-				</h3>
-			</div>
-			<div class="panel-body">
-				<ul class="list-unstyled">
-					<li><?= $this->Html->link(__("Kibana"), ['_port' => '5601', 'controller' => false, 'action' => false]) ?></li>
-					<li><?= $this->Html->link(__("Elasticsearch"), ['_port' => '6900', 'controller' => false, 'action' => false]) ?></li>
-					<? if ($data['update']): ?>
-							<li>
-								<p class="text-danger"><?= __('Cakebox update available') ?> <i class="fa fa-exclamation-circle"></i></p>
-							</li>
-					<? endif ?>
-				</ul>
-			</div>
-		</div>
-	</div>
-	<!-- EOF toolbox -->
+	<?= $this->element('toolbox-panel') ?>
 
 </div>
 <!-- EOF right column -->
