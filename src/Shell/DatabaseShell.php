@@ -46,8 +46,8 @@ class DatabaseShell extends AppShell {
 					'name' => ['help' => __('Name to be used for the databases.'), 'required' => true]
 				],
 				'options' => [
-					'username' => ['short' => 'u', 'help' => __('Username with localhost database access.'), 'default' => 'username'],
-					'password' => ['short' => 'p', 'help' => __('Password for user with localhost access.'), 'default' => 'password'],
+					'username' => ['short' => 'u', 'help' => __('Username with localhost database access.'), 'default' => 'cakebox'],
+					'password' => ['short' => 'p', 'help' => __('Password for user with localhost access.'), 'default' => 'secret'],
 					'force' => ['short' => 'f', 'help' => __('Drop existing database.'), 'boolean' => true]
 				]
 		]]);
