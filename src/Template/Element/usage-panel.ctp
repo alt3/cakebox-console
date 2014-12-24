@@ -11,7 +11,7 @@
 				<h3 class="panel-title"><?= __("Cakebox console") ?></div></h3>
 			<div class="panel-body">
 				<p>
-					Use the <em><strong>cakebox commands</strong></em> to create databases, Nginx virtual hosts and fully pre-configured applications.
+					Use <em><strong>cakebox commands</strong></em> to create databases, Nginx virtual hosts and fully pre-configured applications.
 				</p>
 				<p>For usage instructions see:<p>
 				<ul>
