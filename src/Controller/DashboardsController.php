@@ -29,11 +29,7 @@ class DashboardsController extends AppController {
             'counters' => [
                 'databases' => $this->cbi->getDatabaseCount(),
                 'sites' => $this->cbi->getNginxFileCount()
-            ],
-            'operating_system' => $this->cbi->getOperatingSystem(),
-            'packages' => $this->cbi->getPackages(),
-            'php_modules' => $this->cbi->getPhpModules(),
-            'nginx_modules' => $this->cbi->getNginxModules()
+            ]
         ];
 
         if ($this->cbi->getLatestCommitLocal() != $this->cbi->getLatestCommitRemote()) {
@@ -56,13 +52,30 @@ class DashboardsController extends AppController {
     }
 
 /**
+ * Serve box software as json
+ */
+     public function software() {
+         $packages = $this->cbi->getPackages();
+         $php_modules = $this->cbi->getPhpModules();
+
+         $this->set([
+             'operating_system' => $this->cbi->getOperatingSystem(),
+             'packages' => CakeboxUtility::columnizeArray($packages, 3),
+             'php_modules' => CakeboxUtility::columnizeArray($php_modules, 3),
+             'nginx_modules' => $this->cbi->getNginxModules(),
+             '_serialize' => ['operating_system', 'packages', 'php_modules', 'nginx_modules']
+        ]);
+     }
+
+/**
  * Serve contributors as json
  */
     public function contributors() {
-        $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console');
+    $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console');
         $this->set([
             'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
             '_serialize' => ['contributors']
         ]);
     }
+
 }

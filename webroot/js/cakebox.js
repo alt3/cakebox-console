@@ -20,6 +20,13 @@ $(document).ready(function(){
 		}
 	})
 
+	$('#tab-software a').click(function (e) {
+		currentPanel = $(this).attr('href')
+		if ($(currentPanel).has('.ajax-loader').length != 0 ) {
+			loadTabSoftware()
+		}
+	})
+
 });
 
 /*
@@ -62,7 +69,7 @@ function loadTabStatus() {
 }
 
 /**
- * Ajax loads Credits tab
+ * Ajax load Credits tab
  */
 function loadTabCredits() {
 	var jqxhr = $.getJSON( 'dashboards/contributors.json', function(data) {
@@ -91,5 +98,78 @@ function loadTabCredits() {
 	})
 	.fail(function() {
 		alert( 'So sorry, something went wrong fetching checks' )
+	})
+}
+
+
+/**
+* Ajax load Software tab
+*/
+function loadTabSoftware() {
+	var jqxhr = $.getJSON( 'dashboards/software.json', function(data) {
+		console.dir(data)
+
+		// fill OS panel
+		$('#os-description').append('<a href="https://wiki.ubuntu.com/LTS">' + data['operating_system']['DISTRIB_DESCRIPTION'] + '</a>')
+		$('#os-codename').append(data['operating_system']['DISTRIB_CODENAME'])
+		$('#os-architecture').append(data['operating_system']['architecture'])
+
+		// fill Software panel
+		$.each(data['packages'], function( index, column ) {
+			var target = $('.panel-body.packages > .row')
+			var col = $('<div class="col-sm-4" id="packages-column-' + index + '" />').appendTo(target)
+			var list = $('<ul class="list-unstyled" />').appendTo('#packages-column-' + index)
+
+			// one LI per package
+			$.each(column, function(index, package) {
+				li = '<li class="package">'
+				if (package.version) {
+					li += '<a href="' + package.link + '">' + package.name + '&nbsp;' + package.version + '</a>'
+				} else {
+					li += '<a href="' + package.link + '">' + package.name + '</a> <i class="fa fa-times" title="Could not detect version"></i>'
+				}
+				li += '</li>'
+				list.append(li)
+			})
+		})
+
+		// fill PHP Modules panel
+		$.each(data['php_modules'], function( index, column ) {
+			var target = $('.panel-body.php-modules > .row')
+			var col = $('<div class="col-sm-4" id="php-modules-column-' + index + '" />').appendTo(target)
+			var list = $('<ul class="list-unstyled" />').appendTo('#php-modules-column-' + index)
+
+			// one LI per package
+			$.each(column, function(index, phpmodule) {
+				li = '<li class="php-module">'
+				if (phpmodule['link']) {
+					li += '<a href="' + phpmodule.link + '">' + phpmodule.name + '</a>'
+				} else {
+					li += phpmodule.name
+				}
+				li += '</li>'
+				list.append(li)
+			})
+		})
+
+		// fill nginx core-modules column
+		$.each(data['nginx_modules']['core'], function( index, module ) {
+			var list = $('#nginx-core-modules > ul')
+			list.append('<li><a href="' + module.link + '">' + module.short_name + '</a>')
+		})
+
+		// fill nginx 3rd-party-modules column
+		$.each(data['nginx_modules']['3rdparty'], function( index, module ) {
+			var list = $('#nginx-3rdparty-modules > ul')
+			list.append('<li><a href="' + module.link + '">' + module.short_name + '</a>')
+		})
+
+	})
+	.done(function() {
+		$('#panel-software .ajax-loader').html('').remove()
+		$('#panel-software .panel-content').removeClass('hidden')
+	})
+	.fail(function() {
+		alert( 'So sorry, something went wrong fetching software' )
 	})
 }

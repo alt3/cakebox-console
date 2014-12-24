@@ -83,10 +83,10 @@ use Cake\Utility\Inflector;
 	<div id="tabs" class="col-sm-12 column">
 		<div class="tabbable" id="tabs-299824">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#panel-apps" data-toggle="tab"><?= __("Apps") ?></a></li>
+				<li id="tab-apps" class="active"><a href="#panel-apps" data-toggle="tab"><?= __("Apps") ?></a></li>
 				<li id="tab-status"><a href="#panel-status" data-toggle="tab"><?= __("Box status") ?></a></li>
-				<li><a href="#panel-software" data-toggle="tab"><?= __("Box software") ?></a></li>
-				<li><a href="#panel-usage" data-toggle="tab"><?= __("Usage") ?></a></li>
+				<li id="tab-software"><a href="#panel-software" data-toggle="tab"><?= __("Box software") ?></a></li>
+				<li id="tab-usage"><a href="#panel-usage" data-toggle="tab"><?= __("Usage") ?></a></li>
 				<li id="tab-credits"><a href="#panel-credits" data-toggle="tab"><?= __("Credits") ?></a></li>
 			</ul>
 			<div class="tab-content">
@@ -144,7 +144,6 @@ use Cake\Utility\Inflector;
 								</ul>
 							</div>
 						</div>
-						<!-- EOF system panel -->
 
 						<!-- Application panel -->
 						<div class="panel panel-primary" id="status-application">
@@ -157,7 +156,6 @@ use Cake\Utility\Inflector;
 								</ul>
 							</div>
 						</div>
-						<!-- EOF system panel -->
 
 						<!-- Security panel -->
 						<div class="panel panel-primary" id="status-security">
@@ -170,7 +168,6 @@ use Cake\Utility\Inflector;
 								</ul>
 							</div>
 						</div>
-						<!-- EOF system panel -->
 
 					</div>
 					<!-- EOF tab content -->
@@ -179,108 +176,77 @@ use Cake\Utility\Inflector;
 
 
 				<!-- Software tab -->
-				<div role="tab-panel" id="panel-software" class="tab-pane">
+				<div role="tabpanel" id="panel-software" class="tab-pane">
+
+					<div class="ajax-loader text-center">
+						<i class="fa fa-spinner fa-spin"></i>
+					</div>
 
 					<!-- Operating System -->
-					<div class="col-sm-12">
+					<div class="panel-content col-sm-12 hidden">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title"><?= __("Operating System") ?></h3>
 							</div>
 							<div class="panel-body">
 								<ul class="list-unstyled">
-									<li><strong>Description</strong>:
-										<?= $this->Html->link(preg_replace('/"/', '', $data['operating_system']['DISTRIB_DESCRIPTION']), "https://wiki.ubuntu.com/LTS") ?>
-									<li><strong>Codename</strong>: <?= $data['operating_system']['DISTRIB_CODENAME'] ?></li>
-									<li><strong>Architecture</strong>: <?= $data['operating_system']['architecture'] ?></li>
+									<li id="os-description"><strong><?= __('Description') ?></strong>: </li>
+									<li id="os-codename"><strong><?= __('Codename') ?></strong>: </li>
+									<li id="os-architecture"><strong><?= __('Architecture') ?></strong>: </li>
 								</ul>
 							</div>
 						</div>
 					</div>
-					<!-- EOF Operating System -->
 
 					<!-- Package information -->
-					<div class="col-sm-12">
+					<div class="panel-content col-sm-12 hidden">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title"><?= __("Software") ?></h3>
 							</div>
-							<div class="panel-body">
+							<div class="panel-body packages">
 								<div class="row">
-									<?php $columns = $this->Cakebox->divideEvenly($data['packages'], 3) ?>
-									<?php foreach ($columns as $column): ?>
-										<div class="col-sm-4">
-											<ul class="list-unstyled">
-												<?php foreach ($column as $package): ?>
-													<?php if(!empty($package['link'])): ?>
-														<li>
-															<a href="<?= $package['link'] ?>" title="<?= $package['name'] ?>"><?= $package['name'] ?> <?php echo $package['version'] ? $package['version'] : '<i class="fa fa-times" title="Could not detect version"></i>'; ?></a>
-														</li>
-													<?php else: ?>
-														<li><?= $package['name'] ?></li>
-													<?php endif ?>
-												<?php endforeach ?>
-											</ul>
-										</div>
-									<?php endforeach ?>
+									<!-- ajax-loaded content -->
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- EOF Package information-->
 
 					<!-- PHP modules -->
-					<div class="col-sm-12">
+					<div class="panel-content col-sm-12 hidden">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title"><?= __("PHP Modules") ?></h3>
 							</div>
-							<div class="panel-body">
+							<div class="panel-body php-modules">
 								<div class="row">
-									<?php $columns = $this->Cakebox->divideEvenly($data['php_modules'], 3) ?>
-									<?php foreach ($columns as $column): ?>
-										<div class="col-sm-4">
-											<ul class="list-unstyled">
-												<?php foreach ($column as $module): ?>
-													<?php if(!empty($module['link'])): ?>
-														<li>
-															<?= $this->Html->link($module['name'], $module['link']) ?>
-														</li>
-													<?php else: ?>
-														<li>
-															<?= $module['name'] ?>
-														</li>
-													<?php endif ?>
-												<?php endforeach ?>
-											</ul>
-										</div>
-									<?php endforeach ?>
+
 								</div>
 							</div>
 						</div>
 					</div>
 
-
 					<!-- Nginx modules -->
-					<div class="col-sm-12">
+					<div class="panel-content col-sm-12 hidden">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title"><?= __("Nginx Modules") ?></h3>
 							</div>
 							<div class="panel-body">
 								<div class="row">
-									<?php foreach($data['nginx_modules'] as $category => $modules): ?>
-										<div class="col-sm-4">
-											<div><strong><?= __(Inflector::Humanize($category)) ?>:</strong></div>
-											<ul class="list-unstyled">
-												<?php foreach($modules as $module): ?>
-													<li>
-														<?= $this->Html->link($module['short_name'], $module['link']) ?>
-													</li>
-												<?php endforeach ?>
-											</ul>
-										</div>
-									<?php endforeach ?>
+									<div id="nginx-core-modules" class="col-sm-4">
+										<div><strong><?= __('Core') ?></strong></div>
+										<ul class="list-unstyled">
+											<!-- ajax-loaded list -->
+										</ul>
+									</div>
+
+									<div id="nginx-3rdparty-modules" class="col-sm-4">
+										<div><strong><?= __('3rd Party') ?></strong></div>
+										<ul class="list-unstyled">
+											<!-- ajax-loaded list -->
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -296,7 +262,6 @@ use Cake\Utility\Inflector;
 						<i class="fa fa-spinner fa-spin"></i>
 					</div>
 
-					<!-- Tab content -->
 					<div class="panel-content col-sm-12 hidden">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
@@ -312,7 +277,6 @@ use Cake\Utility\Inflector;
 
 				</div>
 				<!-- EOF Credits tab -->
-
 
 				<!-- Usage tab -->
 				<div role="tabpanel" id="panel-usage" class="tab-pane">
