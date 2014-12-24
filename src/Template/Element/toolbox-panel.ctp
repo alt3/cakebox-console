@@ -18,7 +18,7 @@
 				<li><?= str_replace('https', 'http', $elasticsearchLink) ?></li>
 				<? if ($data['update']): ?>
 				<li>
-					<p class="text-danger"><?= __('Update available') ?> <i class="fa fa-exclamation-circle"></i></p>
+					<p class="text-danger"><?= __('Self-update available') ?> <i class="fa fa-exclamation-circle"></i></p>
 				</li>
 			<? endif ?>
 		</ul>
