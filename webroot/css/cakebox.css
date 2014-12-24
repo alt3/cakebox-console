@@ -25,6 +25,9 @@
 /**
  * Contributors
  */
+.contributor {
+    padding-bottom: 5px;
+}
 .contributor img{
     height: 20px;
     width: 20px;

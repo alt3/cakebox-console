@@ -9,7 +9,14 @@ $(document).ready(function(){
 	$('#tab-status a').click(function (e) {
 		currentPanel = $(this).attr('href')
 		if ($(currentPanel).has('.ajax-loader').length != 0 ) {
-			loadStatusTab()
+			loadTabStatus()
+		}
+	})
+
+	$('#tab-credits a').click(function (e) {
+		currentPanel = $(this).attr('href')
+		if ($(currentPanel).has('.ajax-loader').length != 0 ) {
+			loadTabCredits()
 		}
 	})
 
@@ -20,7 +27,7 @@ $(document).ready(function(){
  *
  * @todo Make generic
  */
-function loadStatusTab() {
+function loadTabStatus() {
 	var jqxhr = $.getJSON( 'dashboards/checks.json', function(data) {
 		// loop through each category
 		$.each( data, function( category, checks ) {
@@ -50,6 +57,39 @@ function loadStatusTab() {
 		$('#panel-status .panel-content').removeClass('hidden')
 	})
 	.fail(function() {
-		alert( 'So sorry, something went horribly wrong...' )
+		alert( 'So sorry, something went wrong fetching checks' )
+	})
+}
+
+/**
+ * Ajax loads Credits tab
+ */
+function loadTabCredits() {
+	var jqxhr = $.getJSON( 'dashboards/contributors.json', function(data) {
+		$.each(data['contributors'], function( index, column ) {
+
+			// one UL per column
+			var target = $('.panel-body.credits > .row')
+			var col = $('<div class="col-sm-4" id="credits-column-' + index + '" />').appendTo(target)
+			var list = $('<ul class="list-unstyled" />').appendTo('#credits-column-' + index)
+
+			// one LI per contributor
+			$.each(column, function(index, contributor) {
+			 	li = '<li class="contributor"><span>'
+			 	li += '<img src="' + contributor.author.avatar_url + '&size=20" alt=""></img>'
+			 	li += '<a href="' + contributor.author.html_url + '" title="' + contributor.total + ' commits">'
+			 	li += contributor.author.login
+			 	li += '</a>'
+			 	li += '</span></li>'
+			 	list.append(li)
+			})
+		})
+	})
+	.done(function() {
+		$('#panel-credits .ajax-loader').html('').remove()
+		$('#panel-credits .panel-content').removeClass('hidden')
+	})
+	.fail(function() {
+		alert( 'So sorry, something went wrong fetching checks' )
 	})
 }

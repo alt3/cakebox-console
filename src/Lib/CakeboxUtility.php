@@ -87,4 +87,29 @@ class CakeboxUtility {
 		return htmlentities($fh->read());
 	}
 
+/**
+ * Divide an array of data equally over a given number of columns.
+ *
+ * @param array Array with data
+ * @param int Number of parts to chop the data into
+ * @return array Array
+ */
+	public function columnizeArray($data, $num_columns) {
+		$n = count($data);
+		$per_column = floor($n / $num_columns);
+		$rest = $n % $num_columns;
+
+		$columns = array();
+		$index = 0;
+		for ($i = 0; $i < $num_columns; $i++) {
+			// Add an extra item to each column while the column number is less than the
+			// remainder.
+			$add_rest = ($rest && ($i < $rest)) ? 1 : 0;
+			$number = $per_column + $add_rest;
+			$columns[] = array_slice($data, $index, $number);
+			$index += $number;
+		}
+		return $columns;
+	}
+
 }

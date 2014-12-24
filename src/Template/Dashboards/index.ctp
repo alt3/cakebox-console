@@ -87,7 +87,7 @@ use Cake\Utility\Inflector;
 				<li id="tab-status"><a href="#panel-status" data-toggle="tab"><?= __("Box status") ?></a></li>
 				<li><a href="#panel-software" data-toggle="tab"><?= __("Box software") ?></a></li>
 				<li><a href="#panel-usage" data-toggle="tab"><?= __("Usage") ?></a></li>
-				<li><a href="#panel-credits" data-toggle="tab"><?= __("Credits") ?></a></li>
+				<li id="tab-credits"><a href="#panel-credits" data-toggle="tab"><?= __("Credits") ?></a></li>
 			</ul>
 			<div class="tab-content">
 
@@ -292,36 +292,26 @@ use Cake\Utility\Inflector;
 				<!-- Credits tab -->
 				<div role="tabpanel" id="panel-credits" class="tab-pane">
 
-					<!-- Contributors -->
-					<div class="col-sm-12">
+					<div class="ajax-loader text-center">
+						<i class="fa fa-spinner fa-spin"></i>
+					</div>
+
+					<!-- Tab content -->
+					<div class="panel-content col-sm-12 hidden">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title"><?= __("Contributors") ?></h3>
 							</div>
-							<div class="panel-body">
+							<div class="panel-body credits">
 								<div class="row">
-									<?php $columns = $this->Cakebox->divideEvenly($data['contributors'], 3) ?>
-									<?php foreach ($columns as $column): ?>
-										<div class="col-sm-4">
-											<ul class="list-unstyled">
-												<?php foreach ($column as $contributor): ?>
-													<li class="contributor">
-														<span>
-															<?= $this->Html->image($contributor['author']['avatar_url']) ?>
-															<?= $this->Html->link($contributor['author']['login'], $contributor['author']['html_url'], ['title' => $contributor['total'] . " commits"]) ?>
-														</span>
-													</li>
-												<?php endforeach ?>
-											</ul>
-										</div>
-									<?php endforeach ?>
+									<!-- ajax-loaded columns -->
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- EOF Contributors -->
+
 				</div>
-				<!-- EOF Credits -->
+				<!-- EOF Credits tab -->
 
 
 				<!-- Usage tab -->

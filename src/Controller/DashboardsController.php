@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Lib\CakeboxCheck;
+use App\Lib\CakeboxUtility;
 
 class DashboardsController extends AppController {
 
@@ -32,8 +33,7 @@ class DashboardsController extends AppController {
             'operating_system' => $this->cbi->getOperatingSystem(),
             'packages' => $this->cbi->getPackages(),
             'php_modules' => $this->cbi->getPhpModules(),
-            'nginx_modules' => $this->cbi->getNginxModules(),
-            'contributors' => $this->cbi->getRepositoryContributors('alt3/cakebox-console')
+            'nginx_modules' => $this->cbi->getNginxModules()
         ];
 
         if ($this->cbi->getLatestCommitLocal() != $this->cbi->getLatestCommitRemote()) {
@@ -55,4 +55,14 @@ class DashboardsController extends AppController {
         ]);
     }
 
+/**
+ * Serve contributors as json
+ */
+    public function contributors() {
+        $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console');
+        $this->set([
+            'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
+            '_serialize' => ['contributors']
+        ]);
+    }
 }
