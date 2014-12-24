@@ -321,3 +321,5 @@ use Cake\Utility\Inflector;
 
 </div>
 <!-- EOF right column -->
+
+<?= $this->Html->script('cakebox-dashboard'); ?>
