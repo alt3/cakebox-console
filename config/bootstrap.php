@@ -47,6 +47,8 @@ use Cake\Network\Request;
 use Cake\Routing\DispatcherFactory;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 /**
  * Read configuration file and inject configuration into various
@@ -165,7 +167,6 @@ Request::addDetector('tablet', function ($request) {
  * Plugin::load('DebugKit'); //Loads a single plugin named DebugKit
  *
  */
-
 #Plugin::load('DebugKit', ['bootstrap' => true]);
 
 /**
@@ -175,3 +176,12 @@ Request::addDetector('tablet', function ($request) {
 DispatcherFactory::add('Asset');
 DispatcherFactory::add('Routing');
 DispatcherFactory::add('ControllerFactory');
+
+/**
+ * Cakebox: use Monolog for all logging to enable Logstash > Elasticsearch forwarding.
+ */
+Log::config('default', function () {
+	$log = new Logger('app');
+	$log->pushHandler(new StreamHandler('/cakebox/console/logs/cakebox.log'));
+	return $log;
+});
