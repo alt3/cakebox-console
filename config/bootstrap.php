@@ -47,6 +47,7 @@ use Cake\Network\Request;
 use Cake\Routing\DispatcherFactory;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
+use Monolog\Formatter\LogstashFormatter;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -188,8 +189,10 @@ DispatcherFactory::add('ControllerFactory');
 */
 if (!$isCli) {
 	Log::config('default-app', function () {
-		$log = new Logger('app.cakebox');
-		$log->pushHandler(new StreamHandler('/cakebox/console/logs/cakebox.log'));
+		$handler = new StreamHandler('/cakebox/console/logs/cakebox.log');
+		$formatter = new LogstashFormatter('cakephp');		// argument used as Logstash/Elasticsearch "type"
+		$handler->setFormatter($formatter);
+		$log = new Logger('app.cakebox', array($handler));	// first argument used as monolog "channel"
 		return $log;
 	});
 

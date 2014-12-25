@@ -16,6 +16,7 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\Log\Log;
+use Monolog\Formatter\LogstashFormatter;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -34,19 +35,16 @@ try {
  * Logstash > Elasticsearch forwarding. This logger is different from the one in
  * bootstrap.php in that is uses the 'cli' prefix tag instead of 'app'.
 */
-Log::config('default', function () {
-	$log = new Logger('cli.cakebox');
-	$log->pushHandler(new StreamHandler('/cakebox/console/logs/cakebox.log'));
+Log::config('default-cli', function () {
+	$handler = new StreamHandler('/cakebox/console/logs/cakebox.log');
+	$formatter = new LogstashFormatter('cakephp');		// argument used as Logstash/Elasticsearch "type"
+	$handler->setFormatter($formatter);
+	$log = new Logger('cli.cakebox', array($handler));	// first argument used as monolog "channel"
 	return $log;
 });
 
 /**
  * Stop using the now redundant default CakePHP file loggers.
- *
- * Note: does not work yet because of consume() line 134 in bootstrap.php.
- * Current workaround is deleting the Log. configurations
  */
-Log::drop('debug');
-Log::drop('error');
-#Configure::delete('Log.error');
-#Configure::delete('Log.error');
+Configure::delete('Log.debug');
+Configure::delete('Log.error');
