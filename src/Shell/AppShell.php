@@ -1,6 +1,7 @@
 <?php
 namespace App\Shell;
 
+use Cake\Core\Configure;
 use Cake\Console\Shell;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
@@ -11,11 +12,14 @@ use Cake\Filesystem\Folder;
 class AppShell extends Shell {
 
 /**
- * Override /cakephp/src/Shell/Bakeshell method to disable welcome screen.
+ * Override Cake\Console\Shell method to return different welcome screen.
  *
  * @return void
  */
 	protected function _welcome() {
+		$this->hr();
+		$this->out(sprintf('<info>CakePHP %s Console</info>', 'v' . Configure::version()));
+		$this->hr();
 	}
 
 }
