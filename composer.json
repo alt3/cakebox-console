@@ -12,7 +12,8 @@
 		"monolog/monolog": "master"
 	},
 	"require-dev": {
-		"d11wtq/boris": "1.0.*"
+		"d11wtq/boris": "1.0.*",
+		"cakephp/bake": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {

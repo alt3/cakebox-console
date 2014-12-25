@@ -20,7 +20,7 @@ class SiteShell extends AppShell {
 	public $tasks = [
 		'Symlink',
 		'Exec',
-		'Template'
+		'Bake.Template'
 	];
 
 /**
