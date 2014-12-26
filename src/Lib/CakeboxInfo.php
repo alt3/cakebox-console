@@ -296,6 +296,11 @@ class CakeboxInfo
      */
     public function getPackages()
     {
+        $cached = Cache::read('packages', 'short');
+        if ($cached) {
+            return $cached;
+        }
+
         $result = [];
         foreach ($this->packages as $package => $details) {
              // fetch version
@@ -327,6 +332,7 @@ class CakeboxInfo
             ];
         }
         sort($result);
+        Cache::write('packages', $result, 'short');
         return $result;
     }
 
@@ -443,6 +449,11 @@ class CakeboxInfo
      */
     public function getPhpModules()
     {
+        $cached = Cache::read('php_modules', 'short');
+        if ($cached) {
+            return $cached;
+        }
+
         $modules = get_loaded_extensions();
         sort($modules);
 
@@ -459,6 +470,7 @@ class CakeboxInfo
                 'link' => $link
             ];
         }
+        Cache::write('php_modules', $result, 'short');
         return $result;
     }
 
@@ -479,18 +491,23 @@ class CakeboxInfo
      */
     public function getNginxModules()
     {
-     // shell command since no other option seems available
+        $cached = Cache::read('nginx_modules', 'short');
+        if ($cached) {
+            return $cached;
+        }
+
+        // shell command since no other option seems available
         $stdout = `2>&1 nginx -V | xargs -n1`;
         $lines = explode("\n", $stdout);
 
-     // prepare the result array
+        // prepare the result array
         $result = [
         'core' => [],
         '3rdparty' => []
         ];
 
         foreach ($lines as $module) {
-         // Extracts core modules
+            // Extracts core modules
             if (preg_match('/^--with-((.{4})_(.*)_module)/m', $module, $matches)) {
                 $module = $matches[1];
                 $shortName = $this->_stripNginxModuleName($module);
@@ -504,12 +521,12 @@ class CakeboxInfo
                 ];
             }
 
-         // Extracts 3rd party modules
+            // Extracts 3rd party modules
             if (preg_match('/^--add-module=(.*)\/((ngx_|nginx-)(.*))/m', $module, $matches)) {
                 $module = $matches[2];
                 $shortname = $this->_stripNginxModuleName($module);
 
-             // Either use the known-deviation-link or generate the generic 3rd party wiki-link
+                // Either use the known-deviation-link or generate the generic 3rd party wiki-link
                 if (array_key_exists($shortname, $this->nginxModuleMeta)) {
                     $link = $this->nginxModuleMeta[$shortname]['link'];
                 } else {
@@ -526,6 +543,7 @@ class CakeboxInfo
                 ];
             }
         }
+        Cache::write('nginx_modules', $result, 'short');
         return $result;
     }
 
@@ -672,7 +690,7 @@ class CakeboxInfo
      */
     public function getFrameworkName($appdir)
     {
-     // Check for known CakePHP "fingerprint" directories first to keep things fast
+        // Check for known CakePHP "fingerprint" directories first to keep things fast
         if (is_dir($appdir . DS . 'webroot')) {
             return 'cakephp';
         }
@@ -680,12 +698,12 @@ class CakeboxInfo
             return 'cakephp';
         }
 
-     // Simply detected Laravel by webroot for now
+        // Simply detected Laravel by webroot for now
         if (is_dir("$appdir/public")) {
             return "laravel";
         }
 
-     // Initial checks failed, try detecting (legacy) Cake applications by searching for valid VERSION.txt
+        // Initial checks failed, try detecting (legacy) Cake applications by searching for valid VERSION.txt
         if ($this->getCakeVersionFile($appdir)) {
             return 'cakephp';
         }
@@ -700,13 +718,13 @@ class CakeboxInfo
      */
     public function getFrameworkVersion($appdir)
     {
-     // Look for version in composer.lock first
+        // Look for version in composer.lock first
         $version = $this->getFrameworkVersionFromComposer($appdir);
         if ($version) {
             return $version;
         }
 
-     // Look for CakePHP VERSION.txt next
+        // Look for CakePHP VERSION.txt next
         $version = $this->getCakeVersionFromFile($appdir);
         if ($version) {
             return $version;
@@ -837,9 +855,9 @@ class CakeboxInfo
      */
     public function getRepositoryContributors($repository)
     {
-        $contributors = Cache::read('contributors', 'short');
-        if ($contributors) {
-            return $contributors;
+        $cached = Cache::read('contributors', 'short');
+        if ($cached) {
+            return $cached;
         }
 
         $http = new Client();
