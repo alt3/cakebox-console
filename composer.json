@@ -7,13 +7,12 @@
 	"require": {
 		"php": ">=5.4.16",
 		"cakephp/cakephp": "3.0.*-dev",
-		"mobiledetect/mobiledetectlib": "2.*",
+		"cakephp/bake": "dev-master",
 		"cakephp/debug_kit": "3.0.*-dev",
+		"mobiledetect/mobiledetectlib": "2.*",
 		"monolog/monolog": "master"
 	},
 	"require-dev": {
-		"d11wtq/boris": "1.0.*",
-		"cakephp/bake": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {
