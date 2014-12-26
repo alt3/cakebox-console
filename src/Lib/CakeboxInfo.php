@@ -321,9 +321,9 @@ class CakeboxInfo
             }
 
             $result[] = [
-            'name' => $package,
-            'version' => $version,
-            'link' => $this->packages[$package]['link']
+                'name' => $package,
+                'version' => $version,
+                'link' => $this->packages[$package]['link']
             ];
         }
         sort($result);
@@ -336,7 +336,7 @@ class CakeboxInfo
      * @param string $package Name of the package.
      * @return mixed Version of package or false if no version could be determined
      */
-    protected function getPackageVersionGeneric($package)
+    protected function _getPackageVersionGeneric($package)
     {
         $stdout = `2>&1 $package --version`;
         preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
@@ -564,7 +564,7 @@ class CakeboxInfo
                     'name' => $appname,
                     'framework' => $this->getFrameworkName($appdir),
                     'framework_major_version' => CakeboxUtility::getMajorVersion($frameworkVersion),
-                    'frameworkVersion' => $frameworkVersion,
+                    'framework_version' => $frameworkVersion,
                     'appdir' => $appdir,
                     'webroot' => $this->getWebrootFromSite($sitefile)
                 ];
