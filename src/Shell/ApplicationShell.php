@@ -10,320 +10,353 @@ use Cake\Filesystem\Folder;
 /**
  * Shell class for installing and configuring PHP framework applications.
  */
-class ApplicationShell extends AppShell {
+class ApplicationShell extends AppShell
+{
 
-/**
- * @var array Shell Tasks used by this shell.
- */
-	public $tasks = [
-		'Installer',
-		'Exec',
-		'Database'
-	];
+    /**
+     * @var array Shell Tasks used by this shell.
+     */
+    public $tasks = [
+        'Installer',
+        'Exec',
+        'Database'
+    ];
 
-/**
- * @var string Full path to the installation directory.
- */
-	public $path;
+    /**
+     * @var string Full path to the installation directory.
+     */
+    public $path;
 
-/**
- * @var array Installer specific settings.
- */
-	public $settings = [
-		#'apps_dir' => '/home/vagrant/Apps',
-		'cakephp2' => [
-			'repository' => 'https://github.com/cakephp/cakephp.git',
-			'webroot' => 'app/webroot',
-			'writable_dirs' => ['app/tmp']
-		],
-		'cakephp3' => [
-			'webroot' => 'webroot'
-		],
-		'laravel' => [
-			'webroot' => 'public',
-			'writable_dirs' => ['app/storage']
-		]
-	];
+    /**
+     * @var array Installer specific settings.
+     */
+    public $settings = [
+        #'apps_dir' => '/home/vagrant/Apps',
+        'cakephp2' => [
+            'repository' => 'https://github.com/cakephp/cakephp.git',
+            'webroot' => 'app/webroot',
+            'writable_dirs' => ['app/tmp']
+        ],
+        'cakephp3' => [
+            'webroot' => 'webroot'
+        ],
+        'laravel' => [
+            'webroot' => 'public',
+            'writable_dirs' => ['app/storage']
+        ]
+    ];
 
-/**
- * Define available subcommands, arguments and options.
- *
- * @return void
- */
-	public function getOptionParser() {
-		$parser = parent::getOptionParser();
-		$parser->description([__('Easily create fully working applications.')]);
+    /**
+     * Define available subcommands, arguments and options.
+     *
+     * @return parser
+     */
+    public function getOptionParser()
+    {
+        $parser = parent::getOptionParser();
+        $parser->description([__('Easily create fully working applications.')]);
 
-		$parser->addSubcommand('add', [
-			'parser' => [
-				'description' => [
-					__("Installs a fully working application in /home/vagrant/Apps using Nginx and MySQL.")
-				],
-				'arguments' => [
-					'url' => ['help' => __('Fully qualified domain name used to expose the application.'), 'required' => true],
-				],
-				'options' => [
-					'path' => ['short' => 'p', 'help' => __('Full path to installation directory. Defaults to ~/Apps of the user sudo-executing the cakebox command.'), 'required' => false],
-					'framework' => ['short' => 'f', 'help' => __('PHP framework to use for the application.'), 'choices' => ['cakephp', 'laravel'], 'default' => 'cakephp'],
-					'majorversion' => ['short' => 'm', 'help' => __('Major CakePHP version to use for the application.'), 'choices' => ['2', '3'], 'default' => '3'],
-					'template' => ['short' => 't', 'help' => __('Template used to generate the application.'), 'choices' => ['cakephp', 'friendsofcake'], 'default' => 'cakephp'],
-					'repository' => ['short' => 'r', 'help' => __('Provision using your own application repository, framework will be autodetected.'), 'required' => false]
-				]
-		]]);
-		return $parser;
-	}
+        $parser->addSubcommand('add', [
+            'parser' => [
+                'description' => [
+                    __("Installs a fully working application in /home/vagrant/Apps using Nginx and MySQL.")
+                ],
+                'arguments' => [
+                    'url' => [
+                        'help' => __('Fully qualified domain name used to expose the application.'), 'required' => true
+                    ],
+                ],
+                'options' => [
+                    'path' => [
+                        'short' => 'p',
+                        'help' => __('Full path to installation directory. Defaults to ~/Apps of the user sudo-executing the cakebox command.'),
+                        'required' => false
+                    ],
+                    'framework' => [
+                        'short' => 'f',
+                        'help' => __('PHP framework to use for the application.'),
+                        'choices' => ['cakephp', 'laravel'],
+                        'default' => 'cakephp'
+                    ],
+                    'majorversion' => [
+                        'short' => 'm',
+                        'help' => __('Major CakePHP version to use for the application.'),
+                        'choices' => ['2', '3'],
+                        'default' => '3'
+                    ],
+                    'template' => [
+                        'short' => 't',
+                        'help' => __('Template used to generate the application.'),
+                        'choices' => ['cakephp', 'friendsofcake'],
+                        'default' => 'cakephp'
+                    ],
+                    'repository' => [
+                        'short' => 'r',
+                        'help' => __('Provision using your own application repository, framework will be autodetected.'),
+                        'required' => false
+                    ]
+                ]
+            ]
+        ]);
+        return $parser;
+    }
 
-/**
- * Install and configure a PHP framework application using Nginx and MySQL.
- *
- * @param string $url Fully Qualified Domain Name used to expose the site
- * @return bool
- */
-	public function add($url) {
-		# Provide (vagrant provisioning) feedback
-		$this->out("Creating application http://$url");
+    /**
+     * Install and configure a PHP framework application using Nginx and MySQL.
+     *
+     * @param string $url Fully Qualified Domain Name used to expose the site.
+     * @return void
+     */
+    public function add($url)
+    {
+     # Provide (vagrant provisioning) feedback
+        $this->out("Creating application http://$url");
 
-		# Prevent overwriting default Cakebox site
-		if ($url == 'default') {
-			$this->out("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
-			$this->Exec->exitBashError();
-		}
+     # Prevent overwriting default Cakebox site
+        if ($url == 'default') {
+            $this->out("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
+            $this->Exec->exitBashError();
+        }
 
-		# Use default installation path unless --path option is given
-		if (isset($this->params['path'])) {
-			$this->path = $this->params['path'];
-		} else {
-			$this->path = $this->Installer->getSudoerHomeDirectory() . "/Apps/" . $url;
-		}
-		$this->out("Installing into $this->path");
+     # Use default installation path unless --path option is given
+        if (isset($this->params['path'])) {
+            $this->path = $this->params['path'];
+        } else {
+            $this->path = $this->Installer->getSudoerHomeDirectory() . "/Apps/" . $url;
+        }
+        $this->out("Installing into $this->path");
 
-		# Check if the target directory meets requirements for git cloning
-		# (non-existent or empty). Note: exits with success to allow vagrant
-		# re-provisioning.
-		if (!$this->Installer->dirAvailable($this->path)) {
-			$this->out("* Skipping: target directory $this->path not empty.");
-			$this->Exec->exitBashSuccess();
-		}
+     # Check if the target directory meets requirements for git cloning
+     # (non-existent or empty). Note: exits with success to allow vagrant
+     # re-provisioning.
+        if (!$this->Installer->dirAvailable($this->path)) {
+            $this->out("* Skipping: target directory $this->path not empty.");
+            $this->Exec->exitBashSuccess();
+        }
 
-		// Run user-application installer
-		if (isset($this->params['repository'])) {
-			if (!$this->__runRepositoryInstaller($url, $this->params['repository'])) {
-				$this->out("Error: error completing user specified repository installation.");
-				$this->Exec->exitBashError();
-			}
-		# Run framework/version specific installer method
-		} elseif (!$this->__runFrameworkInstaller($url, $this->params['framework'], $this->params['majorversion'], $this->params['template'])) {
-				$this->out("Error: error running framework specific installer method.");
-				$this->Exec->exitBashError();
-		}
+     // Run user-application installer
+        if (isset($this->params['repository'])) {
+            if (!$this->__runRepositoryInstaller($url, $this->params['repository'])) {
+                $this->out("Error: error completing user specified repository installation.");
+                $this->Exec->exitBashError();
+            }
+        # Run framework/version specific installer method
+        } elseif (!$this->__runFrameworkInstaller($url, $this->params['framework'], $this->params['majorversion'], $this->params['template'])) {
+            $this->out("Error: error running framework specific installer method.");
+            $this->Exec->exitBashError();
+        }
 
-		# Provide Vagrant feedback
-		$this->out("Installation completed successfully");
-		$this->Exec->exitBashSuccess();
-	}
+     # Provide Vagrant feedback
+        $this->out("Installation completed successfully");
+        $this->Exec->exitBashSuccess();
+    }
 
-/**
- * Determine and executes framework specific installer method.
- *
- * @param string $url Fully Qualified Domain Name used to expose the site
- * @param string $framework Name of the PHP framework (e.g. cakephp, laravel)
- * @param string $version Major version of the PHP framework (e.g. 2, 3)
- * @param string $template Template to use (e.g. cakephp/friendsofcake)
- * @return bool
- */
-	private function __runFrameworkInstaller($url, $framework, $version, $template) {
-		switch ($framework) {
-			case "cakephp":
-				if ($template == 'cakephp' && $version == "3") {
-					return ($this->__installCake3($url));
-				}
-				if ($template == 'cakephp' && $version == "2") {
-					return ($this->__installCake2($url));
-				}
-				$this->out("Error: reached undefined cakephp installer.");
-				return false;
-			case "laravel":
-				return ($this->__installLaravel($url));
-			default:
-				$this->out("Error: reached undefined framework installer.");
-				return false;
-		}
-	}
+    /**
+     * Determine and executes framework specific installer method.
+     *
+     * @param string $url Fully Qualified Domain Name used to expose the site.
+     * @param string $framework Name of the PHP framework (e.g. cakephp, laravel).
+     * @param string $version Major version of the PHP framework (e.g. 2, 3).
+     * @param string $template Template to use (e.g. cakephp/friendsofcake).
+     * @return bool
+     */
+    private function __runFrameworkInstaller($url, $framework, $version, $template)
+    {
+        switch ($framework) {
+            case "cakephp":
+                if ($template == 'cakephp' && $version == "3") {
+                    return ($this->__installCake3($url));
+                }
+                if ($template == 'cakephp' && $version == "2") {
+                    return ($this->__installCake2($url));
+                }
+                $this->out("Error: reached undefined cakephp installer.");
+                return false;
+            case "laravel":
+                return ($this->__installLaravel($url));
+            default:
+                $this->out("Error: reached undefined framework installer.");
+                return false;
+        }
+    }
 
-/**
- * CakePHP 2.x specific installer.
- *
- * @param string $url Fully Qualified Domain Name used to expose the site
- * @return bool
- */
-	private function __installCake2($url) {
-		$this->out("Please wait... installing CakePHP 2.x application $url");
+    /**
+     * CakePHP 2.x specific installer.
+     *
+     * @param string $url Fully Qualified Domain Name used to expose the site.
+     * @return bool
+     */
+    private function __installCake2($url)
+    {
+        $this->out("Please wait... installing CakePHP 2.x application $url");
 
-		# Clone the repository
-		$repository = $this->settings['cakephp2']['repository'];
-		if ($this->Exec->runCommand("git clone $repository $this->path", 'vagrant')) {
-			$this->out("Error git cloning $url to $this->path");
-		}
+     # Clone the repository
+        $repository = $this->settings['cakephp2']['repository'];
+        if ($this->Exec->runCommand("git clone $repository $this->path", 'vagrant')) {
+            $this->out("Error git cloning $url to $this->path");
+        }
 
-		# Clone DebugKit plugin
-		$repository = 'https://github.com/cakephp/debug_kit.git';
-		$pluginDir = $this->path . DS . 'app' . DS . 'Plugin' . DS . 'DebugKit';
-		if ($this->Exec->runCommand("git clone $repository $pluginDir", 'vagrant')) {
-			$this->out("Error git cloning $url to $pluginDir");
-		}
+     # Clone DebugKit plugin
+        $repository = 'https://github.com/cakephp/debug_kit.git';
+        $pluginDir = $this->path . DS . 'app' . DS . 'Plugin' . DS . 'DebugKit';
+        if ($this->Exec->runCommand("git clone $repository $pluginDir", 'vagrant')) {
+            $this->out("Error git cloning $url to $pluginDir");
+        }
 
-		# Create nginx site
-		$webroot = $this->path . DS . $this->settings['cakephp2']['webroot'];
-		$this->dispatchShell("site add $url $webroot --force");
+     # Create nginx site
+        $webroot = $this->path . DS . $this->settings['cakephp2']['webroot'];
+        $this->dispatchShell("site add $url $webroot --force");
 
-		# Create databases
-		$this->dispatchShell("database add $url --force");
+     # Create databases
+        $this->dispatchShell("database add $url --force");
 
-		# Make required folders writable
-		foreach ($this->settings['cakephp2']['writable_dirs'] as $directory) {
-			$this->Installer->setFolderPermissions($this->path . DS . $directory);
-		}
+     # Make required folders writable
+        foreach ($this->settings['cakephp2']['writable_dirs'] as $directory) {
+            $this->Installer->setFolderPermissions($this->path . DS . $directory);
+        }
 
-		# Replace salt and cipher in core.php
-		$coreFile = $this->path . DS . "app" . DS . "Config" . DS . "core.php";
-		$this->Installer->setSecuritySalt($coreFile, 2);
-		$this->Installer->setSecurityCipher($coreFile, 2);
+     # Replace salt and cipher in core.php
+        $coreFile = $this->path . DS . "app" . DS . "Config" . DS . "core.php";
+        $this->Installer->setSecuritySalt($coreFile, 2);
+        $this->Installer->setSecurityCipher($coreFile, 2);
 
-		# Enable debugkit in bootstrap.php
-		$bootstrapFile = $this->path . DS . "app" . DS . "Config" . DS . "bootstrap.php";
-		$fh = new File($bootstrapFile);
-		$fh->append('CakePlugin::loadAll();');
-		$this->out("Enabled DebugKit plugin in $bootstrapFile");
+     # Enable debugkit in bootstrap.php
+        $bootstrapFile = $this->path . DS . "app" . DS . "Config" . DS . "bootstrap.php";
+        $fh = new File($bootstrapFile);
+        $fh->append('CakePlugin::loadAll();');
+        $this->out("Enabled DebugKit plugin in $bootstrapFile");
 
-		# Create database.php config
-		$dbDefault = $this->path . DS . "app" . DS . "Config" . DS . "database.php.default";
-		$dbConfig = $this->path . DS . "app" . DS . "Config" . DS . "database.php";
-		$this->Installer->createConfig($dbDefault, $dbConfig);
+     # Create database.php config
+        $dbDefault = $this->path . DS . "app" . DS . "Config" . DS . "database.php.default";
+        $dbConfig = $this->path . DS . "app" . DS . "Config" . DS . "database.php";
+        $this->Installer->createConfig($dbDefault, $dbConfig);
 
-		# Update database.php config
-		$dbName = $this->Database->normalizeName($url);
-		$this->Installer->replaceConfigValue($dbConfig, 'test_database_name', 'test_' . $dbName);
-		$this->Installer->replaceConfigValue($dbConfig, 'database_name', $dbName);
-		$this->Installer->replaceConfigValue($dbConfig, 'user', 'cakebox');
+     # Update database.php config
+        $dbName = $this->Database->normalizeName($url);
+        $this->Installer->replaceConfigValue($dbConfig, 'test_database_name', 'test_' . $dbName);
+        $this->Installer->replaceConfigValue($dbConfig, 'database_name', $dbName);
+        $this->Installer->replaceConfigValue($dbConfig, 'user', 'cakebox');
 
-		$oldPassword = "'password' => 'password'";
-		$newPassword = "'password' => 'secret'";
-		$this->Installer->replaceConfigValue($dbConfig, $oldPassword, $newPassword);
+        $oldPassword = "'password' => 'password'";
+        $newPassword = "'password' => 'secret'";
+        $this->Installer->replaceConfigValue($dbConfig, $oldPassword, $newPassword);
 
-		return true;
-	}
+        return true;
+    }
 
-/**
- * CakePHP 3.x specific installer using CakePHP Application Skeleton.
- *
- * @param string $url Fully Qualified Domain Name used to expose the site
- * @return bool
- */
-	private function __installCake3($url) {
-		$this->out("Please wait... installing CakePHP 3.x application $url");
+    /**
+     * CakePHP 3.x specific installer using CakePHP Application Skeleton.
+     *
+     * @param string $url Fully Qualified Domain Name used to expose the site.
+     * @return bool
+     */
+    private function __installCake3($url)
+    {
+        $this->out("Please wait... installing CakePHP 3.x application $url");
 
-		# Composer install Cake3 using Application Template
-		if ($this->Exec->runCommand("composer create-project --prefer-dist --no-interaction -s dev cakephp/app $this->path", 'vagrant')) {
-			$this->out("Error composer installing to $targetdir");
-		}
+     # Composer install Cake3 using Application Template
+        if ($this->Exec->runCommand("composer create-project --prefer-dist --no-interaction -s dev cakephp/app $this->path", 'vagrant')) {
+            $this->out("Error composer installing to $targetdir");
+        }
 
-		# Create nginx site
-		$webroot = $this->path . DS . $this->settings['cakephp3']['webroot'];
-		$this->dispatchShell("site add $url $webroot --force");
+     # Create nginx site
+        $webroot = $this->path . DS . $this->settings['cakephp3']['webroot'];
+        $this->dispatchShell("site add $url $webroot --force");
 
-		# Create databases
-		$this->dispatchShell("database add $url --force");
+     # Create databases
+        $this->dispatchShell("database add $url --force");
 
-		# Update database settings is app.php
-		$dbName = $this->Database->normalizeName($url);
-		$appConfig = $this->path . DS . "config" . DS . "app.php";
+     # Update database settings is app.php
+        $dbName = $this->Database->normalizeName($url);
+        $appConfig = $this->path . DS . "config" . DS . "app.php";
 
-		$oldUser = "'username' => 'my_app'";
-		$newUser = "'username' => 'cakebox'";
-		$this->Installer->replaceConfigValue($appConfig, $oldUser, $newUser);
-		$this->Installer->replaceConfigValue($appConfig, 'test_myapp', 'test_' . $dbName);
+        $oldUser = "'username' => 'my_app'";
+        $newUser = "'username' => 'cakebox'";
+        $this->Installer->replaceConfigValue($appConfig, $oldUser, $newUser);
+        $this->Installer->replaceConfigValue($appConfig, 'test_myapp', 'test_' . $dbName);
 
-		$oldDatabase = "'database' => 'my_app'";
-		$newDatabase = "'database' => '$dbName'";
-		$this->Installer->replaceConfigValue($appConfig, $oldDatabase, $newDatabase);
+        $oldDatabase = "'database' => 'my_app'";
+        $newDatabase = "'database' => '$dbName'";
+        $this->Installer->replaceConfigValue($appConfig, $oldDatabase, $newDatabase);
 
-		return true;
-	}
+        return true;
+    }
 
-/**
- * Laravel specific installer.
- *
- * @param string $url Fully Qualified Domain Name used to expose the site
- * @return bool
- */
-	private function __installLaravel($url) {
-		$this->out("Please wait... installing Laravel application $url");
+    /**
+     * Laravel specific installer.
+     *
+     * @param string $url Fully Qualified Domain Name used to expose the site.
+     * @return bool
+     */
+    private function __installLaravel($url)
+    {
+        $this->out("Please wait... installing Laravel application $url");
 
-		# Composer install Laravel
-		if ($this->Exec->runCommand("composer create-project --prefer-dist --no-interaction laravel/laravel $this->path", 'vagrant')) {
-			$this->out("Error composer installing to $targetdir");
-		}
+     # Composer install Laravel
+        if ($this->Exec->runCommand("composer create-project --prefer-dist --no-interaction laravel/laravel $this->path", 'vagrant')) {
+            $this->out("Error composer installing to $targetdir");
+        }
 
-		# Create nginx site
-		$webroot = $this->path . DS . $this->settings['laravel']['webroot'];
-		$this->dispatchShell("site add $url $webroot --force");
+     # Create nginx site
+        $webroot = $this->path . DS . $this->settings['laravel']['webroot'];
+        $this->dispatchShell("site add $url $webroot --force");
 
-		# Create databases
-		$this->dispatchShell("database add $url --force");
+     # Create databases
+        $this->dispatchShell("database add $url --force");
 
-		# Make required folders writable
-		foreach ($this->settings['laravel']['writable_dirs'] as $directory) {
-			$this->Installer->setFolderPermissions($this->path . DS . $directory);
-		}
-		return true;
-	}
+     # Make required folders writable
+        foreach ($this->settings['laravel']['writable_dirs'] as $directory) {
+            $this->Installer->setFolderPermissions($this->path . DS . $directory);
+        }
+        return true;
+    }
 
-/**
- * User specified repository installer.
- *
- * @param string $url
- * @param string $repository
- * @return bool
- */
-	private function __runRepositoryInstaller($url, $repository) {
-		$cbi = new CakeboxInfo();
+    /**
+     * User specified repository installer.
+     *
+     * @param string $url Fully Qualified Domain Name used to expose the site.
+     * @param string $repository Full url/git path to the user's repository.
+     * @return bool
+     */
+    private function __runRepositoryInstaller($url, $repository)
+    {
+        $cbi = new CakeboxInfo();
 
-		# Clone the repository
-		$this->out("Please wait... cloning user repository $repository");
-		if ($this->Exec->runCommand("git clone $repository $this->path", 'vagrant')) {
-			$this->out("Note: make sure your SSH agent is forwarding the required identity key if this is a private repository");
-			$this->out("Note: Windows users MUST use Pageant or SSH Agent Forwarding will simply not work");
-			throw new \Exception('Fatal error git cloning repository');
-		}
+     # Clone the repository
+        $this->out("Please wait... cloning user repository $repository");
+        if ($this->Exec->runCommand("git clone $repository $this->path", 'vagrant')) {
+            $this->out("Note: make sure your SSH agent is forwarding the required identity key if this is a private repository");
+            $this->out("Note: Windows users MUST use Pageant or SSH Agent Forwarding will simply not work");
+            throw new \Exception('Fatal error git cloning repository');
+        }
 
-		# Composer install if needed
-		if (file_exists($this->path . DS . 'composer.json')) {
-			$this->out("Please wait... installing detected composer file");
-			if ($this->Exec->runCommand("cd " . $this->path . "; composer install --prefer-dist --no-interaction", 'vagrant')) {
-				$this->out("Error composer installing to $targetdir");
-			}
-		}
+     # Composer install if needed
+        if (file_exists($this->path . DS . 'composer.json')) {
+            $this->out("Please wait... installing detected composer file");
+            if ($this->Exec->runCommand("cd " . $this->path . "; composer install --prefer-dist --no-interaction", 'vagrant')) {
+                $this->out("Error composer installing to $targetdir");
+            }
+        }
 
-		# Detect framework
-		$framework = $cbi->getFrameworkCommonName($this->path);
-		$this->out("Detected framework $framework");
+     # Detect framework
+        $framework = $cbi->getFrameworkCommonName($this->path);
+        $this->out("Detected framework $framework");
 
-		# Create nginx site
-		$webroot = $cbi->getWebrootFromDirectory($this->path);
-		$this->dispatchShell("site add $url $webroot --force");
+     # Create nginx site
+        $webroot = $cbi->getWebrootFromDirectory($this->path);
+        $this->dispatchShell("site add $url $webroot --force");
 
-		# Create databases
-		$this->dispatchShell("database add $url --force");
+     # Create databases
+        $this->dispatchShell("database add $url --force");
 
-		# Make required folders writable
-		foreach ($this->settings[$framework]['writable_dirs'] as $directory) {
-			$this->Installer->setFolderPermissions($this->path . DS . $directory);
-		}
+     # Make required folders writable
+        foreach ($this->settings[$framework]['writable_dirs'] as $directory) {
+            $this->Installer->setFolderPermissions($this->path . DS . $directory);
+        }
 
-		# Provisioning feedback
-		$this->out("* Note: application settings are not automatically configured for user repositories,");
-		$this->out("  make sure to update your database credentials, etc. manually.");
-		return true;
-	}
-
+     # Provisioning feedback
+        $this->out("* Note: application settings are not automatically configured for user repositories,");
+        $this->out("  make sure to update your database credentials, etc. manually.");
+        return true;
+    }
 }
