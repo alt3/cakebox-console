@@ -3,26 +3,18 @@ namespace App\Controller;
 
 use App\Lib\CakeboxCheck;
 use App\Lib\CakeboxUtility;
+use Cake\Log\Log;
 
-class DashboardsController extends AppController {
+class DashboardsController extends AppController
+{
 
-/**
- * Initialization hook method.
- *
- * @todo instantiate CakeboxCheck only when needed (e.g. on tab load)
- * @return void
- */
-    public function initialize() {
-        parent::initialize();
-        $this->cbc = new CakeboxCheck();
-    }
-
-/**
- * Dashboard index
- *
- * @return void
- */
-    public function index(){
+    /**
+     * Dashboard index
+     *
+     * @return void
+     */
+    public function index()
+    {
         $data = [
             'vm' => $this->cbi->getVmInfo(),
             'apps' => $this->cbi->getApps(),
@@ -39,43 +31,52 @@ class DashboardsController extends AppController {
         $this->set('data', $data);
     }
 
-/**
- * Serve cakebox checks as json
- */
-    public function checks() {
+    /**
+     * Serve cakebox checks as json
+     *
+     * @return void
+     */
+    public function checks()
+    {
+        $cbc = new CakeboxCheck();
         $this->set([
-            'system' => $this->cbc->getSystemChecks(),
-            'application' => $this->cbc->getApplicationChecks('/cakebox/console'),
-            'security' =>$this->cbc->getSecurityChecks(),
+            'system' => $cbc->getSystemChecks(),
+            'application' => $cbc->getApplicationChecks('/cakebox/console'),
+            'security' => $cbc->getSecurityChecks(),
             '_serialize' => ['system', 'application', 'security']
         ]);
     }
 
-/**
- * Serve box software as json
- */
-     public function software() {
-         $packages = $this->cbi->getPackages();
-         $php_modules = $this->cbi->getPhpModules();
+    /**
+     * Serve box software as json
+     *
+     * @return void
+     */
+    public function software()
+    {
+        $packages = $this->cbi->getPackages();
+        $phpModules = $this->cbi->getPhpModules();
 
-         $this->set([
-             'operating_system' => $this->cbi->getOperatingSystem(),
-             'packages' => CakeboxUtility::columnizeArray($packages, 3),
-             'php_modules' => CakeboxUtility::columnizeArray($php_modules, 3),
-             'nginx_modules' => $this->cbi->getNginxModules(),
-             '_serialize' => ['operating_system', 'packages', 'php_modules', 'nginx_modules']
-        ]);
-     }
-
-/**
- * Serve contributors as json
- */
-    public function contributors() {
-    $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console');
         $this->set([
-            'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
-            '_serialize' => ['contributors']
+            'operating_system' => $this->cbi->getOperatingSystem(),
+            'packages' => CakeboxUtility::columnizeArray($packages, 3),
+            'php_modules' => CakeboxUtility::columnizeArray($phpModules, 3),
+            'nginx_modules' => $this->cbi->getNginxModules(),
+            '_serialize' => ['operating_system', 'packages', 'php_modules', 'nginx_modules']
         ]);
     }
 
+    /**
+     * Serve contributors as json
+     *
+     * @return void
+     */
+    public function contributors()
+    {
+        $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console');
+        $this->set([
+        'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
+        '_serialize' => ['contributors']
+        ]);
+    }
 }
