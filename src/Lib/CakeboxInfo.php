@@ -513,6 +513,7 @@ class CakeboxInfo
         // shell command since no other option seems available
         $stdout = `2>&1 nginx -V | xargs -n1`;
         $lines = explode("\n", $stdout);
+        sort($lines, SORT_NATURAL | SORT_FLAG_CASE);
 
         // prepare the result array
         $result = [
