@@ -183,16 +183,26 @@ DispatcherFactory::add('Routing');
 DispatcherFactory::add('ControllerFactory');
 
 /**
-* Cakebox: use Monolog to create a combined log (with all log levels) to enable
-* Logstash > Elasticsearch forwarding, unless we are in CLI mode which defines
-* it's own Monlog logger (with 'cli' prefix tag instead of 'app').
-*/
+ * Cakebox: use Monolog to create a combined log (with all log levels) to enable
+ * Logstash > Elasticsearch forwarding, unless we are in CLI mode which defines
+ * it's own Monlog logger (with 'cli' prefix tag instead of 'app').
+ *
+ * Notes:
+ * - will log to /var/logs/cakephp if available so it can be parsed by Logstash
+ * - LogStashFormatter argument is used as Logstash/Elasticsearch "type"
+ * - Logger second argument is used as Monolog "channel"
+ */
 if (!$isCli) {
-	Log::config('default-app', function () {
-		$handler = new StreamHandler('/cakebox/console/logs/cakebox.log');
-		$formatter = new LogstashFormatter('cakephp');		// argument used as Logstash/Elasticsearch "type"
+	Log::config('default', function () {
+		if (is_writable('/var/log/cakephp')) {
+			$handler = new StreamHandler('/var/log/cakephp/cakebox.log');
+		} else {
+			$handler = new StreamHandler( LOGS . DS . 'cakebox.log');
+		}
+
+		$formatter = new LogstashFormatter('cakephp');
 		$handler->setFormatter($formatter);
-		$log = new Logger('app.cakebox', array($handler));	// first argument used as monolog "channel"
+		$log = new Logger('app.cakebox', array($handler));
 		return $log;
 	});
 
