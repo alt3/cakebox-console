@@ -469,9 +469,9 @@ class CakeboxInfo
         }
 
         $modules = get_loaded_extensions();
-        sort($modules);
+        sort($modules, SORT_NATURAL | SORT_FLAG_CASE);
 
-     // add standard php.net hyperlink except for known deviations
+        // add standard php.net hyperlink except for known deviations
         $result = [];
         foreach ($modules as $module) {
             if (array_key_exists($module, $this->phpModuleMeta)) {
@@ -516,8 +516,8 @@ class CakeboxInfo
 
         // prepare the result array
         $result = [
-        'core' => [],
-        '3rdparty' => []
+            'core' => [],
+            '3rdparty' => []
         ];
 
         foreach ($lines as $module) {
@@ -798,7 +798,7 @@ class CakeboxInfo
             return trim($lines[count($lines) - 1]);
         }
 
-     // nothing found, recursively search the application tree for VERSION.txt
+        // nothing found, recursively search the application tree for VERSION.txt
         $versionFiles = $this->findVersionFilesRecursive($appdir);
         if (!$versionFiles) {
             return false;
