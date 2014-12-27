@@ -28,7 +28,7 @@ class CakeboxCheck
     protected $boxRequirements = [
     'global' => [
         'php_min_version' => '5.4.16',
-        'php_modules' => ['mbstring', 'mcrypt', 'intl', 'pdo_sqlite']
+        'php_modules' => ['mbstring', 'openssl', 'mcrypt', 'intl', 'pdo_sqlite']
     ]
     ];
 
