@@ -32,18 +32,18 @@ class CakeboxUtility
     /**
      * Retrieve the installed version of a Composer package by parsing composer.lock.
      *
-     * @param string $lockfile Full path to the composer.lock file.
+     * @param string $path Full path to the directory holding the composer.lock file.
      * @param string $package Name of the package to get the version for.
      * @return mixed String containing value or false when key lookup fails
      */
-    public static function getComposerLockVersion($lockfile, $package)
+    public static function getComposerLockVersion($path, $package)
     {
-        if (!file_exists($lockfile)) {
+        if (!file_exists("$path/composer.lock")) {
             return false;
         }
      // escape / in package name to not break Xpath query
         $package = str_replace('/', '\/', $package);
-        $json = json_decode(file_get_contents($lockfile), true);
+        $json = json_decode(file_get_contents("$path/composer.lock"), true);
         return implode(Hash::extract($json, "packages.{n}[name=/$package/].version"));
     }
 

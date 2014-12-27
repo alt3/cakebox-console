@@ -93,6 +93,7 @@ class CakeboxInfo
         'php' => ['link' => 'https://launchpad.net/~ondrej/+archive/ubuntu/php5-5.6'],
         'phpunit' => ['link' => 'https://phpunit.de'],
         'phpcs' => ['link' => 'https://github.com/squizlabs/PHP_CodeSniffer'],
+        'cakephp-codesniffer' => ['link' => 'https://github.com/cakephp/cakephp-codesniffer'],
         'postgresql' => [
             'link' => 'http://www.postgresql.org',
             'alias' => 'psql'
@@ -307,6 +308,9 @@ class CakeboxInfo
             switch($package) {
                 case 'memcached':
                     $version = $this->_getPackageVersionMemcached();
+                    break;
+                case 'cakephp-codesniffer':
+                    $version = CakeboxUtility::getComposerLockVersion('/opt/composer-libraries/cakephp_codesniffer', $package);
                     break;
                 case 'elasticsearch':
                     $version = $this->_getPackageVersionElasticsearch();
@@ -752,7 +756,7 @@ class CakeboxInfo
         ];
 
         foreach ($packages as $package) {
-            $version = CakeboxUtility::getComposerLockVersion($lockfile, $package);
+            $version = CakeboxUtility::getComposerLockVersion($appdir, $package);
             if ($version) {
                 return $version;
             }
