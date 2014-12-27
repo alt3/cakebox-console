@@ -90,6 +90,7 @@ class CakeboxInfo
         'mysql' => ['link' => 'http://www.percona.com/software/percona-server'],
         'memcached' => ['link' => 'http://memcached.org'],
         'nginx' => ['link' => 'https://launchpad.net/nginx'],
+        'openssl' => ['link' => 'https://www.openssl.org'],
         'php' => ['link' => 'https://launchpad.net/~ondrej/+archive/ubuntu/php5-5.6'],
         'phpunit' => ['link' => 'https://phpunit.de'],
         'phpcs' => ['link' => 'https://github.com/squizlabs/PHP_CodeSniffer'],
@@ -349,24 +350,33 @@ class CakeboxInfo
     protected function _getPackageVersionGeneric($package)
     {
         $stdout = `2>&1 $package --version`;
-        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
+        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*[a-z]|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
         if (!empty($matches[1])) {
             return $matches[1];
         }
 
-     // No match on --version so let's try --v
+        // No match on --version so let's try --v
         $stdout = `2>&1 $package -v`;
-        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
+        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*[a-z]|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
         if (!empty($matches[1])) {
             return $matches[1];
         }
 
-     // Edge case for e.g. java using -version
+        // Edge case for e.g. java using -version
         $stdout = `2>&1 $package -version`;
-        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
+        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*[a-z]|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
         if (!empty($matches[1])) {
             return $matches[1];
         }
+
+        // Edge case for e.g. openssl using just "version"
+        $stdout = `2>&1 $package version`;
+        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*[a-z]|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $stdout, $matches);
+        if (!empty($matches[1])) {
+            return $matches[1];
+        }
+
+        // no generic match found
         return false;
     }
 
