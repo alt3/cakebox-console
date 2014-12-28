@@ -11,157 +11,19 @@
      z-index: 101;
  }
 
-/*
- * Login form
- */
-#loginbox {
-    padding-top: 12%;
-}
-
-.login-credits {
-    font-size: 85%;
-}
-
 /**
- * Contributors
+* Top-navigation
+*/
+ .logo-version {
+     margin-left: 8px;
+     font-size: 11px;
+     color: #666;
+
+ }
+
+ /**
+ * Login
  */
-.contributor {
-    padding-bottom: 5px;
-}
-.contributor img{
-    height: 20px;
-    width: 20px;
-    margin-right: 5px;
-    vertical-align: top;
-}
-
-/*
- * Top navigation
- */
-.navbar {
-    /*background-color: #15848f;*/
-}
-
-.navbar-default .navbar-brand,
-.navbar-default .navbar-nav > li > a {
-    /*color: #fff;*/
-}
-
-/**
- * Ajax loader
- */
-.ajax-loader > i {
-    /*color: #337AB7;*/
-}
-
-/*
- * Dashboard box-info panel
- */
- .panel-default > .panel-heading, {
-     /*background-color: #15848f;
-     color: #fff; */
- }
-
-/*
- * Dashboard spotlights
- */
- #spotlights{
-     margin-bottom: 25px;
- }
- .huge {
-     font-size: 40px;
- }
- .panel-green {
-     border-color: #5CB85C;
- }
- .panel-green .panel-heading {
-     border-color: #5CB85C;
-     color: #FFF;
-     background-color: #5CB85C;
- }
-  .panel-green a {
-     color: #5CB85C;
- }
- .panel-green a:hover {
-     color: #3D8B3D;
- }
- .panel-yellow {
-     border-color: #F0AD4E;
- }
- .panel-yellow .panel-heading {
-     border-color: #F0AD4E;
-     color: #FFF;
-     background-color: #F0AD4E;
- }
- .panel-yellow a {
-     color: #F0AD4E;
- }
- .panel-yellow a:hover {
-     color: #DF8A13;
- }
-
-
-
-
- /*
-  * Tabs
-  */
-.nav-tabs {
-    margin-bottom: 25px;
-}
-/* Disable after tab selection */
-.nav-tabs > .active > a, .nav-tabs > .active > a:hover {
-    outline:none;
-}
-/* Give status icon some right space */
-#panel-status i,
-#panel-software i {
-    margin-right: 10px;
-}
-
-/* Box status */
-.panel-heading.danger {
-    background-color: #F2DEDE;
-}
-.panel-heading.success {
-    /*background-color: #DFF0D8;*/
-    /*background-color: #5CB85C;*/
-    /*color: #fff;*/
-}
-.fa-check{
-    color: green;
-}
-.fa-times{
-    color: red;
-}
-
-
-/* App panel headings use image backgrounds, left indent text to not overlap icon */
-.panel-heading.app a {
-    margin-left: 25px;
-}
-.panel-heading.app {
-    background-position: 10px;
-    background-repeat: no-repeat;
-}
-.panel-heading.app.cakephp {
-    background-image: url('../img/cake.icon.png');
-}
-.panel-heading.app.laravel {
-    background-image: url('../img/laravel.icon.png');
-}
-
-
-
-
-/*
- * Tables
- */
-thead > tr > th {
-    border-top: 0 !important;
-    border-bottom: 0 !important;
-}
-
-.table-borderless > tbody > tr > td {
-    border: none;
+.account-container {
+    margin-top: 17%;
 }
