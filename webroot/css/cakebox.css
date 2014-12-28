@@ -38,3 +38,13 @@ body {
 .account-container {
     margin-top: 17%;
 }
+
+.widget .widget-header [class^="fa-"], .widget .widget-header [class*=" fa-"] {
+    display: inline-block;
+    margin-top: -3px;
+    margin-left: 13px;
+    margin-right: -2px;
+    font-size: 16px;
+    color: #555;
+    vertical-align: middle;
+}
