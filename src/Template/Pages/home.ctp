@@ -10,36 +10,29 @@
 
 	<div class="content clearfix">
 
-		<form action="./index.html" method="post">
+		<form action="dashboards" method="post">
 
-			<h1>Sign In</h1>
-
+			<h1><?= __('Sing in') ?></h1>
 			<div class="login-fields">
-
-				<p>Unleash your box!</p>
+				<p><?= __('Unleash your box') ?></p>
+				<div class="field">
+					<label for="username"><?= __('Username') ?>:</label>
+					<input type="text" id="username" name="username" value="" placeholder="<?= __('Username') ?>" class="form-control input-lg username-field" />
+				</div>
 
 				<div class="field">
-					<label for="username">Username:</label>
-					<input type="text" id="username" name="username" value="" placeholder="Username" class="form-control input-lg username-field" />
-				</div> <!-- /field -->
-
-				<div class="field">
-					<label for="password">Password:</label>
-					<input type="password" id="password" name="password" value="" placeholder="Password" class="form-control input-lg password-field"/>
-				</div> <!-- /password -->
-
-			</div> <!-- /login-fields -->
+					<label for="password"><?= __('Password') ?>:</label>
+					<input type="password" id="password" name="password" value="" placeholder="<?= __('Password') ?>" class="form-control input-lg password-field"/>
+				</div>
+			</div>
 
 			<div class="login-actions">
-
 				<span class="login-checkbox">
 					<input id="Field" name="Field" type="checkbox" class="field login-checkbox" value="First Choice" tabindex="4" />
-					<label class="choice" for="Field">Keep me signed in</label>
+					<label class="choice" for="Field"><?= __('Keep me signed in') ?></label>
 				</span>
-
-				<button class="login-action btn btn-primary">Sign In</button>
-
-			</div> <!-- .actions -->
+				<button class="login-action btn btn-primary"><?= __('Sign in') ?></button>
+			</div>
 
 		</form>
 
