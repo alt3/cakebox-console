@@ -8,7 +8,7 @@
 
 	<div class="container">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="dashboards">Cakebox Admin<span class="logo-version">0.1.0</span></a>
+			<a class="navbar-brand" href="/">Cakebox Admin<span class="logo-version">0.1.0</span></a>
 		</div>
 	</div>
 
