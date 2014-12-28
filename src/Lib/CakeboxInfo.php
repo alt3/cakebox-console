@@ -104,7 +104,8 @@ class CakeboxInfo
             'link' => 'https://launchpad.net/~chris-lea/+archive/ubuntu/redis-server',
             'alias' => 'redis-server'
         ],
-        'ruby' => ['link' => 'https://www.ruby-lang.org/en']
+        'ruby' => ['link' => 'https://www.ruby-lang.org/en'],
+        'xtrabackup' => ['link' => 'http://www.percona.com/doc/percona-xtrabackup']
     ];
 
     /**
