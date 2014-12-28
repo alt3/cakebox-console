@@ -20,28 +20,33 @@ $cakeDescription = 'Cakebox Admin';
 
 	<!-- Bootstrap Core CSS (v3.3.1)-->
 	<?= $this->Html->css('bootstrap/bootstrap.min') ?>
-	<?= $this->Html->css('fonts/font-awesome-4.1.0/css/font-awesome.min') ?>
 	<?= $this->Html->css('https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600') ?>
+	<?= $this->Html->css('fonts/font-awesome-4.1.0/css/font-awesome.min') ?>
 
 	<!-- Base Admin theme -->
 	<?= $this->Html->css('ui-lightness/jquery-ui-1.10.0.custom.min') ?>
 	<?= $this->Html->css('theme/base-admin-3') ?>
 	<?= $this->Html->css('theme/base-admin-3-responsive') ?>
 
-	<!-- Conditional page-specific css -->
+	<!-- Conditional page-specific css/js -->
 	<?php
 		if ($this->request->here == '/') {
 			echo $this->Html->css('pages/signin');
 		}
+		if ($this->request->here == '/dashboards') {
+			echo $this->Html->css('pages/dashboard');
+		}
+
 	?>
 
 	<!-- Cakebox overrides -->
 	<?= $this->Html->css('cakebox') ?>
 
-
-
 	<!-- Bootstrap Core JS (v3.3.1) -->
 	<?= $this->Html->script('jquery.js') ?>
+	<?= $this->Html->script('jquery-ui-1.10.0.custom.min.js') ?>
+
+
 	<?= $this->Html->script('bootstrap.js') ?>
 	<?= $this->Html->script('cakebox.js') ?>
 
@@ -62,6 +67,8 @@ $cakeDescription = 'Cakebox Admin';
 	<?php
 	 	if ($this->request->here == '/') {
 			echo $this->element('top-anonymous');
+		} else {
+			echo $this->element('top-authenticated');
 		}
 	?>
 
@@ -75,6 +82,9 @@ $cakeDescription = 'Cakebox Admin';
 	</div>
 
 	<?= $this->element('beta') ?>
+
+	<!-- @todo: move this Base Admin script -->
+	<?= $this->Html->script('Application.js') ?>
 
 </body>
 </html>

@@ -1,3 +1,7 @@
+body {
+    background: #e9e9e9 url(../img/tiny_grid.png) repeat 0 0;
+}
+
 /**
  * Beta
  */
@@ -15,11 +19,18 @@
 * Top-navigation
 */
  .logo-version {
-     margin-left: 8px;
+     margin-left: 6px;
      font-size: 11px;
      color: #666;
 
  }
+
+ .subnav-collapse.collapse {
+     visibility: visible;
+ }
+
+
+
 
  /**
  * Login
