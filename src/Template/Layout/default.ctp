@@ -19,11 +19,26 @@ $cakeDescription = 'Cakebox Admin';
 	<?= $this->Html->meta('icon') ?>
 
 	<!-- Bootstrap Core CSS (v3.3.1)-->
-	<?= $this->Html->css('bootstrap.min.css') ?>
-	<?= $this->Html->css('fonts/font-awesome-4.1.0/css/font-awesome.min.css') ?>
+	<?= $this->Html->css('bootstrap/bootstrap.min') ?>
+	<?= $this->Html->css('fonts/font-awesome-4.1.0/css/font-awesome.min') ?>
+	<?= $this->Html->css('https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600') ?>
 
-	<!-- Cakebox CSS overrides -->
-	<?= $this->Html->css('cakebox.css') ?>
+	<!-- Base Admin theme -->
+	<?= $this->Html->css('ui-lightness/jquery-ui-1.10.0.custom.min') ?>
+	<?= $this->Html->css('theme/base-admin-3') ?>
+	<?= $this->Html->css('theme/base-admin-3-responsive') ?>
+
+	<!-- Conditional page-specific css -->
+	<?php
+		if ($this->request->here == '/') {
+			echo $this->Html->css('pages/signin');
+		}
+	?>
+
+	<!-- Cakebox overrides -->
+	<?= $this->Html->css('cakebox') ?>
+
+
 
 	<!-- Bootstrap Core JS (v3.3.1) -->
 	<?= $this->Html->script('jquery.js') ?>
@@ -45,8 +60,8 @@ $cakeDescription = 'Cakebox Admin';
 <body>
 	<!-- @todo: hook into Auth -->
 	<?php
-	 	if ($this->request->here != '/') {
-			echo $this->element('top-navigation');
+	 	if ($this->request->here == '/') {
+			echo $this->element('top-anonymous');
 		}
 	?>
 

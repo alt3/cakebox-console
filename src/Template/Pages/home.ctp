@@ -5,47 +5,50 @@
  * @todo move once hooked into Auth
  */
 ?>
-<div id="loginbox" class="row col-md-4 col-md-offset-4">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<div class="panel-title"><?= __('Unleash your box!') ?></div>
-		</div>
-		<div class="panel-body">
 
-			<!-- Login form -->
-			<form id="loginform" class="form-horizontal" role="form" accept-charset="UTF-8">
+<div class="account-container stacked">
 
-				<!-- Username/password -->
-				<div style="margin-bottom: 25px" class="input-group">
-					<span class="input-group-addon"><i class="fa fa-user"></i></span>
-					<input id="login-username" class="form-control" name="username" value="" placeholder="<?= __('username') ?>" type="text">
-				</div>
+	<div class="content clearfix">
 
-				<div style="margin-bottom: 25px" class="input-group">
-					<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-					<input id="login-password" class="form-control" name="password" placeholder="<?= __('password') ?>" type="password">
-				</div>
+		<form action="./index.html" method="post">
 
-				<!-- Button -->
-				<div style="margin-top:10px" class="form-group pull-right">
-					<div class="col-sm-12 controls">
-						<?= $this->Html->link(__('Login'), 'dashboards', ['id' => 'btn-login', 'class' => 'btn btn-success']) ?>
-					</div>
-				</div>
-			</form>
-			<!-- End of login form -->
+			<h1>Sign In</h1>
 
-		</div>
-		<!-- EOF panel-body -->
+			<div class="login-fields">
 
-		<!-- Panel footer -->
-		<div class="panel-footer clearfix">
-			<div class="login-credits">
-				Powered by <?= $this->Html->link('CakePHP 3', 'http://cakephp.org') ?>
-			</div>
-		</div>
-		<!-- EOF panel-footer -->
+				<p>Unleash your box!</p>
 
-	</div>
-	<!-- EOF panel -->
-</div>
+				<div class="field">
+					<label for="username">Username:</label>
+					<input type="text" id="username" name="username" value="" placeholder="Username" class="form-control input-lg username-field" />
+				</div> <!-- /field -->
+
+				<div class="field">
+					<label for="password">Password:</label>
+					<input type="password" id="password" name="password" value="" placeholder="Password" class="form-control input-lg password-field"/>
+				</div> <!-- /password -->
+
+			</div> <!-- /login-fields -->
+
+			<div class="login-actions">
+
+				<span class="login-checkbox">
+					<input id="Field" name="Field" type="checkbox" class="field login-checkbox" value="First Choice" tabindex="4" />
+					<label class="choice" for="Field">Keep me signed in</label>
+				</span>
+
+				<button class="login-action btn btn-primary">Sign In</button>
+
+			</div> <!-- .actions -->
+
+		</form>
+
+	</div> <!-- /content -->
+
+</div> <!-- /account-container -->
+
+
+<!-- Text Under Box -->
+<div class="login-extra">
+	Powered by <a href="http://www.cakephp.org">CakePHP 3</a><br/>
+</div> <!-- /login-extra -->
