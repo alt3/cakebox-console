@@ -893,9 +893,9 @@ class CakeboxInfo
     public function getRepositoryCommits($repository, $limit = null)
     {
         $commits = Cache::read('commits', 'short');
-        #if ($commits) {
-        #    return $commits;
-        #}
+        if ($commits) {
+            return $commits;
+        }
 
         if ($limit) {
             if (!is_int($limit)) {
