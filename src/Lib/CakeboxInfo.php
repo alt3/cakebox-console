@@ -593,10 +593,17 @@ class CakeboxInfo
             $appdir = $this->getAppBase($sitefile);
 
             if ($appdir) {
+                $framework = $this->getFrameworkName($appdir);
                 $frameworkVersion = $this->getFrameworkVersion($appdir);
+                $frameworkHuman = Inflector::humanize($framework);
+                if ($frameworkHuman == 'Cakephp') {
+                    $frameworkHuman = 'CakePHP';
+                }
+
                 $result[] = [
                     'name' => $appname,
-                    'framework' => $this->getFrameworkName($appdir),
+                    'framework' => $framework,
+                    'framework_human' => $frameworkHuman,
                     'framework_major_version' => CakeboxUtility::getMajorVersion($frameworkVersion),
                     'framework_version' => $frameworkVersion,
                     'appdir' => $appdir,
