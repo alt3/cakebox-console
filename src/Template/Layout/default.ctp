@@ -21,7 +21,7 @@ $cakeDescription = 'Cakebox Admin';
 	<!-- Bootstrap Core CSS (v3.3.1)-->
 	<?= $this->Html->css('bootstrap/bootstrap.min') ?>
 	<?= $this->Html->css('https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600') ?>
-	<?= $this->Html->css('fonts/font-awesome-4.1.0/css/font-awesome.min') ?>
+	<?= $this->Html->css('https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css') ?>
 
 	<!-- Base Admin theme -->
 	<?= $this->Html->css('ui-lightness/jquery-ui-1.10.0.custom.min') ?>
@@ -44,8 +44,6 @@ $cakeDescription = 'Cakebox Admin';
 
 	<!-- Bootstrap Core JS (v3.3.1) -->
 	<?= $this->Html->script('jquery.js') ?>
-	<?= $this->Html->script('jquery-ui-1.10.0.custom.min.js') ?>
-
 
 	<?= $this->Html->script('bootstrap.js') ?>
 	<?= $this->Html->script('cakebox.js') ?>
@@ -72,19 +70,27 @@ $cakeDescription = 'Cakebox Admin';
 		}
 	?>
 
-	<div class="container">
-		<div id="content">
+	<div class="main">
+		<div class="container">
 			<?= $this->Flash->render() ?>
-			<div id="row">
+			<div class="row">
 				<?= $this->fetch('content') ?>
 			</div>
 		</div>
 	</div>
 
+
 	<?= $this->element('beta') ?>
 
-	<!-- @todo: move this Base Admin script -->
-	<?= $this->Html->script('Application.js') ?>
+	<!-- @todo: move and selectively) load these scripts -->
+	<?php
+		echo $this->Html->script('jquery-plugins/flot-0.8.3/jquery.flot.min');
+		echo $this->Html->script('jquery-plugins/flot-0.8.3/jquery.flot.pie.min');
+		echo $this->Html->script('jquery-plugins/flot-0.8.3/jquery.flot.resize.min');
+		echo $this->Html->script('Application.js');
+		echo $this->Html->script('charts/donut.js');
+	?>
+
 
 </body>
 </html>
