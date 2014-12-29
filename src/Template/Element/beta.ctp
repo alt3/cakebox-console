@@ -1,6 +1,4 @@
-<?php
-/**
-* Beta ribbon
-*/
 
-	echo $this->Html->image('beta.png', ['class' => 'beta']);
+<div id="beta">
+	<?= $this->Html->image('beta.png') ?>
+</div>
