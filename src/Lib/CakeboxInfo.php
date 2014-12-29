@@ -886,21 +886,36 @@ class CakeboxInfo
     /**
      * Fetch commits for a repository from the Github API.
      *
-     * @param string $repository Github repository shortname (owner/repo).
+     * @param string $repository Github repository shortname (owner/repo)
+     * @param string $limit Number of results to return
      * @return array Array
      */
-    public function getRepositoryCommits($repository)
+    public function getRepositoryCommits($repository, $limit = null)
     {
         $commits = Cache::read('commits', 'short');
-        if ($commits) {
-            return $commits;
+        #if ($commits) {
+        #    return $commits;
+        #}
+
+        if ($limit) {
+            if (!is_int($limit)) {
+                throw new Exception("Parameter limit must be an integer");
+            }
+            $limit = "?page=1&per_page=$limit";
         }
 
-        $http = new Client();
-        $response = $http->get("https://api.github.com/repos/$repository/commits");
-        $result = json_decode($response->body(), true);
-        Cache::write('commits', $result, 'short');
-        return $result;
+        try {
+            $http = new Client();
+            $response = $http->get("https://api.github.com/repos/$repository/commits$limit");
+            if (!$response->isOk()){
+                return null;
+            }
+            $result = json_decode($response->body(), true);
+            Cache::write('commits', $result, 'short');
+            return $result;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**
@@ -910,7 +925,7 @@ class CakeboxInfo
      */
     public function getLatestCommitRemote()
     {
-        $commits = $this->getRepositoryCommits('alt3/cakebox-console');
+        $commits = $this->getRepositoryCommits('alt3/cakebox-console', 1);
         return $commits[0]['sha'];
     }
 
