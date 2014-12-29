@@ -77,7 +77,7 @@
 				<ul class="mainnav">
 
 					<li class="active">
-						<a href="./index.html">
+						<a href="dashboards">
 							<i class="fa fa-home"></i>
 							<span><?= __('Dashboard'); ?></span>
 						</a>
