@@ -94,7 +94,7 @@ td.app-name a {
     text-align: center;
 }
 .stat-value {
-    font-size: 34px;
+    font-size: 45px;
 }
 .stat-key {
     font-size: 11px;
@@ -124,7 +124,7 @@ td.app-name a {
 
 .stat-value {
     letter-spacing: -4px;
-    margin-bottom: 0.15em;
+    margin-bottom: 0.11em;
 
 }
 .uptime-component {
