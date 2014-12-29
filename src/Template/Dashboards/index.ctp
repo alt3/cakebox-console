@@ -3,6 +3,7 @@
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 
+//pr($data);
 ?>
 
 <div class="col-md-6 col-xs-12">
@@ -319,3 +320,26 @@ use Cake\Utility\Inflector;
 						</ul>
 
 					</div> <!-- /span3 -->
+
+
+
+<?php
+	// Count the number of app per unique framework to feed the donut
+	$frameworks = array_values(array_unique(Hash::extract($data['apps'], '{n}.framework_human')));
+	foreach ($frameworks as $framework) {
+		$frameworkCount = count(Hash::extract($data['apps'], "{n}[framework_human=/$framework/].name"));
+		$flotData[] = [
+			'label' => $framework,
+			'data' => $frameworkCount
+		];
+	}
+
+	// create inline var "data" so it becomes available in the donut script
+	echo $this->Html->scriptBlock(
+		"var donutData = " . json_encode($flotData) ,
+		['inline' => false]
+	);
+
+	// load the dashboard js
+	echo $this->Html->script('pages/dashboards');
+?>

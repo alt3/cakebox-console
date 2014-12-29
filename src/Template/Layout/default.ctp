@@ -88,7 +88,6 @@ $cakeDescription = 'Cakebox Admin';
 		echo $this->Html->script('jquery-plugins/flot-0.8.3/jquery.flot.pie.min');
 		echo $this->Html->script('jquery-plugins/flot-0.8.3/jquery.flot.resize.min');
 		echo $this->Html->script('Application.js');
-		echo $this->Html->script('charts/donut.js');
 	?>
 
 
