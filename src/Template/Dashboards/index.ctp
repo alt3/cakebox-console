@@ -130,7 +130,7 @@ use Cake\Utility\Inflector;
 					// Applications
 					 echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-code-fork"></i><span class="shortcut-label" />' . __('Applications'),
-					  	'#',
+						['controller'=>'applications', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false, 'title' => 'Not implemented yet']
 					 );
 

@@ -26,9 +26,11 @@
 								<td><?= $key + 1 ?></td>
 								<td><?= $database['name'] ?></td>
 								<td class="actions">
-									<button type="button" class="btn btn-danger btn-sm">
-										<?= __('Delete') ?>
-									</button>
+									<div class="btn-group pull-right">
+										<button type="button" class="btn btn-danger btn-sm">
+											<?= __('Delete') ?>
+										</button>
+									</div>
 								</td>
 							</tr>
 						<?php endforeach ?>
