@@ -32,6 +32,11 @@ class DashboardsController extends AppController
         $this->set('data', $data);
     }
 
+    public function vm() {
+        $data['vm'] = $this->cbi->getVmInfo();
+        $this->set('data', $data);
+    }
+
     /**
      * Serve cakebox checks as json
      *

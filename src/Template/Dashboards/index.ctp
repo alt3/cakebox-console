@@ -125,8 +125,6 @@ use Cake\Utility\Inflector;
 
 		<div class="widget-content">
 
-			<!-- IETS DOEN MET BOX SOFTWARE, CHECKS, ETC -->
-
 			<div class="shortcuts">
 				<?php
 					// Applications
@@ -160,8 +158,9 @@ use Cake\Utility\Inflector;
 					// Virtual Machine
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-cube"></i><span class="shortcut-label" />' . __('Virtual Machine'),
-						'#',
-						['class' => 'shortcut', 'data-toggle' => 'modal', 'data-target' => '#modal-vm', 'escape' => false]
+						'dashboards/vm',
+						//['class' => 'shortcut', 'data-toggle' => 'modal', 'data-target' => '#modal-vm', 'escape' => false]
+						['class' => 'shortcut', 'escape' => false]
 					);
 
 					// Kibana: dirty https tp http hack until figured out how to do otherwise
@@ -268,7 +267,7 @@ use Cake\Utility\Inflector;
 
 
 	<!-- Virtual Machine Modal -->
-	<div class="modal fade" id="modal-vm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="modal-vm-DIS" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
