@@ -1,45 +1,48 @@
 
 <div class="col-sm-12 column">
 
-	<!-- Main site files panel -->
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?= __("Nginx site configuration files") ?></h3>
-		</div>
-		<div class="panel-body">
-			<table class="table">
-				<caption><?= __('As found in ') . $data['directories']['sites-available'] ?></caption>
-				<thead>
-					<tr>
-						<th>#</th>
-						<th><?= __("Filename") ?></th>
-						<th><?= __("Enabled") ?></th>
-						<th><?= __("Last Modified") ?></th>
+	<!-- Applications widget -->
+	<div class="widget stacked widget-table action-table">
 
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ($data['sitefiles'] as $key => $file): ?>
+		<div class="widget-header">
+			<i class="fa fa-file-text-o"></i>
+			<h3><?= __('Nginx site configuration files') ?></h3>
+		</div> <!-- /widget-header -->
+
+		<div class="widget-content">
+			<div class="panel-body">
+				<table class="table">
+					<caption><?= __('As found in ') . $data['directories']['sites-available'] ?></caption>
+					<thead>
 						<tr>
-							<td><?= $key + 1 ?></td>
-							<td class="filename"><?= $file['name'] ?></td>
-							<td><?= $file['enabled'] ? __('Yes') : __('No') ?></td>
-							<td><?= $this->Time->format($file['modified'], 'YYYY-MM-dd'); ?></td>
-							<td>
-								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#fileModal">
-									View file
-								</button>
-							</td>
+							<th>#</th>
+							<th><?= __("Filename") ?></th>
+							<th><?= __("Enabled") ?></th>
+							<th><?= __("Last Modified") ?></th>
 						</tr>
-					<?php endforeach ?>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						<?php foreach ($data['sitefiles'] as $key => $file): ?>
+							<tr>
+								<td><?= $key + 1 ?></td>
+								<td class="filename"><?= $file['name'] ?></td>
+								<td><?= $file['enabled'] ? __('Yes') : __('No') ?></td>
+								<td><?= $this->Time->format($file['modified'], 'YYYY-MM-dd'); ?></td>
+								<td>
+									<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#fileModal">
+										View file
+									</button>
+								</td>
+							</tr>
+						<?php endforeach ?>
+					</tbody>
+				</table>
+			</div>
 
-		</div>
-	</div>
-	<!-- EOF main site files panel -->
+		</div> <!-- /widget-content -->
 
-</div>
+	</div> <!-- /widget -->
+
 
 <!-- Modal -->
 <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
