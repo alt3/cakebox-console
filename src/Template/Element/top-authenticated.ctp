@@ -76,6 +76,7 @@
 			<div class="collapse subnav-collapse">
 				<ul class="mainnav">
 
+					<!-- Home -->
 					<li class="active">
 						<?php
 							echo $this->Html->link(
@@ -135,6 +136,18 @@
 							</li>
 						</ul>
 					</li>
+
+					<!-- Backups -->
+					<li>
+						<?php
+							echo $this->Html->link(
+								'<i class="fa fa-cloud-download"></i><span />' . __('Backups'),
+								['controller' => 'dashboards', 'action' => 'index'],
+								['class' => 'shortcut', 'escape' => false]
+							);
+						?>
+					</li>
+
 
 				</ul>
 			</div> <!-- /.subnav-collapse -->
