@@ -24,7 +24,6 @@ $cakeDescription = 'Cakebox Admin';
 	<?= $this->Html->css('https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css') ?>
 
 	<!-- Base Admin theme -->
-	<?php $this->Html->css('ui-lightness/jquery-ui-1.10.0.custom.min') ?>
 	<?= $this->Html->css('theme/base-admin-3') ?>
 	<?= $this->Html->css('theme/base-admin-3-responsive') ?>
 
