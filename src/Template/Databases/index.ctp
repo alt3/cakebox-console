@@ -17,6 +17,7 @@
 						<tr>
 							<th>#</th>
 							<th><?= __("Name") ?></th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -24,6 +25,11 @@
 							<tr>
 								<td><?= $key + 1 ?></td>
 								<td><?= $database['name'] ?></td>
+								<td class="actions">
+									<button type="button" class="btn btn-danger btn-sm">
+										<?= __('Delete') ?>
+									</button>
+								</td>
 							</tr>
 						<?php endforeach ?>
 					</tbody>

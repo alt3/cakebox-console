@@ -29,9 +29,12 @@
 								<td class="filename"><?= $file['name'] ?></td>
 								<td><?= $file['enabled'] ? __('Yes') : __('No') ?></td>
 								<td><?= $this->Time->format($file['modified'], 'YYYY-MM-dd'); ?></td>
-								<td>
-									<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#fileModal">
-										View file
+								<td class="actions">
+									<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#fileModal">
+										<?= __('View') ?>
+									</button>
+									<button type="button" class="btn btn-danger btn-sm">
+										<?= __('Delete') ?>
 									</button>
 								</td>
 							</tr>

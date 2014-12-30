@@ -73,6 +73,15 @@ caption {
     font-size: 13px;
 }
 
+/**
+ * Plain pages
+ */
+td.actions button {
+    margin-right: 5px;
+}
+td.actions button:last-child {
+    margin-right: 0;
+}
 
 /**
  * Modals
