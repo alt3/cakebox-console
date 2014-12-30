@@ -77,10 +77,13 @@
 				<ul class="mainnav">
 
 					<li class="active">
-						<a href="dashboards">
-							<i class="fa fa-home"></i>
-							<span><?= __('Dashboard'); ?></span>
-						</a>
+						<?php
+							echo $this->Html->link(
+								'<i class="fa fa-home"></i><span />' . __('Dashboard'),
+								['controller' => 'dashboards', 'action' => 'index'],
+								['class' => 'shortcut', 'escape' => false]
+							);
+						?>
 					</li>
 
 					<li class="dropdown">
