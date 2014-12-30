@@ -11,7 +11,7 @@
 		<div class="widget-content">
 			<div class="panel-body">
 
-				<table class="table">
+				<table class="table collection">
 					<caption><?= __('Excluding system databases') ?></caption>
 					<thead>
 						<tr>

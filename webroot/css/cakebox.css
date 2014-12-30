@@ -74,8 +74,15 @@ caption {
 }
 
 /**
- * Plain pages
+ * Index tables
  */
+.table.collection tr td:last-child {
+     white-space: nowrap;
+     width: 1px;
+}
+.table.collection tr td:last-child {
+    text-align: right;
+}
 td.actions button {
     margin-right: 5px;
 }
