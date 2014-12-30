@@ -1,6 +1,10 @@
 body {
     background: #e9e9e9 url(../img/tiny_grid.png) repeat 0 0;
 }
+body, p {
+    font: 14px/1.7em "Open Sans";
+}
+
 
 /**
  * Beta
@@ -64,8 +68,11 @@ body {
 }
 .stacked:after, .stacked:before {
     bottom: 0;
-
 }
+caption {
+    font-size: 13px;
+}
+
 
 /**
  * Modals
@@ -73,6 +80,23 @@ body {
 .modal-dialog {
     margin-top: 60px;
 }
+
+/*------------------------------------------------------------------
+[ Growl / .msgGrowl ]
+*/
+.msgGrowl.success .msgGrowl-content {
+    background: url(../img/notifications/success-32.png) no-repeat 7px 13px;
+}
+.msgGrowl.error .msgGrowl-content {
+    background: url(../img/notifications/error-32.png) no-repeat 7px 13px;
+}
+.msgGrowl.info .msgGrowl-content {
+    background: url(../img/notifications/info-32.png) no-repeat 7px 13px;
+}
+.msgGrowl.warning .msgGrowl-content {
+    background: url(../img/notifications/alert-32.png) no-repeat 7px 13px;
+}
+
 
 /**
  * Key/value pairs
@@ -112,9 +136,10 @@ td.app-name a {
 }
 .stat-value {
     font-size: 45px;
+    padding-bottom: 5px;
 }
 .stat-key {
-    font-size: 11px;
+    font-size: 14px;
     font-weight: bold;
     color: #999;
 }
@@ -129,11 +154,13 @@ td.app-name a {
 .shortcuts .shortcut {
     /*width: 112px;*/
     margin-right: 10px;
-
+}
+.shortcut-label {
+    font-size: 13px;
 }
 
 .stat-chart {
-    padding-bottom: 1.25em;
+    padding-bottom: 0.8em;  /* use this to align stats widget height with shortcuts height */
 }
 .stat-time {
     padding-top: 1.2em;
@@ -155,6 +182,10 @@ td.app-name a {
     padding: 0;
     margin: 0;
 }
+.uptime-title {
+    font-size: 13px;
+}
+
 
 /**
  * Contributions
@@ -188,9 +219,7 @@ li.commit-item:last-child {
 .commit-item .details {
     padding-top: 0px;
 }
-
 .commit-item .details a{
-    /*font-size: 14px;*/
     font-weight: 600;
     margin-left: 22px;
 }
@@ -201,9 +230,10 @@ li.commit-item:last-child {
     color: #777;
 }
 .commit-item .details a.sha-link{
+    font-size: 10px;
     margin-left: 1px;
-    font-size: 13px;
     font-weight: normal;
+    /*font-style: italic;*/
 }
 
 .commit-day {

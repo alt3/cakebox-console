@@ -244,7 +244,7 @@ use Cake\Utility\Inflector;
 								<div class="col-xs-9 details">
 									<!-- <span> -->
 										<?= $this->Html->link($commit['author']['login'], $commit['author']['html_url']) ?>
-										<p class="message news-item-preview">
+										<p class="message">
 											<?= $commit['commit']['message'] ?>
 											<?= $this->Html->link('(' . substr($commit['sha'], 0, 7) . ')', $commit['html_url'], ['class' => 'sha-link']) ?>
 										</p>
@@ -300,9 +300,6 @@ use Cake\Utility\Inflector;
 			</div>
 		</div>
 	</div>
-
-
-
 
 </div> <!-- /span6 -->
 
