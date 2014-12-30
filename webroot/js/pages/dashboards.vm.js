@@ -51,7 +51,7 @@ function loadTabStatus() {
 	})
 	.done(function() {
 		$('#panel-status .ajax-loader').html('').remove()
-		$('#panel-status .panel-content').removeClass('hidden')
+		$('#panel-status .widget').removeClass('hidden')
 	})
 	.fail(function() {
 		alert( 'So sorry, something went wrong fetching checks' )
@@ -123,7 +123,7 @@ function loadTabSoftware() {
 	})
 	.done(function() {
 		$('#panel-software .ajax-loader').html('').remove()
-		$('#panel-software .panel-content').removeClass('hidden')
+		$('#panel-software .widget').removeClass('hidden')
 	})
 	.fail(function() {
 		alert( 'So sorry, something went wrong fetching software' )

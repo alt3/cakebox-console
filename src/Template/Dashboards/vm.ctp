@@ -62,7 +62,7 @@ use Cake\Utility\Inflector;
 					</div>
 
 					<!-- System checks -->
-					<div id="status-system" class="widget stacked widget-table">
+					<div id="status-system" class="widget stacked widget-table hidden">
 						<div class="widget-header">
 							<i class="fa fa-file-text-o"></i>
 							<h3><?= __('System') ?></h3>
@@ -78,7 +78,7 @@ use Cake\Utility\Inflector;
 					</div>
 
 					<!-- Application checks -->
-					<div id="status-application" class="widget stacked widget-table">
+					<div id="status-application" class="widget stacked widget-table hidden">
 						<div class="widget-header">
 							<i class="fa fa-file-text-o"></i>
 							<h3><?= __('Application') ?></h3>
@@ -94,7 +94,7 @@ use Cake\Utility\Inflector;
 					</div>
 
 					<!-- Security checks -->
-					<div id="status-security" class="widget stacked widget-table">
+					<div id="status-security" class="widget stacked widget-table hidden">
 						<div class="widget-header">
 							<i class="fa fa-file-text-o"></i>
 							<h3><?= __('Security') ?></h3>
@@ -120,7 +120,7 @@ use Cake\Utility\Inflector;
 					</div>
 
 					<!-- Operating System -->
-					<div id="software-system" class="widget stacked widget-table">
+					<div id="software-system" class="widget stacked widget-table hidden">
 						<div class="widget-header">
 							<i class="fa fa-file-text-o"></i>
 							<h3><?= __('System') ?></h3>
@@ -147,7 +147,7 @@ use Cake\Utility\Inflector;
 					</div>
 
 					<!-- Software -->
-					<div id="software-packages" class="widget stacked widget-table">
+					<div id="software-packages" class="widget stacked widget-table hidden">
 						<div class="widget-header">
 							<i class="fa fa-file-text-o"></i>
 							<h3><?= __('Software') ?></h3>
@@ -163,7 +163,7 @@ use Cake\Utility\Inflector;
 					</div>
 
 					<!-- PHP Modules -->
-					<div id="software-php-modules" class="widget stacked widget-table">
+					<div id="software-php-modules" class="widget stacked widget-table hidden">
 						<div class="widget-header">
 							<i class="fa fa-file-text-o"></i>
 							<h3><?= __('PHP Modules') ?></h3>
@@ -179,7 +179,7 @@ use Cake\Utility\Inflector;
 					</div>
 
 					<!-- Nginx Modules -->
-					<div id="software-nginx-modules" class="widget stacked widget-table">
+					<div id="software-nginx-modules" class="widget stacked widget-table hidden">
 						<div class="widget-header">
 							<i class="fa fa-file-text-o"></i>
 							<h3><?= __('PHP Modules') ?></h3>
