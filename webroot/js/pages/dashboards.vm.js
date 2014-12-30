@@ -34,10 +34,10 @@ function loadTabStatus() {
 			$.each( data[category], function( index, check ) {
 				if (check.pass == true ) {
 					icon = '<i class="fa fa-check"></i>'
-					$('#status-' + category + ' ul').append( '<li>' + icon + check.message + '</li>')
+					$('#status-' + category + ' ul').append( '<li class="check">' + icon + check.message + '</li>')
 				} else {
 					icon = '<i class="fa fa-times"></i>'
-					$('#status-' + category + ' ul').append( '<li class="text-danger">' + icon + check.message + '</li>')
+					$('#status-' + category + ' ul').append( '<li class="check text-danger">' + icon + check.message + '</li>')
 					failCount++
 				}
 			});
@@ -45,7 +45,7 @@ function loadTabStatus() {
 			// set panel header to danger for failed category
 			if (failCount != 0) {
 				$('#status-' + category).removeClass('panel-primary')
-				$('#status-' + category).addClass('panel-danger')
+				$('#status-' + category).addClass('danger')
 			}
 		});
 	})

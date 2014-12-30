@@ -73,6 +73,19 @@ caption {
     font-size: 13px;
 }
 
+/* Widget - danger */
+.widget.danger {
+    border-color: -moz-use-text-color #C12E2A #C12E2A;
+}
+.widget.danger .widget-header {
+    background-image: linear-gradient(to bottom, #D9534F 0%, #C9302C 100%);
+}
+.widget.danger .widget-header i,
+.widget.danger .widget-header h3 {
+    color: #fff;
+}
+
+
 /**
  * Index tables
  */
@@ -202,6 +215,20 @@ td.app-name a {
     font-size: 13px;
 }
 
+/**
+* Shortcuts widget
+*/
+a.shortcut > i {
+    display: inline;
+}
+
+/**
+* Flot
+*/
+.legendColorBox {
+    padding-right: 4px;
+}
+
 
 /**
  * Contributions
@@ -268,26 +295,23 @@ li.commit-item:last-child {
     color: #888;
 }
 
+/**
+* Page VM
+*/
+li.check i {
+    margin-right: 10px;
+}
+li.check .fa-check {
+    color: green;
+}
+li.check .fa-danger {
+    color: red;
+}
+
 
 /**
  * Footer
  */
 #back-to-top {
     background-color: #1a1a1a;
-}
-
-
-
-/**
- * Shortcuts widget
- */
-a.shortcut > i {
-    display: inline;
-}
-
-/**
- * Flot
- */
-.legendColorBox {
-    padding-right: 4px;
 }
