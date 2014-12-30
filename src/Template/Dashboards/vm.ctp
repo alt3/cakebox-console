@@ -64,7 +64,7 @@ use Cake\Utility\Inflector;
 					<!-- System checks -->
 					<div id="status-system" class="widget stacked widget-table hidden">
 						<div class="widget-header">
-							<i class="fa fa-file-text-o"></i>
+							<i class="fa fa-desktop"></i>
 							<h3><?= __('System') ?></h3>
 						</div>
 
@@ -80,7 +80,7 @@ use Cake\Utility\Inflector;
 					<!-- Application checks -->
 					<div id="status-application" class="widget stacked widget-table hidden">
 						<div class="widget-header">
-							<i class="fa fa-file-text-o"></i>
+							<i class="fa fa-code"></i>
 							<h3><?= __('Application') ?></h3>
 						</div>
 
@@ -96,7 +96,7 @@ use Cake\Utility\Inflector;
 					<!-- Security checks -->
 					<div id="status-security" class="widget stacked widget-table hidden">
 						<div class="widget-header">
-							<i class="fa fa-file-text-o"></i>
+							<i class="fa fa-lock"></i>
 							<h3><?= __('Security') ?></h3>
 						</div>
 
@@ -122,7 +122,7 @@ use Cake\Utility\Inflector;
 					<!-- Operating System -->
 					<div id="software-system" class="widget stacked widget-table hidden">
 						<div class="widget-header">
-							<i class="fa fa-file-text-o"></i>
+							<i class="fa fa-linux"></i>
 							<h3><?= __('Operating System') ?></h3>
 						</div>
 
@@ -165,7 +165,7 @@ use Cake\Utility\Inflector;
 					<!-- PHP Modules -->
 					<div id="software-php-modules" class="widget stacked widget-table hidden">
 						<div class="widget-header">
-							<i class="fa fa-file-text-o"></i>
+							<i class="fa fa-plug"></i>
 							<h3><?= __('PHP Modules') ?></h3>
 						</div>
 
@@ -181,7 +181,7 @@ use Cake\Utility\Inflector;
 					<!-- Nginx Modules -->
 					<div id="software-nginx-modules" class="widget stacked widget-table hidden">
 						<div class="widget-header">
-							<i class="fa fa-file-text-o"></i>
+							<i class="fa fa-plug"></i>
 							<h3><?= __('Nginx Modules') ?></h3>
 						</div>
 
