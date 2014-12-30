@@ -89,19 +89,16 @@ caption {
 /**
  * Index tables
  */
-.table.collection tr td:last-child {
-     white-space: nowrap;
-     width: 1px;
+td.actions div button {
+    margin-right: 10px;
 }
-.table.collection tr td:last-child {
-    text-align: right;
-}
-td.actions button {
-    margin-right: 5px;
-}
-td.actions button:last-child {
+td.actions div button:last-child {
     margin-right: 0;
 }
+td.actions div button i {
+    font-size: 16px;
+}
+
 
 /**
  * Modals
