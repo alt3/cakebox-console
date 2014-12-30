@@ -16,11 +16,6 @@ $(document).ready(function(){
 		tooltips: true
 	});
 
-	// Make modals draggable using jQuery UI
-	$(".modal-dialog").draggable({
-		handle: ".modal-header"
-	});
-
 	// Allow closing the sponsor widget
 	$("#close-sponsors").click(function() {
 		$( ".widget.sponsors" ).slideUp()

@@ -71,7 +71,7 @@ body {
  * Modals
  */
 .modal-dialog {
-    margin-top: 140px;
+    margin-top: 60px;
 }
 
 /**
@@ -104,7 +104,7 @@ td.app-name a {
     margin-right: 5px;
 }
 .app-link {
-    /*font-weight: bold;*/
+    font-weight: bold;
 }
 
 .row.stats > div {
