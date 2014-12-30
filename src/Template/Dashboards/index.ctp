@@ -204,10 +204,10 @@ use Cake\Utility\Inflector;
 
 
 	<!-- Sponsors widget -->
-	<div class="widget stacked">
+	<div class="widget sponsors stacked">
 
 		<div class="widget-header">
-			<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<button type="button" class="close" id="close-sponsors" data-dismiss="widget" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<i class="fa fa-bullhorn"></i>
 			<h3><?= __('Our Sponsors') ?></h3>
 		</div> <!-- /widget-header -->

@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	// load the donut using "data" variable set in the Dashboards index view
+	// Load the donut using "data" variable set in the Dashboards index view
 	$.plot($("#donut-chart"), donutData,
 	{
 		colors: ["#F90", "#222", "#777", "#AAA"],
@@ -16,9 +16,14 @@ $(document).ready(function(){
 		tooltips: true
 	});
 
-	// make modals draggable using jQuery UI
+	// Make modals draggable using jQuery UI
 	$(".modal-dialog").draggable({
 		handle: ".modal-header"
+	});
+
+	// Allow closing the sponsor widget
+	$("#close-sponsors").click(function() {
+		$( ".widget.sponsors" ).slideUp()
 	});
 
 });
