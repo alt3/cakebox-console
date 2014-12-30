@@ -1,7 +1,7 @@
 
 <div class="col-sm-12 column">
 
-	<!-- Applications widget -->
+	<!-- Sitefiles widget -->
 	<div class="widget stacked widget-table action-table">
 
 		<div class="widget-header">
@@ -19,6 +19,7 @@
 							<th><?= __("Filename") ?></th>
 							<th><?= __("Enabled") ?></th>
 							<th><?= __("Last Modified") ?></th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -43,6 +44,7 @@
 
 	</div> <!-- /widget -->
 
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
