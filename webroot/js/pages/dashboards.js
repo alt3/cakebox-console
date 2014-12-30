@@ -16,4 +16,9 @@ $(document).ready(function(){
 		tooltips: true
 	});
 
+	// make modals draggable using jQuery UI
+	$(".modal-dialog").draggable({
+		handle: ".modal-header"
+	});
+
 });

@@ -10,15 +10,7 @@ body {
     top: 0;
     right: 0;
 }
-/*.beta {
-     position: fixed;
-     top: 0;
-     right: 0;
-     width: 72px;
-     height: 72px;
-     border: 0;
-     z-index: 101;
- }*/
+
 
 /**
 * Top-navigation
@@ -74,6 +66,31 @@ body {
     bottom: 0;
 
 }
+
+/**
+ * Modals
+ */
+.modal-dialog {
+    margin-top: 140px;
+}
+
+/**
+ * Key/value pairs
+ */
+ul.pair {
+    display: table;
+}
+ul.pair li {
+    display: table-row;
+}
+ul.pair li span {
+    display: table-cell;
+}
+ul.pair li span.key {
+    font-weight: bold;
+    padding-right: 15px;
+}
+
 
 
 /**

@@ -129,48 +129,66 @@ use Cake\Utility\Inflector;
 
 			<div class="shortcuts">
 				<?php
+					// Applications
 					 echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-code-fork"></i><span class="shortcut-label" />' . __('Applications'),
 					  	'#',
 						['class' => 'shortcut', 'escape' => false, 'title' => 'Not implemented yet']
 					 );
 
+					// Databases
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-database"></i><span class="shortcut-label" />' . __('Databases'),
 						['controller'=>'databases', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false, 'title' => 'Not implemented yet']
 					);
 
+					// Site files
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label" />' . __('Site Files'),
 						['controller'=>'sitefiles', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 
+					// Pro Tips
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-lightbulb-o"></i><span class="shortcut-label" />' . __('Pro Tips'),
 						'#',
 						['class' => 'shortcut', 'escape' => false]
 					);
 
+					// Virtual Machine
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-cube"></i><span class="shortcut-label" />' . __('Virtual Machine'),
 						'#',
-						['class' => 'shortcut', 'escape' => false]
+						['class' => 'shortcut', 'data-toggle' => 'modal', 'data-target' => '#modal-vm', 'escape' => false]
 					);
 
-					echo $this->Html->link(
+					// Kibana: dirty https tp http hack until figured out how to do otherwise
+					$kibanaLink = $this->Html->link(
 						'<i class="shortcut-icon fa fa-bar-chart"></i><span class="shortcut-label" />' . __('Kibana'),
-						'#',
+						[
+							'_port' => '5601',
+							'controller' => false,
+							'action' => false
+						],
 						['class' => 'shortcut', 'escape' => false]
 					);
+					echo str_replace('https', 'http', $kibanaLink);
 
-					echo $this->Html->link(
+					// Elasticsearch: dirty https tp http hack until figured out how to do otherwise
+					$elasticSearchLink = $this->Html->link(
 						'<i class="shortcut-icon fa fa-search"></i><span class="shortcut-label" />' . __('Elasticsearch'),
-						'#',
+						[
+							'_port' => '9200',
+							'controller' => false,
+							'action' => false
+						],
 						['class' => 'shortcut', 'escape' => false]
 					);
+					echo str_replace('https', 'http', $elasticSearchLink);
 
+					// Credits
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-thumbs-up"></i><span class="shortcut-label" />' . __('Credits'),
 						'#',
@@ -195,7 +213,7 @@ use Cake\Utility\Inflector;
 		</div> <!-- /widget-header -->
 
 		<div class="widget-content">
-			<p>Theme license kindly donated by Rod Howard from <?= $this->Html->link('Jumpstart Themes', 'http://jumpstartthemes.com') ?></p>
+			<p>Theme license donated by Rod Howard from <?= $this->Html->link('Jumpstart Themes', 'http://jumpstartthemes.com') ?></p>
 			<p>Box image cdn-hosted by our friends at <?= $this->Html->link('Your Name Here', 'http://google.com') ?></p>
 		</div> <!-- /widget-content -->
 
@@ -249,6 +267,40 @@ use Cake\Utility\Inflector;
 	</div> <!-- /widget -->
 
 
+	<!-- Virtual Machine Modal -->
+	<div class="modal fade" id="modal-vm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel"><?= __('Virtual Machine') ?></h4>
+				</div>
+				<div class="modal-body">
+					<ul class="pair list-unstyled">
+						<li>
+							<span class="key"><?= __("Hostname") ?>:</span>
+							<span class="value"><?= $data['vm']['hostname'] ?></span>
+						</li>
+						<li>
+							<span class="key"><?= __("IP address") ?>:</span>
+							<span class="value"><?= $data['vm']['ip_address'] ?></span>
+						</li>
+						<li>
+							<span class="key"><?= __("CPUs") ?>:</span>
+							<span class="value"><?= $data['vm']['cpus'] ?></span>
+						</li>
+						<li>
+							<span class="key"><?= __("Memory") ?>:</span>
+							<span class="value"><?= $data['vm']['memory'] ?>MB</span>
+						</li>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 

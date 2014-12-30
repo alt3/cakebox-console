@@ -24,7 +24,7 @@ $cakeDescription = 'Cakebox Admin';
 	<?= $this->Html->css('https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css') ?>
 
 	<!-- Base Admin theme -->
-	<?= $this->Html->css('ui-lightness/jquery-ui-1.10.0.custom.min') ?>
+	<?php $this->Html->css('ui-lightness/jquery-ui-1.10.0.custom.min') ?>
 	<?= $this->Html->css('theme/base-admin-3') ?>
 	<?= $this->Html->css('theme/base-admin-3-responsive') ?>
 
@@ -43,7 +43,8 @@ $cakeDescription = 'Cakebox Admin';
 	<?= $this->Html->css('cakebox') ?>
 
 	<!-- Bootstrap Core JS (v3.3.1) -->
-	<?= $this->Html->script('jquery.js') ?>
+	<?php echo $this->Html->script('jquery.js') ?>
+	<?php echo $this->Html->script('https://code.jquery.com/ui/1.11.1/jquery-ui.min.js') ?>
 
 	<?= $this->Html->script('bootstrap.js') ?>
 	<?= $this->Html->script('cakebox.js') ?>
