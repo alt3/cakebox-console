@@ -3,7 +3,6 @@
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 
-//pr($data);
 ?>
 
 <div class="col-md-6 col-xs-12">
@@ -115,7 +114,6 @@ use Cake\Utility\Inflector;
 
 <div class="col-md-6">
 
-
 	<div class="widget stacked">
 
 		<div class="widget-header">
@@ -158,8 +156,7 @@ use Cake\Utility\Inflector;
 					// Virtual Machine
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-cube"></i><span class="shortcut-label" />' . __('Virtual Machine'),
-						'dashboards/vm',
-						//['class' => 'shortcut', 'data-toggle' => 'modal', 'data-target' => '#modal-vm', 'escape' => false]
+						['controller'=>'dashboards', 'action'=>'vm'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 
@@ -266,41 +263,6 @@ use Cake\Utility\Inflector;
 	</div> <!-- /widget -->
 
 
-	<!-- Virtual Machine Modal -->
-	<div class="modal fade" id="modal-vm-DIS" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel"><?= __('Virtual Machine') ?></h4>
-				</div>
-				<div class="modal-body">
-					<ul class="pair list-unstyled">
-						<li>
-							<span class="key"><?= __("Hostname") ?>:</span>
-							<span class="value"><?= $data['vm']['hostname'] ?></span>
-						</li>
-						<li>
-							<span class="key"><?= __("IP address") ?>:</span>
-							<span class="value"><?= $data['vm']['ip_address'] ?></span>
-						</li>
-						<li>
-							<span class="key"><?= __("CPUs") ?>:</span>
-							<span class="value"><?= $data['vm']['cpus'] ?></span>
-						</li>
-						<li>
-							<span class="key"><?= __("Memory") ?>:</span>
-							<span class="value"><?= $data['vm']['memory'] ?>MB</span>
-						</li>
-					</ul>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
 </div> <!-- /span6 -->
 
 </div> <!-- closes row from layout.ctp -->
@@ -310,65 +272,84 @@ use Cake\Utility\Inflector;
 </div> <!-- /closes .container in layout.ctp -->
 
 
+<!-- Extra bottom panel/footer (dashboard index only) -->
+<div class="extra">
 
-		<div class="extra">
+	<div class="container">
 
-			<div class="container">
+		<div class="row">
 
-				<div class="row">
+			<!-- About -->
+			<div class="col-md-3">
+				<h4>About</h4>
+				<ul>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+				</ul>
+			</div> <!-- /span3 -->
 
-					<div class="col-md-3">
+			<!-- Support -->
+			<div class="col-md-3">
+				<h4>Support</h4>
+				<ul>
+					<li><a class="#">Documentation</a></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+				</ul>
+			</div>
 
-						<h4>About</h4>
+			<!-- Legal -->
+			<div class="col-md-3">
+				<h4>Legal</h4>
+				<ul>
+					<li><a class="ajax-file-modal" id="license" href="#" rel="dashboards/license.json">License</a></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+				</ul>
+			</div>
 
-						<ul>
-							<li><a href="javascript:;">About Us</a></li>
-							<li><a href="javascript:;">Twitter</a></li>
-							<li><a href="javascript:;">Facebook</a></li>
-							<li><a href="javascript:;">Google+</a></li>
-						</ul>
+			<!-- Links -->
+			<div class="col-md-3">
+				<h4>Links</h4>
+				<ul>
+					<li>
+						<?php
+							echo $this->Html->link(
+								'<i class="footer-icon fa fa-github"></i>' . __('Github Sources'),
+								'https://github.com/alt3/cakebox-console',
+								['escape' => false]
+							);
+						?>
+					</li>
+					<li><?= $this->Html->link('CakePHP', 'http://cakephp.org') ?></li>
+					<li><?= $this->Html->link('Jumpstart Themes', 'https://jumpstartthemes.com') ?></li>
+					<li><a href="#">&gt; Placeholder &lt;</a></li>
+				</ul>
+			</div>
 
-					</div> <!-- /span3 -->
+<!-- Closed by layout.ctp divs -->
 
-					<div class="col-md-3">
-
-						<h4>Support</h4>
-
-						<ul>
-							<li><a href="javascript:;">Frequently Asked Questions</a></li>
-							<li><a href="javascript:;">Ask a Question</a></li>
-							<li><a href="javascript:;">Video Tutorial</a></li>
-							<li><a href="javascript:;">Feedback</a></li>
-						</ul>
-
-					</div> <!-- /span3 -->
-
-					<div class="col-md-3">
-
-						<h4>Legal</h4>
-
-						<ul>
-							<li><a href="javascript:;">License</a></li>
-							<li><a href="javascript:;">Terms of Use</a></li>
-							<li><a href="javascript:;">Privacy Policy</a></li>
-							<li><a href="javascript:;">Security</a></li>
-						</ul>
-
-					</div> <!-- /span3 -->
-
-					<div class="col-md-3">
-
-						<h4>Settings</h4>
-
-						<ul>
-							<li><a href="javascript:;">Consectetur adipisicing</a></li>
-							<li><a href="javascript:;">Eiusmod tempor </a></li>
-							<li><a href="javascript:;">Fugiat nulla pariatur</a></li>
-							<li><a href="javascript:;">Officia deserunt</a></li>
-						</ul>
-
-					</div> <!-- /span3 -->
-
+<!-- Ajax loaded modal -->
+<div id="ajaxModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ajaxModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">ajax-loaded-title</h4>
+			</div>
+			<div class="modal-body">
+				ajax-loaded-content
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 <?php

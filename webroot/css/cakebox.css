@@ -309,3 +309,8 @@ li.check .fa-danger {
 #back-to-top {
     background-color: #1a1a1a;
 }
+.footer-icon {
+    font-size: 23px;
+    vertical-align: top;
+    margin-right: 5px;
+}
