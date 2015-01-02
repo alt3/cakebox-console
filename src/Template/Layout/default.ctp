@@ -44,6 +44,7 @@ $cakeDescription = 'Cakebox Admin';
 	<!-- Bootstrap Core JS (v3.3.1) -->
 	<?php echo $this->Html->script('jquery.js') ?>
 	<?php echo $this->Html->script('https://code.jquery.com/ui/1.11.1/jquery-ui.min.js') ?>
+	<?php echo $this->Html->script('https://cdn.rawgit.com/jprichardson/string.js/master/lib/string.min.js'); ?>
 
 	<?= $this->Html->script('bootstrap.js') ?>
 
