@@ -18,10 +18,11 @@ $cakeDescription = 'Cakebox Admin';
 	</title>
 	<?= $this->Html->meta('icon') ?>
 
-	<!-- Bootstrap Core CSS (v3.3.1)-->
+	<!-- 3rd party css -->
 	<?= $this->Html->css('bootstrap/bootstrap.min') ?>
 	<?= $this->Html->css('https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600') ?>
 	<?= $this->Html->css('https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css') ?>
+	<?= $this->Html->css('../js/jquery-plugins/msgGrowl/css/msgGrowl'); ?>
 
 	<!-- Base Admin theme -->
 	<?= $this->Html->css('theme/base-admin-3') ?>
@@ -35,7 +36,6 @@ $cakeDescription = 'Cakebox Admin';
 		if ($this->request->here == '/dashboards') {
 			echo $this->Html->css('pages/dashboard');
 		}
-
 	?>
 
 	<!-- Cakebox overrides -->
@@ -46,7 +46,12 @@ $cakeDescription = 'Cakebox Admin';
 	<?php echo $this->Html->script('https://code.jquery.com/ui/1.11.1/jquery-ui.min.js') ?>
 
 	<?= $this->Html->script('bootstrap.js') ?>
+
+	<?= $this->Html->script('jquery-plugins/msgGrowl/js/msgGrowl.js') ?>
+
+	<!-- Load cakebox js last -->
 	<?= $this->Html->script('cakebox.js') ?>
+
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -78,7 +83,6 @@ $cakeDescription = 'Cakebox Admin';
 			</div>
 		</div>
 	</div>
-
 
 	<?= $this->element('beta') ?>
 

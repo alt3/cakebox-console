@@ -34,7 +34,7 @@
 										<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#fileModal">
 											<?= __('View') ?>
 										</button>
-										<button type="button" class="btn btn-danger btn-sm">
+										<button type="button" class="btn btn-danger btn-sm todo">
 											<?= __('Delete') ?>
 										</button>
 									</div>

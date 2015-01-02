@@ -19,43 +19,14 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown">
-
-					<a href="javscript:;" class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-cog"></i>
-						Settings
-						<b class="caret"></b>
+				<li>
+					<a href="#" class="todo" data-toggle="dropdown">
+						<i class="fa fa-sign-out"></i>
+						<?= __('Logout'); ?>
 					</a>
-
-					<ul class="dropdown-menu">
-						<li><a href="./account.html"><?= __('Account Settings'); ?></a></li>
-						<li><a href="javascript:;"><?= __('Privacy Settings'); ?></a></li>
-						<li class="divider"></li>
-						<li><a href="javascript:;"><?= __('Help'); ?></a></li>
-					</ul>
-
-				</li>
-
-				<li class="dropdown">
-
-					<a href="javscript:;" class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-user"></i>
-						<?= __('Username'); ?>
-						<b class="caret"></b>
-					</a>
-
-					<ul class="dropdown-menu">
-						<li><a href="javascript:;"><?= __('Logout'); ?></a></li>
-					</ul>
-
 				</li>
 			</ul>
 
-			<form class="navbar-form navbar-right" role="search">
-				<div class="form-group">
-					<input type="text" class="form-control input-sm search-query" placeholder="Search">
-				</div>
-			</form>
 		</div><!-- /.navbar-collapse -->
 	</div> <!-- /.container -->
 </nav>
@@ -87,67 +58,49 @@
 						?>
 					</li>
 
-					<li class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="fa fa-th"></i>
-							<span><?= __('Components'); ?></span>
-							<b class="caret"></b>
-						</a>
-
-						<ul class="dropdown-menu">
-							<li><a href="./elements.html"><?= __('Elements'); ?></a></li>
-							<li><a href="./forms.html"><?= __('Form Styles'); ?></a></li>
-						</ul>
-					</li>
-
-					<li class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="fa fa-copy"></i>
-							<span><?= __('Sample Pages'); ?></span>
-							<b class="caret"></b>
-						</a>
-
-						<ul class="dropdown-menu">
-							<li><a href="./pricing.html"><?= __('Pricing Plans'); ?></a></li>
-							<li><a href="./faq.html"><?= __('FAQ\'s'); ?></a></li>
-							<li><a href="./gallery.html"><?= __('Gallery'); ?></a></li>
-						</ul>
-					</li>
-
-					<li class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="fa fa-external-link"></i>
-							<span><?= __('Extra Pages'); ?></span>
-							<b class="caret"></b>
-						</a>
-
-						<ul class="dropdown-menu">
-							<li><a href="./login.html">Login</a></li>
-							<li><a href="./signup.html">Signup</a></li>
-							<li><a href="./error.html">Error</a></li>
-							<li class="dropdown-submenu">
-								<a tabindex="-1" href="#">More options</a>
-								<ul class="dropdown-menu">
-									<li><a tabindex="-1" href="#">Second level</a></li>
-
-									<li><a href="#">Second level</a></li>
-									<li><a href="#">Second level</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-
 					<!-- Backups -->
 					<li>
 						<?php
 							echo $this->Html->link(
 								'<i class="fa fa-cloud-download"></i><span />' . __('Backups'),
-								['controller' => 'dashboards', 'action' => 'index'],
+								'#',
+								['class' => 'shortcut todo', 'escape' => false]
+							);
+						?>
+					</li>
+
+					<!-- Source -->
+					<li>
+						<?php
+							echo $this->Html->link(
+								'<i class="fa fa-github"></i><span />' . __('Source'),
+								'https://www.github.com/alt3/cakebox-console',
 								['class' => 'shortcut', 'escape' => false]
 							);
 						?>
 					</li>
 
+					<!-- Settings -->
+					<li>
+						<?php
+							echo $this->Html->link(
+								'<i class="fa fa-cog"></i><span />' . __('Settings'),
+								'#',
+								['class' => 'shortcut todo', 'escape' => false]
+							);
+						?>
+					</li>
+
+					<!-- Help -->
+					<li>
+						<?php
+							echo $this->Html->link(
+								'<i class="fa fa-question-circle"></i><span />' . __('Help'),
+								'#',
+								['class' => 'shortcut todo', 'escape' => false]
+							);
+						?>
+					</li>
 
 				</ul>
 			</div> <!-- /.subnav-collapse -->

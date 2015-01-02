@@ -152,7 +152,7 @@ use Cake\Utility\Inflector;
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-lightbulb-o"></i><span class="shortcut-label" />' . __('Pro Tips'),
 						'#',
-						['class' => 'shortcut', 'escape' => false]
+						['class' => 'shortcut todo', 'escape' => false]
 					);
 
 					// Virtual Machine
@@ -191,7 +191,7 @@ use Cake\Utility\Inflector;
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-thumbs-up"></i><span class="shortcut-label" />' . __('Credits'),
 						'#',
-						['class' => 'shortcut', 'escape' => false]
+						['class' => 'shortcut todo', 'escape' => false]
 					);
 				?>
 			</div> <!-- /shortcuts -->

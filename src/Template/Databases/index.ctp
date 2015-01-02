@@ -27,7 +27,7 @@
 								<td><?= $database['name'] ?></td>
 								<td class="actions">
 									<div class="btn-group pull-right">
-										<button type="button" class="btn btn-danger btn-sm">
+										<button type="button" class="btn btn-danger btn-sm todo">
 											<?= __('Delete') ?>
 										</button>
 									</div>
