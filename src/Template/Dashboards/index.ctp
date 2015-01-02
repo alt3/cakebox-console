@@ -319,14 +319,28 @@ use Cake\Utility\Inflector;
 					<li>
 						<?php
 							echo $this->Html->link(
-								'<i class="footer-icon fa fa-github"></i>' . __('Github Sources'),
+								'<i class="footer-icon fa fa-github"></i>' . 'Github',
 								'https://github.com/alt3/cakebox-console',
-								['escape' => false]
+								['escape' => false, 'escapeTitle' => false, 'title' => 'View our sourcecode on Github']
 							);
 						?>
 					</li>
-					<li><?= $this->Html->link('CakePHP', 'http://cakephp.org') ?></li>
-					<li><?= $this->Html->link('Jumpstart Themes', 'https://jumpstartthemes.com') ?></li>
+
+					<li>
+						<?php
+							echo $this->Html->link(
+								$this->Html->image("frameworks/cakephp.icon.png", ['class' => 'footer-icon']) . 'CakePHP',
+								"http://cakephp.org",
+								['escape' => false, 'escapeTitle' => false, 'title' => 'CakePHP: the rapid development php framework']
+							);
+						?>
+					</li>
+
+					<li>
+						<?php
+							echo $this->Html->link('Jumpstart Themes', 'https://jumpstartthemes.com', ['title' => 'Jumpstart Themes: Effortless Twitter Bootstrap Themes']);
+						?>
+					</li>
 					<li><a href="#">&gt; Placeholder &lt;</a></li>
 				</ul>
 			</div>

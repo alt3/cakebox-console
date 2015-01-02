@@ -69,17 +69,6 @@
 						?>
 					</li>
 
-					<!-- Source -->
-					<li>
-						<?php
-							echo $this->Html->link(
-								'<i class="fa fa-github"></i><span />' . __('Source'),
-								'https://www.github.com/alt3/cakebox-console',
-								['class' => 'shortcut', 'escape' => false]
-							);
-						?>
-					</li>
-
 					<!-- Settings -->
 					<li>
 						<?php
@@ -98,6 +87,17 @@
 								'<i class="fa fa-question-circle"></i><span />' . __('Help'),
 								'#',
 								['class' => 'shortcut todo', 'escape' => false]
+							);
+						?>
+					</li>
+
+					<!-- Contribute -->
+					<li>
+						<?php
+							echo $this->Html->link(
+								'<i class="fa fa-github"></i><span />' . __('Contribute'),
+								'https://www.github.com/alt3/cakebox-console',
+								['class' => 'shortcut', 'escape' => false]
 							);
 						?>
 					</li>
