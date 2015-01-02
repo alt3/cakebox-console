@@ -11,6 +11,11 @@ use Cake\Log\Log;
 class AppShell extends Shell
 {
 
+    /**
+     * Disconnect default loggers from consoleIO output.
+     *
+     * @return void
+     */
     public function initialize() {
         $this->_io->setLoggers(false);
         parent::initialize();
@@ -29,47 +34,47 @@ class AppShell extends Shell
     }
 
     /**
-     * Only output message to screen when script is run with --verbose argument
+     * Only output debug message to screen when script is run with --verbose argument
      *
      * @param string $message
      * @return void
      */
-    public function debug($message) {
+    public function logDebug($message) {
         log::debug($message);
         $this->out($message, 1, Shell::VERBOSE);
     }
 
-    /*
-     * Always output info message to screen (even when using --quiet)
+    /**
+     * Always output info message to screen (even when using --quiet).
      *
      * @param string $message
      * @return void
      */
-    public function info($message) {
+    public function logInfo($message) {
         log::info($message);
         $this->out($message, 1, Shell::QUIET);
     }
 
-    /*
+    /**
     * Always output warning message to screen (even when using --quiet)
     *
     * @param string $message
     * @return void
     */
-    public function warning($message) {
+    public function logWarning($message) {
         log::warning($message);
         $this->out($message, 1, Shell::QUIET);
     }
 
-    /*
+    /**
     * Always output warning message to screen (even when using --quiet)
     *
     * @param string $message
     * @return void
     */
-    public function fatal($message) {
+    public function logError($message) {
         log::warning($message);
-        $this->out($message, 1, Shell::QUIET);
+        $this->out("<error>$message</error>", 1, Shell::QUIET);
     }
 
 }
