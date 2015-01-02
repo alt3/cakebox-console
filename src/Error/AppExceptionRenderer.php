@@ -44,7 +44,7 @@ class AppExceptionRenderer extends \Cake\Error\ExceptionRenderer
 			 	'error' => $exception,
 				'errors' => $exception->getErrors(),
 			 	'code' => $code,
-			 	'_serialize' => array('message', 'errors', 'url', 'code')
+			 	'_serialize' => array('message', 'url', 'code', 'errors')
 			 ));
 		} else {
 			 $this->controller->set(array(
