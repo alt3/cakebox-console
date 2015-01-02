@@ -2,6 +2,7 @@
 namespace App\Shell\Task;
 
 use App\Shell\AppShell;
+use Cake\Console\Shell;
 
 /**
  * Task class for managing system command shelling.
@@ -18,28 +19,27 @@ class ExecTask extends AppShell
      */
     public function runCommand($command, $username = "root")
     {
-        $this->out("Executing system command as $username", 1, Shell::VERBOSE);
         if ($username == "root") {
             $command = "$command 2>&1";
         } else {
             $command = "su $username -c \"$command\" 2>&1";
         }
-        $this->out(" => $command", 1, Shell::VERBOSE);
+        $this->logDebug("Executing as $username: `$command`");
 
-     # Execute the command, capture exit code, stdout and stderr
-        $ret = exec($command, $stdout, $exitCode);
+        # Execute the command, capture exit code, stdout and stderr
+        $ret = exec($command , $stdout, $exitCode);
         foreach ($stdout as $line) {
             if (!empty($line)) {
-                $this->out(" => $line", 1, Shell::VERBOSE);
+                $this->logDebug(" => $line");
             }
         }
 
-     # Return exit-code and write stdout to log if errors occured
+        # Return exit-code and write stdout to log if errors occured
         if ($exitCode) {
-            $this->out("Error: Non-zero exit code ($exitCode)");
+            $this->logError("Error: shelled command produced non-zero exit code ($exitCode) and error message:");
             foreach ($stdout as $line) {
                 if (!empty($line)) {
-                    $this->out(" => $line");
+                    $this->logError(" => $line");
                 }
             }
             return $exitCode;

@@ -2,6 +2,7 @@
 namespace App\Shell\Task;
 
 use App\Shell\AppShell;
+use Cake\Console\Shell;
 
 /**
  * Task class for managing symbolic links.
@@ -18,11 +19,11 @@ class SymlinkTask extends AppShell
      */
     public function create($target, $link)
     {
-        $this->out("Creating symbolic link $link");
         if ($this->exists($link)) {
-            $this->out("* Skipping: symlink already exist");
+            $this->logWarning("* Skipping: symbolic link $link already exist");
             return;
         }
+        $this->logInfo("Creating symbolic link $link");
         symlink($target, $link);
     }
 

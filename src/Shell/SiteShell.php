@@ -89,44 +89,48 @@ class SiteShell extends AppShell
      */
     public function add($url, $webroot)
     {
-        $this->out("Creating Nginx configuration file for $url");
+        $this->logInfo("Creating Nginx configuration file for $url");
 
-     # Prevent overwriting default Cakebox site
+        # Prevent overwriting default Cakebox site
         if ($url == 'default') {
-            $this->out("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
+            $this->logError("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
             $this->Exec->exitBashError();
         }
 
-     # Check for existing configuration file
+        # Check for existing configuration file
         $file = $this->webservers['nginx']['sites_available'] . "/" . $url;
         if (file_exists($file)) {
             if ($this->params['force'] == false) {
-                $this->out("* Skipping: file already exists.");
+                $this->logWarning("* Skipping: file already exists.");
                 $this->Exec->exitBashSuccess();
             }
-            $this->out("* Overwriting existing file", 1, Shell::VERBOSE);
+            $this->logInfo("* Overwriting existing file $file", 1, Shell::VERBOSE);
         }
 
-     # Render template using viewVars
+        # Render template using viewVars
         $contents = $this->Template->generate('config/vhost_nginx', [
             'url' => $url,
             'webroot' => $webroot
         ]);
 
-     # Write to the file
+        # Write to the file
         $fh = new File($file, true);
         $fh->write($contents);
 
-     # Enable site by creating symlink in sites-enabled
+        # Enable site by creating symlink in sites-enabled
         $symlink = $this->webservers['nginx']['sites_enabled'] . "/" . $url;
         $this->Symlink->create($file, $symlink);
 
-     # Reload webserver to effectuate changes
-        $this->out("Reloading webserver");
-        $this->Exec->runCommand("service nginx reload");
+        # Reload webserver to effectuate changes
+        $this->logInfo("Reloading webserver");
+        $error = $this->Exec->runCommand("service nginx reload");
+        if ($error == true) {
+            $this->Exec->exitBashError();
+        }
 
-     # Provisioning feedback
-        $this->out("* Note: don't forget to update your localhosts file");
+        # Provisioning feedback
+        $this->out("* Note: remember to update your local hosts file");
+        $this->logInfo("Nginx configuration file created successfully");
     }
 
     /**
