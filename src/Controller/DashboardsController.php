@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Lib\CakeboxCheck;
 use App\Lib\CakeboxUtility;
 use Cake\Log\Log;
+use Cake\Filesystem\File;
 
 class DashboardsController extends AppController
 {
@@ -85,4 +86,17 @@ class DashboardsController extends AppController
         '_serialize' => ['contributors']
         ]);
     }
+
+    /**
+    * Return LICENSE.TXT as json
+    *
+    * @return void
+    */
+    public function license() {
+        $this->set([
+            'fileContent' => CakeboxUtility::getFileContent('/cakebox/console/LICENSE.txt'),
+            '_serialize' => ['fileContent']
+        ]);
+    }
+
 }
