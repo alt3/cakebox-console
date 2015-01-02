@@ -34,6 +34,19 @@ class AppShell extends Shell
     }
 
     /**
+    * Convenience function adds a "hr" splitter element to the logs to easily
+    * identify various actions when reading the plain logfile.
+    *
+    * @param string $message
+    * @return void
+    */
+    public function logStart($message) {
+        log::debug(str_repeat("=", 80));
+        $this->out($message, 1, Shell::QUIET);
+        log::info($message);
+    }
+    
+    /**
      * Only output debug message to screen when script is run with --verbose argument
      *
      * @param string $message
