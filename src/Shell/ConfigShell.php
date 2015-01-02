@@ -55,24 +55,27 @@ class ConfigShell extends AppShell
      */
     public function git()
     {
-        $this->out("Configuring git globals");
+        $this->logStart("Configuring git globals");
 
         if (!isset($this->params['username']) && !isset($this->params['email'])) {
-            $this->out("* Skipping: no options passed");
+            $this->logWarning("* Skipping: no options passed");
             $this->Exec->exitBashSuccess();
         }
 
         if (isset($this->params['username'])) {
             $username = $this->params['username'];
-            $this->out("* Setting git user.name to $username");
+            $this->logInfo("* Setting git user.name to $username");
             $this->Exec->runCommand("git config --global user.name $username", "vagrant");
         }
 
         if (isset($this->params['email'])) {
             $email = $this->params['email'];
-            $this->out("* Setting git user.email to $email");
+            $this->logInfo("* Setting git user.email to $email");
             $this->Exec->runCommand("git config --global user.email $email", "vagrant");
         }
+
+        // Provide feedback
+        $this->logInfo("Configuration updated successfully");
         $this->Exec->exitBashSuccess();
     }
 

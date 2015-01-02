@@ -44,6 +44,7 @@ class ExecTask extends AppShell
             }
             return $exitCode;
         }
+        $this->logDebug("Shelled command completed successfully");
         return false;
     }
 

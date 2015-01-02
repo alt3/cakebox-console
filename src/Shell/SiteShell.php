@@ -89,7 +89,7 @@ class SiteShell extends AppShell
      */
     public function add($url, $webroot)
     {
-        $this->logInfo("Creating Nginx configuration file for $url");
+        $this->logStart("Creating Nginx configuration file for $url");
 
         # Prevent overwriting default Cakebox site
         if ($url == 'default') {
