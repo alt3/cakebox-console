@@ -2,9 +2,9 @@ body {
     background: #e9e9e9 url(../img/tiny_grid.png) repeat 0 0;
 }
 body, p {
-    font: 14px/1.7em "Open Sans";
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
 }
-
 
 /**
  * Beta
@@ -152,9 +152,6 @@ td.app-name a {
 .app-framework-icon {
     margin-left: 4px;
     margin-right: 5px;
-}
-.app-link {
-    font-weight: bold;
 }
 
 .row.stats > div {
