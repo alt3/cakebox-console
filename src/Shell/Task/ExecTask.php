@@ -1,12 +1,12 @@
 <?php
 namespace App\Shell\Task;
 
-use Cake\Console\Shell;
+use App\Shell\AppShell;
 
 /**
  * Task class for managing system command shelling.
  */
-class ExecTask extends Shell
+class ExecTask extends AppShell
 {
 
     /**

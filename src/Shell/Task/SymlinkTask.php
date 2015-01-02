@@ -1,12 +1,12 @@
 <?php
 namespace App\Shell\Task;
 
-use Cake\Console\Shell;
+use App\Shell\AppShell;
 
 /**
  * Task class for managing symbolic links.
  */
-class SymlinkTask extends Shell
+class SymlinkTask extends AppShell
 {
 
     /**

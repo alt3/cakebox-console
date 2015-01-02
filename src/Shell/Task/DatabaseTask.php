@@ -1,14 +1,14 @@
 <?php
 namespace App\Shell\Task;
 
-use Cake\Console\Shell;
+use App\Shell\AppShell;
 use Cake\Datasource\ConnectionManager;
 use Cake\Utility\Hash;
 
 /**
  * Task class for managing Cakebox databases.
  */
-class DatabaseTask extends Shell
+class DatabaseTask extends AppShell
 {
 
     /**

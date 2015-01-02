@@ -1,12 +1,12 @@
 <?php
 namespace App\Shell\Task;
 
-use Cake\Console\Shell;
+use App\Shell\AppShell;
 
 /**
  * Task class for managing application installations.
  */
-class InstallerTask extends Shell
+class InstallerTask extends AppShell
 {
 
     /**
