@@ -10,7 +10,8 @@
 		"cakephp/bake": "dev-master",
 		"cakephp/debug_kit": "3.0.*-dev",
 		"mobiledetect/mobiledetectlib": "2.*",
-		"monolog/monolog": "master"
+		"monolog/monolog": "master",
+		"friendsofcake/bootstrap-ui": "master"
 	},
 	"require-dev": {
 	},
