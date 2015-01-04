@@ -281,7 +281,7 @@ class CakeboxUtility
      * @param string $url FQDN used to expose the application.
      * @return boolean True if the file was updated successfully
      */
-    public static function updateCake3ConfigFile($file, $url)
+    public static function updateCake3Configuration($file, $url)
     {
         $database = CakeboxUtility::normalizeDatabaseName($url);
         $result = CakeboxUtility::updateConfigFile($file, [
@@ -295,7 +295,7 @@ class CakeboxUtility
         }
         return true;
     }
-
+    
     /**
      * Set globally writable permissions on the "tmp" and "logs" directory.
      *

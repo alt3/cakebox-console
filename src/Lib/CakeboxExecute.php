@@ -97,7 +97,7 @@ class CakeboxExecute
     }
 
     /**
-     * Composer create-project for a given package as user vagrant.
+     * Run `composer create-project` for a given package as user vagrant.
      *
      * @param string $package Name of the composer package (e.g. `cakephp/app`).
      * @param string $path Full path to the directory to create the project in.
@@ -107,6 +107,22 @@ class CakeboxExecute
     {
         $this->flushLogs();
         $command = "composer create-project --prefer-dist --no-interaction -s dev $package $path";
+        if ($this->shell($command, 'vagrant') == false) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    * Run `composer install` for a given package as user vagrant.
+    *
+    * @param string $directory Full path to the directory holding composer.json.
+    * @return boolean True on success
+    */
+    public function composerInstall($directory)
+    {
+        $this->flushLogs();
+        $command = "cd $directory; composer install --prefer-dist --no-interaction";
         if ($this->shell($command, 'vagrant') == false) {
             return false;
         }

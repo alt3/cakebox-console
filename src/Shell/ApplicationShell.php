@@ -2,10 +2,9 @@
 namespace App\Shell;
 
 use App\Lib\CakeboxInfo;
+use App\Lib\CakeboxExecute;
 use App\Lib\CakeboxUtility;
 use Cake\Console\Shell;
-use Cake\Filesystem\File;
-use Cake\Filesystem\Folder;
 
 /**
  * Shell class for installing and configuring PHP framework applications.
@@ -14,37 +13,9 @@ class ApplicationShell extends AppShell
 {
 
     /**
-     * @var array Shell Tasks used by this shell.
-     */
-    public $tasks = [
-        'Installer',
-        'Exec',
-        'Database'
-    ];
-
-    /**
      * @var string Full path to the installation directory.
      */
     public $path;
-
-    /**
-     * @var array Installer specific settings.
-     */
-    public $settings = [
-        #'apps_dir' => '/home/vagrant/Apps',
-        'cakephp2' => [
-            'repository' => 'https://github.com/cakephp/cakephp.git',
-            'webroot' => 'app/webroot',
-            'writable_dirs' => ['app/tmp']
-        ],
-        'cakephp3' => [
-            'webroot' => 'webroot'
-        ],
-        'laravel' => [
-            'webroot' => 'public',
-            'writable_dirs' => ['app/storage']
-        ]
-    ];
 
     /**
      * Define available subcommands, arguments and options.
@@ -109,46 +80,46 @@ class ApplicationShell extends AppShell
      */
     public function add($url)
     {
-     # Provide (vagrant provisioning) feedback
-        $this->out("Creating application http://$url");
+        # Provide (vagrant provisioning) feedback
+        $this->logStart("Creating application http://$url");
 
-     # Prevent overwriting default Cakebox site
+        # Prevent overwriting default Cakebox site
         if ($url == 'default') {
-            $this->out("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
-            $this->Exec->exitBashError();
+            $this->logError("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
+            $this->exitBashError();
         }
 
-     # Use default installation path unless --path option is given
+        # Use default installation path unless --path option is given
         if (isset($this->params['path'])) {
             $this->path = $this->params['path'];
         } else {
-            $this->path = $this->Installer->getSudoerHomeDirectory() . "/Apps/" . $url;
+            $this->path = '/home/vagrant/Apps/' . $url;
         }
-        $this->out("Installing into $this->path");
+        $this->logInfo("Installing into $this->path");
 
-     # Check if the target directory meets requirements for git cloning
-     # (non-existent or empty). Note: exits with success to allow vagrant
-     # re-provisioning.
-        if (!$this->Installer->dirAvailable($this->path)) {
-            $this->out("* Skipping: target directory $this->path not empty.");
-            $this->Exec->exitBashSuccess();
+        # Check if the target directory meets requirements for git cloning
+        # (non-existent or empty). Note: exits with success to allow vagrant
+        # re-provisioning.
+        if (!CakeboxUtility::dirAvailable($this->path)) {
+            $this->logWarning("* Skipping: target directory $this->path not empty.");
+            $this->exitBashSuccess();
         }
 
-     // Run user-application installer
+        # Run user-application installer
         if (isset($this->params['repository'])) {
             if (!$this->__runRepositoryInstaller($url, $this->params['repository'])) {
-                $this->out("Error: error completing user specified repository installation.");
-                $this->Exec->exitBashError();
+                $this->logError("Error encoutered while installing user specified repository.");
+                $this->exitBashError();
             }
         # Run framework/version specific installer method
         } elseif (!$this->__runFrameworkInstaller($url, $this->params['framework'], $this->params['majorversion'], $this->params['template'])) {
-            $this->out("Error: error running framework specific installer method.");
-            $this->Exec->exitBashError();
+            $this->logError("Error encoutered running framework installer.");
+            $this->exitBashError();
         }
 
-     # Provide Vagrant feedback
-        $this->out("Installation completed successfully");
-        $this->Exec->exitBashSuccess();
+        # Provide Vagrant feedback
+        $this->logInfo("Application installed successfully");
+        $this->exitBashSuccess();
     }
 
     /**
@@ -170,12 +141,12 @@ class ApplicationShell extends AppShell
                 if ($template == 'cakephp' && $version == "2") {
                     return ($this->__installCake2($url));
                 }
-                $this->out("Error: reached undefined cakephp installer.");
+                $this->logError("Error: reached undefined cakephp installer.");
                 return false;
             case "laravel":
                 return ($this->__installLaravel($url));
             default:
-                $this->out("Error: reached undefined framework installer.");
+                $this->logError("Error: reached undefined framework installer.");
                 return false;
         }
     }
@@ -188,59 +159,67 @@ class ApplicationShell extends AppShell
      */
     private function __installCake2($url)
     {
-        $this->out("Please wait... installing CakePHP 2.x application $url");
+        $execute = new CakeboxExecute();
+        $cbInfo = new CakeboxInfo();
 
-     # Clone the repository
-        $repository = $this->settings['cakephp2']['repository'];
-        if ($this->Exec->runCommand("git clone $repository $this->path", 'vagrant')) {
-            $this->out("Error git cloning $url to $this->path");
+        # Create target directory with correct ownership if needed
+        if (!is_dir($this->path)) {
+            $this->logInfo("Creating target directory " . $this->path);
+            if ($execute->mkVagrantDir($this->path) == false) {
+                $this->logError("Error creating target directory " . $this->path);
+                return false;
+            }
         }
 
-     # Clone DebugKit plugin
+        # Git clone Cake2 repo
+        $this->logInfo("Please wait... git cloning CakePHP 2.x");
+        $repository = $cbInfo->frameworkMeta['cakephp2']['repository'];
+        if ($execute->gitClone($repository, $this->path) == false) {
+            $this->logError("Error git cloning repository");
+            return false;
+        }
+
+        # Git clone DebugKit plugin
         $repository = 'https://github.com/cakephp/debug_kit.git';
         $pluginDir = $this->path . DS . 'app' . DS . 'Plugin' . DS . 'DebugKit';
-        if ($this->Exec->runCommand("git clone $repository $pluginDir", 'vagrant')) {
-            $this->out("Error git cloning $url to $pluginDir");
+        if ($execute->gitClone($repository, $pluginDir) == false) {
+            $this->logError("Error git cloning DebugKit plugin");
+            return false;
         }
 
-     # Create nginx site
-        $webroot = $this->path . DS . $this->settings['cakephp2']['webroot'];
-        $this->dispatchShell("site add $url $webroot --force");
-
-     # Create databases
-        $this->dispatchShell("database add $url --force");
-
-     # Make required folders writable
-        foreach ($this->settings['cakephp2']['writable_dirs'] as $directory) {
-            $this->Installer->setFolderPermissions($this->path . DS . $directory);
+        # Create nginx site
+        $this->logInfo("Creating website");
+        $webroot = $this->path . DS . $cbInfo->frameworkMeta['cakephp2']['webroot'];
+        if ($execute->addSite($url, $webroot, true) == false) {
+            $this->logError("Error creating website");
+            return false;
         }
 
-     # Replace salt and cipher in core.php
-        $coreFile = $this->path . DS . "app" . DS . "Config" . DS . "core.php";
-        $this->Installer->setSecuritySalt($coreFile, 2);
-        $this->Installer->setSecurityCipher($coreFile, 2);
+        # Create databases
+        $this->logInfo("Creating databases");
+        if ($execute->addDatabase($url, 'cakebox', 'secret', true) == false) {
+            $this->logError("Error creating databases");
+            return false;
+        }
 
-     # Enable debugkit in bootstrap.php
-        $bootstrapFile = $this->path . DS . "app" . DS . "Config" . DS . "bootstrap.php";
-        $fh = new File($bootstrapFile);
-        $fh->append('CakePlugin::loadAll();');
-        $this->out("Enabled DebugKit plugin in $bootstrapFile");
+        # Set permissions
+        $this->logInfo("Setting permissions");
+        foreach ($cbInfo->frameworkMeta['cakephp2']['writable_dirs'] as $directory) {
+            if (CakeboxUtility::setFolderPermissions($this->path . DS . $directory) == false) {
+                $this->logError("Error setting permissions on $directory");
+                return false;
+            }
+        }
 
-     # Create database.php config
-        $dbDefault = $this->path . DS . "app" . DS . "Config" . DS . "database.php.default";
-        $dbConfig = $this->path . DS . "app" . DS . "Config" . DS . "database.php";
-        $this->Installer->createConfig($dbDefault, $dbConfig);
+        # Update configuration (core.php, database.php and bootstrap.php
+        $this->logInfo("Updating configuration");
+        #$config = $this->path . DS . "config" . DS . "app.php";
+        if ($execute->updateCake2Configuration($this->path, $url) == false) {
+            $this->logError("Error updating configuration");
+            return false;
+        }
 
-     # Update database.php config
-        $dbName = $this->Database->normalizeName($url);
-        $this->Installer->replaceConfigValue($dbConfig, 'test_database_name', 'test_' . $dbName);
-        $this->Installer->replaceConfigValue($dbConfig, 'database_name', $dbName);
-        $this->Installer->replaceConfigValue($dbConfig, 'user', 'cakebox');
-
-        $oldPassword = "'password' => 'password'";
-        $newPassword = "'password' => 'secret'";
-        $this->Installer->replaceConfigValue($dbConfig, $oldPassword, $newPassword);
-
+        # All done, Cake2 app should be up-and-running
         return true;
     }
 
@@ -248,37 +227,53 @@ class ApplicationShell extends AppShell
      * CakePHP 3.x specific installer using CakePHP Application Skeleton.
      *
      * @param string $url Fully Qualified Domain Name used to expose the site.
-     * @return bool
+     * @return boolean True if the application installed successfully
      */
     private function __installCake3($url)
     {
-        $this->out("Please wait... installing CakePHP 3.x application $url");
+        $execute = new CakeboxExecute();
+        $cbInfo = new CakeboxInfo();
 
-     # Composer install Cake3 using Application Template
-        if ($this->Exec->runCommand("composer create-project --prefer-dist --no-interaction -s dev cakephp/app $this->path", 'vagrant')) {
-            $this->out("Error composer installing to $targetdir");
+        # Create target directory with correct ownership if needed
+        if (!is_dir($this->path)) {
+            $this->logInfo("Creating target directory " . $this->path);
+            if ($execute->mkVagrantDir($this->path) == false) {
+                $this->logError("Error creating target directory " . $this->path);
+                return false;
+            }
         }
 
-     # Create nginx site
-        $webroot = $this->path . DS . $this->settings['cakephp3']['webroot'];
-        $this->dispatchShell("site add $url $webroot --force");
+        # Composer install Cake3 using Application Template
+        $this->logInfo("Please wait... composer installing CakePHP 3.x app skeleton");
+        if ($execute->composerCreateProject('cakephp/app', $this->path) == false) {
+            $this->logError("Error composer creating project");
+            return false;
+        }
 
-     # Create databases
-        $this->dispatchShell("database add $url --force");
+        # Create nginx site
+        $this->logInfo("Creating website");
+        $webroot = $this->path . DS . $cbInfo->frameworkMeta['cakephp3']['webroot'];
+        if ($execute->addSite($url, $webroot, true) == false) {
+            $this->logError("Error creating website");
+            return false;
+        }
 
-     # Update database settings is app.php
-        $dbName = $this->Database->normalizeName($url);
-        $appConfig = $this->path . DS . "config" . DS . "app.php";
+        # Create databases
+        $this->logInfo("Creating databases");
+        if ($execute->addDatabase($url, 'cakebox', 'secret', true) == false) {
+            $this->logError("Error creating databases");
+            return false;
+        }
 
-        $oldUser = "'username' => 'my_app'";
-        $newUser = "'username' => 'cakebox'";
-        $this->Installer->replaceConfigValue($appConfig, $oldUser, $newUser);
-        $this->Installer->replaceConfigValue($appConfig, 'test_myapp', 'test_' . $dbName);
+        # Update app.php with database names
+        $this->logInfo("Updating configuration");
+        $config = $this->path . DS . "config" . DS . "app.php";
+        if (CakeboxUtility::updateCake3Configuration($config, $url) == false) {
+            $this->logError("Error updating config file");
+            return false;
+        }
 
-        $oldDatabase = "'database' => 'my_app'";
-        $newDatabase = "'database' => '$dbName'";
-        $this->Installer->replaceConfigValue($appConfig, $oldDatabase, $newDatabase);
-
+        # All done, cake app should be up-and-running
         return true;
     }
 
@@ -290,24 +285,50 @@ class ApplicationShell extends AppShell
      */
     private function __installLaravel($url)
     {
-        $this->out("Please wait... installing Laravel application $url");
+        $execute = new CakeboxExecute();
+        $cbInfo = new CakeboxInfo();
 
-     # Composer install Laravel
-        if ($this->Exec->runCommand("composer create-project --prefer-dist --no-interaction laravel/laravel $this->path", 'vagrant')) {
-            $this->out("Error composer installing to $targetdir");
+        # Create target directory with correct ownership if needed
+        if (!is_dir($this->path)) {
+            $this->logInfo("Creating target directory " . $this->path);
+            if ($execute->mkVagrantDir($this->path) == false) {
+                $this->logError("Error creating target directory " . $this->path);
+                return false;
+            }
         }
 
-     # Create nginx site
-        $webroot = $this->path . DS . $this->settings['laravel']['webroot'];
-        $this->dispatchShell("site add $url $webroot --force");
-
-     # Create databases
-        $this->dispatchShell("database add $url --force");
-
-     # Make required folders writable
-        foreach ($this->settings['laravel']['writable_dirs'] as $directory) {
-            $this->Installer->setFolderPermissions($this->path . DS . $directory);
+        # Composer install Cake3 using Application Template
+        $this->logInfo("Please wait... composer installing Laravel 4");
+        if ($execute->composerCreateProject('laravel/laravel', $this->path) == false) {
+            $this->logError("Error composer creating project");
+            return false;
         }
+
+        # Create nginx site
+        $this->logInfo("Creating website");
+        $webroot = $this->path . DS . $cbInfo->frameworkMeta['laravel']['webroot'];
+        if ($execute->addSite($url, $webroot, true) == false) {
+            $this->logError("Error creating website");
+            return false;
+        }
+
+        # Create databases
+        $this->logInfo("Creating databases");
+        if ($execute->addDatabase($url, 'cakebox', 'secret', true) == false) {
+            $this->logError("Error creating databases");
+            return false;
+        }
+
+        # Set permissions
+        $this->logInfo("Setting permissions");
+        foreach ($cbInfo->frameworkMeta['laravel']['writable_dirs'] as $directory) {
+            if (CakeboxUtility::setFolderPermissions($this->path . DS . $directory) == false) {
+                $this->logError("Error setting permissions on $directory");
+                return false;
+            }
+        }
+
+        # All done, Laravel app should be up-and-running
         return true;
     }
 
@@ -320,43 +341,67 @@ class ApplicationShell extends AppShell
      */
     private function __runRepositoryInstaller($url, $repository)
     {
-        $cbi = new CakeboxInfo();
+        $execute = new CakeboxExecute();
+        $cbInfo = new CakeboxInfo();
 
-     # Clone the repository
-        $this->out("Please wait... cloning user repository $repository");
-        if ($this->Exec->runCommand("git clone $repository $this->path", 'vagrant')) {
-            $this->out("Note: make sure your SSH agent is forwarding the required identity key if this is a private repository");
-            $this->out("Note: Windows users MUST use Pageant or SSH Agent Forwarding will simply not work");
-            throw new \Exception('Fatal error git cloning repository');
-        }
-
-     # Composer install if needed
-        if (file_exists($this->path . DS . 'composer.json')) {
-            $this->out("Please wait... installing detected composer file");
-            if ($this->Exec->runCommand("cd " . $this->path . "; composer install --prefer-dist --no-interaction", 'vagrant')) {
-                $this->out("Error composer installing to $targetdir");
+        # Create target directory with correct ownership if needed
+        if (!is_dir($this->path)) {
+            $this->logInfo("Creating target directory " . $this->path);
+            if ($execute->mkVagrantDir($this->path) == false) {
+                $this->logError("Error creating target directory " . $this->path);
+                return false;
             }
         }
 
-     # Detect framework
-        $framework = $cbi->getFrameworkCommonName($this->path);
-        $this->out("Detected framework $framework");
-
-     # Create nginx site
-        $webroot = $cbi->getWebrootFromDirectory($this->path);
-        $this->dispatchShell("site add $url $webroot --force");
-
-     # Create databases
-        $this->dispatchShell("database add $url --force");
-
-     # Make required folders writable
-        foreach ($this->settings[$framework]['writable_dirs'] as $directory) {
-            $this->Installer->setFolderPermissions($this->path . DS . $directory);
+        # Git clone user repository
+        $this->logInfo("Please wait... git cloning $repository");
+        if ($execute->gitClone($repository, $this->path) == false) {
+            $this->logInfo($execute->debug());
+            $this->logError("Error git cloning repository");
+            return false;
         }
 
-     # Provisioning feedback
-        $this->out("* Note: application settings are not automatically configured for user repositories,");
-        $this->out("  make sure to update your database credentials, etc. manually.");
+        # Composer install if needed
+        if (file_exists($this->path . DS . 'composer.json')) {
+            $this->logInfo("Please wait... composer installing");
+            if ($execute->composerInstall($this->path) == false) {
+                $this->logInfo($execute->debug());
+                $this->logError("Error composer installing");
+                return false;
+            }
+        }
+
+        # Detect framework
+        $framework = $cbInfo->getFrameworkCommonName($this->path);
+        $this->logInfo("Detected framework $framework");
+
+        # Create nginx site
+        $this->logInfo("Creating website");
+        $webroot = $cbInfo->getWebrootFromDirectory($this->path);
+        if ($execute->addSite($url, $webroot, true) == false) {
+            $this->logError("Error creating website");
+            return false;
+        }
+
+        # Create databases
+        $this->logInfo("Creating databases");
+        if ($execute->addDatabase($url, 'cakebox', 'secret', true) == false) {
+            $this->logError("Error creating databases");
+            return false;
+        }
+
+        # Set permissions
+        $this->logInfo("Setting permissions");
+        foreach ($cbInfo->frameworkMeta[$framework]['writable_dirs'] as $directory) {
+            if (CakeboxUtility::setFolderPermissions($this->path . DS . $directory) == false) {
+                $this->logError("Error setting permissions on $directory");
+                return false;
+            }
+        }
+
+        # All done, provisioning feedback
+         $this->logInfo(" => Note: application settings are not automatically configured for user repositories");
+         $this->logInfo(" => Note: make sure to manually update your database credentials, plugins, etc.");
         return true;
     }
 }
