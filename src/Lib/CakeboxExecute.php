@@ -147,11 +147,13 @@ class CakeboxExecute
      * @return boolean True on success
      */
     protected function sanityCheckSSH() {
-        log::debug("Sanity checking SSH before attempting git clone");
+        $this->_log("Sanity checking SSH before attempting git clone");
 
         $this->_log("* Sanity checking SSH Agent forwarded SSH key");
         if ($this->shell("ssh-add -l", 'vagrant') == false) {
-            $this->_error("SSH git cloning requires a SSH key, none found. Make sure your SSH Agent is forwarding your Github private key.");
+            $this->_error("Error: SSH git clone requires a SSH key, none found");
+            $this->_log(" => Note: make sure your SSH agent is forwarding the required identity key if this is a private repository");
+            $this->_log(" => Note: Windows users MUST use Pageant or SSH Agent Forwarding will simply not work");
             return false;
         }
 
