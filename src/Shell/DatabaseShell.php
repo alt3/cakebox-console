@@ -1,8 +1,6 @@
 <?php
 namespace App\Shell;
 
-use App\Lib\CakeboxInfo;
-use App\Lib\CakeboxExecute;
 use App\Lib\CakeboxUtility;
 use Cake\Console\Shell;
 
@@ -22,7 +20,7 @@ class DatabaseShell extends AppShell
         $parser = parent::getOptionParser();
         $parser->description([__('Manage databases directly from the command line.')]);
 
-     # add
+        # add
         $parser->addSubcommand('add', [
             'parser' => [
                 'description' => [
@@ -85,27 +83,18 @@ class DatabaseShell extends AppShell
      */
     public function add($database)
     {
-        $database = CakeboxUtility::normalizeDatabaseName($database);
         $this->logStart("Creating databases $database and test_$database");
-        $execute = new CakeboxExecute();
 
-        # Will fail on existing databases without --force parameter
-        if ($this->params['force'] == false) {
-            if ($execute->addDatabase($database, $this->params['username'], $this->params['password']) == false) {
-                $this->logInfo($execute->debug());
-                $this->logError("Error creating databases");
-                $this->exitBashError();
-            }
+        # Don't drop existing database without --force option
+        if (CakeboxUtility::databaseExists($database) && !$this->params['force']) {
+            $this->exitBashWarning("* Skipping: database already exists. Use --force to drop.");
         }
 
-        # Option --force parameter passed
-        if ($execute->addDatabase($database, $this->params['username'], $this->params['password'], true) == false) {
-            $this->logInfo($execute->debug());
-            $this->logError("Error creating databases");
-            $this->exitBashError();
+        # Database either does not exist or --force option used
+        if ($this->execute->addDatabase($database, $this->params['username'], $this->params['password'], true) == false) {
+            $this->exitBashError("Error creating databases");
         }
-        $this->logInfo("Databases created successfully");
-        $this->exitBashSuccess();
+        $this->exitBashSuccess("Databases created successfully");
     }
 
     /**
@@ -116,16 +105,16 @@ class DatabaseShell extends AppShell
      */
     public function remove($database)
     {
-        $database = CakeboxUtility::normalizeDatabaseName($database);
         $this->logStart("Dropping databases $database and test_$database");
 
-        if (CakeboxUtility::dropDatabase($database) == false) {
-            $this->logInfo($execute->debug());
-            $this->logError("Error dropping databases");
-            $this->exitBashError();
+        if (!CakeboxUtility::databaseExists($database)) {
+            $this->exitBashWarning("* Skipping: database does not exist.");
         }
-        $this->logInfo("Databases dropped successfully");
-        $this->exitBashSuccess();
+
+        if (CakeboxUtility::dropDatabase($database) == false) {
+            $this->exitBashError("Error dropping databases");
+        }
+        $this->exitBashSuccess("Databases dropped successfully");
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 namespace App\Shell;
 
-use App\Lib\CakeboxExecute;
+use App\Lib\CakeboxUtility;
 use Cake\Console\Shell;
 
 /**
@@ -46,13 +46,13 @@ class PackageShell extends AppShell
     {
         $this->logStart("Please wait... installing software package `$package`");
 
-        $execute = new CakeboxExecute();
-        if ($execute->installPackage($package) == false) {
-            $this->logInfo($execute->debug());
-            $this->logError("Error installing package.");
-            $this->exitBashError();
+        if (CakeboxUtility::packageInstalled($package)) {
+            $this->exitBashWarning("* Skipping: package already installed");
         }
-        $this->out("Package installed successfully.");
-        $this->exitBashSuccess();
+
+        if ($this->execute->installPackage($package) == false) {
+            $this->exitBashError('Error installing package.');
+        }
+        $this->exitBashSuccess("Package installed successfully.");
     }
 }

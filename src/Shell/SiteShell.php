@@ -1,8 +1,6 @@
 <?php
 namespace App\Shell;
 
-use App\Lib\CakeboxExecute;
-use App\Lib\CakeboxInfo;
 use Cake\Console\Shell;
 
 /**
@@ -67,26 +65,20 @@ class SiteShell extends AppShell
     public function add($url, $webroot)
     {
         $this->logStart("Creating Nginx configuration file for $url");
-        $execute = new CakeboxExecute();
 
-        # Will fail on existing vhost file without --force parameter
-        if ($this->params['force'] == false) {
-            if ($execute->addSite($url, $webroot) == false) {
-                $this->logInfo($execute->debug());
-                $this->logError("Error creating site file");
-                $this->exitBashError();
-            }
+        # Don't overwrite existing site file without --force option
+        $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
+        if (file_exists($siteFile) && !$this->params['force']) {
+            $this->exitBashWarning("* Skipping: site already exists. Use --force to overwrite.");
         }
 
-        # Option --force passed
-        if ($execute->addSite($url, $webroot, true) == false) {
-            $this->logInfo($execute->debug());
+        # Site file either does not exist or --force option used
+        if ($this->execute->addSite($url, $webroot, true) == false) {
+            $this->logInfo($this->execute->debug());
             $this->logError("Error creating site file");
             $this->exitBashError();
         }
-        $this->logInfo("Website created successfully");
-        $this->out("<info>Don't forget to update your hosts file</info>");
-        $this->exitBashSuccess();
+        $this->exitBashSuccess("Website created successfully.\n<info>Don't forget to update your hosts file</info>");
     }
 
     /**
@@ -98,14 +90,13 @@ class SiteShell extends AppShell
     public function listall()
     {
         $this->out('Enabled websites highlighted:');
-
-        $siteFiles = (new CakeboxInfo)->getRichNginxFiles();
-        foreach ($siteFiles as $site) {
+        foreach ($this->cbi->getRichNginxFiles() as $site) {
             if ($site['enabled'] == true) {
                 $this->out("  <info>" . $site['name'] . "</info>");
             } else {
                 $this->out("  " . $site['name']);
             }
         }
+        $this->exitBashSuccess();
     }
 }

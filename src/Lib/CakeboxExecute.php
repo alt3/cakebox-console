@@ -380,7 +380,7 @@ class CakeboxExecute
 
         if (CakeboxUtility::packageInstalled($package)) {
             $this->_warn("* Package already installed");
-            return true;
+            return false;
         }
 
         // not installed, shell installation
