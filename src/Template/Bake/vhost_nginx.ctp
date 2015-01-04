@@ -1,26 +1,23 @@
-<%
-/**
- * Cakebox-generated Nginx virtual host using generic template.
- */
-%>
+#
+# Cakebox-generated Nginx virtual host using generic template.
+#
+
 server {
     listen 80;
-    server_name www.<%= $url %>;
-    rewrite ^(.*) http://<%= $url %>$1 permanent;
+    server_name www.:url;
+    rewrite ^(.*) http://:url$1 permanent;
 }
 
-
-
 server {
     listen 80;
-    server_name <%= $url %>;
+    server_name :url;
 
     # root directive should be global
-    root <%= $webroot %>;
+    root :webroot;
     index index.php;
 
-    access_log /var/log/nginx/<%= $url %>.access.log logstash;
-    error_log /var/log/nginx/<%= $url %>.error.log;
+    access_log /var/log/nginx/:url.access.log logstash;
+    error_log /var/log/nginx/:url.error.log;
 
     location / {
         try_files $uri \$uri/ /index.php?\$args;

@@ -1,38 +1,15 @@
 <?php
 namespace App\Shell;
 
+use App\Lib\CakeboxExecute;
+use App\Lib\CakeboxInfo;
 use Cake\Console\Shell;
-use Cake\Filesystem\File;
-use Cake\Filesystem\Folder;
 
 /**
  * Shell class for managing website configuration files.
- *
- * NOTE: not using File class right now due to error "Call to undefined method
- * App\Shell\SiteShell::clearStatCache() in
- * /cakebox/commands/vendor/cakephp/cakephp/src/Filesystem/File.php on line 403.
  */
 class SiteShell extends AppShell
 {
-
-    /**
-     * @var array Shell Tasks used by this shell.
-     */
-    public $tasks = [
-        'Symlink',
-        'Exec',
-        'Bake.Template'
-    ];
-
-    /**
-     * @var array Webserver specific settings.
-     */
-    public $webservers = [
-        'nginx' => [
-            'sites_available' => '/etc/nginx/sites-available',
-            'sites_enabled' => '/etc/nginx/sites-enabled'
-        ]
-    ];
 
     /**
      * Define available subcommands, arguments and options.
@@ -90,47 +67,26 @@ class SiteShell extends AppShell
     public function add($url, $webroot)
     {
         $this->logStart("Creating Nginx configuration file for $url");
+        $execute = new CakeboxExecute();
 
-        # Prevent overwriting default Cakebox site
-        if ($url == 'default') {
-            $this->logError("Error: cannot use 'default' as <url> as this would overwrite the default Cakebox site.");
-            $this->Exec->exitBashError();
-        }
-
-        # Check for existing configuration file
-        $file = $this->webservers['nginx']['sites_available'] . "/" . $url;
-        if (file_exists($file)) {
-            if ($this->params['force'] == false) {
-                $this->logWarning("* Skipping: file already exists.");
-                $this->Exec->exitBashSuccess();
+        # Will fail on existing vhost file without --force parameter
+        if ($this->params['force'] == false) {
+            if ($execute->addSite($url, $webroot) == false) {
+                $this->logInfo($execute->debug());
+                $this->logError("Error creating site file");
+                $this->exitBashError();
             }
-            $this->logInfo("* Overwriting existing file $file", 1, Shell::VERBOSE);
         }
 
-        # Render template using viewVars
-        $contents = $this->Template->generate('config/vhost_nginx', [
-            'url' => $url,
-            'webroot' => $webroot
-        ]);
-
-        # Write to the file
-        $fh = new File($file, true);
-        $fh->write($contents);
-
-        # Enable site by creating symlink in sites-enabled
-        $symlink = $this->webservers['nginx']['sites_enabled'] . "/" . $url;
-        $this->Symlink->create($file, $symlink);
-
-        # Reload webserver to effectuate changes
-        $this->logInfo("Reloading webserver");
-        $error = $this->Exec->runCommand("service nginx reload");
-        if ($error == true) {
-            $this->Exec->exitBashError();
+        # Option --force passed
+        if ($execute->addSite($url, $webroot, true) == false) {
+            $this->logInfo($execute->debug());
+            $this->logError("Error creating site file");
+            $this->exitBashError();
         }
-
-        # Provisioning feedback
-        $this->out("* Note: remember to update your local hosts file");
-        $this->logInfo("Nginx configuration file created successfully");
+        $this->logInfo("Website created successfully");
+        $this->out("<info>Don't forget to update your hosts file</info>");
+        $this->exitBashSuccess();
     }
 
     /**
@@ -141,14 +97,14 @@ class SiteShell extends AppShell
      */
     public function listall()
     {
-        $this->out('Enabled nginx sites are highlighted:');
-        $dir = new Folder($this->webservers['nginx']['sites_available']);
-        $files = $dir->find('.*', 'sort');
-        foreach ($files as $file) {
-            if ($this->Symlink->exists($this->webservers['nginx']['sites_enabled'] . "/$file")) {
-                $this->out("  <info>$file</info>");
+        $this->out('Enabled websites highlighted:');
+
+        $siteFiles = (new CakeboxInfo)->getRichNginxFiles();
+        foreach ($siteFiles as $site) {
+            if ($site['enabled'] == true) {
+                $this->out("  <info>" . $site['name'] . "</info>");
             } else {
-                $this->out("  $file");
+                $this->out("  " . $site['name']);
             }
         }
     }

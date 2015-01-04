@@ -1,34 +1,16 @@
 <?php
 namespace App\Shell;
 
+use App\Lib\CakeboxInfo;
+use App\Lib\CakeboxExecute;
+use App\Lib\CakeboxUtility;
 use Cake\Console\Shell;
-use Cake\Core\Configure;
-use Cake\Filesystem\Folder;
-use Cake\Log\Log;
 
 /**
  * Shell class for managing databases.
  */
 class DatabaseShell extends AppShell
 {
-
-    /**
-     * @var array Shell Tasks used by this shell.
-     */
-    public $tasks = [
-        'Database',
-        'Exec'
-    ];
-
-    /**
-     * @var array Database server specific settings.
-     */
-    public $dbservers = [
-        'mysql' => [
-            'sites_available' => '/etc/nginx/sites-available',
-            'sites_enabled' => '/etc/nginx/sites-enabled'
-        ]
-    ];
 
     /**
      * Define available subcommands, arguments and options.
@@ -69,7 +51,7 @@ class DatabaseShell extends AppShell
             ]
         ]);
 
-     # remove
+        # remove
         $parser->addSubcommand('remove', [
             'parser' => [
                 'description' => [
@@ -84,7 +66,7 @@ class DatabaseShell extends AppShell
             ]
         ]);
 
-     # listall
+        # listall
         $parser->addSubcommand('listall', [
             'parser' => [
                 'description' => [
@@ -103,26 +85,27 @@ class DatabaseShell extends AppShell
      */
     public function add($database)
     {
-        $this->out("Creating databases");
+        $database = CakeboxUtility::normalizeDatabaseName($database);
+        $this->logStart("Creating databases $database and test_$database");
+        $execute = new CakeboxExecute();
 
-        # Prevent processing protected databases
-        if ($database == 'information_schema') {
-            $this->out("Error: cannot drop protected database '$database'.");
-            $this->Exec->exitBashError();
-        }
-
-        # Check for existing databases
-        if ($this->Database->exists($database)) {
-            if ($this->params['force'] == false) {
-                $this->out("* Skipping: databases already exists. Use --force to drop.");
-                $this->Exec->exitBashSuccess();
+        # Will fail on existing databases without --force parameter
+        if ($this->params['force'] == false) {
+            if ($execute->addDatabase($database, $this->params['username'], $this->params['password']) == false) {
+                $this->logInfo($execute->debug());
+                $this->logError("Error creating databases");
+                $this->exitBashError();
             }
-            $this->Database->drop($database);
         }
 
-        # Create databases and set permissions
-        $this->Database->create($database);
-        $this->Database->setGrants($database, $this->params['username'], $this->params['password']);
+        # Option --force parameter passed
+        if ($execute->addDatabase($database, $this->params['username'], $this->params['password'], true) == false) {
+            $this->logInfo($execute->debug());
+            $this->logError("Error creating databases");
+            $this->exitBashError();
+        }
+        $this->logInfo("Databases created successfully");
+        $this->exitBashSuccess();
     }
 
     /**
@@ -133,7 +116,16 @@ class DatabaseShell extends AppShell
      */
     public function remove($database)
     {
-        $res = $this->Database->drop($database);
+        $database = CakeboxUtility::normalizeDatabaseName($database);
+        $this->logStart("Dropping databases $database and test_$database");
+
+        if (CakeboxUtility::dropDatabase($database) == false) {
+            $this->logInfo($execute->debug());
+            $this->logError("Error dropping databases");
+            $this->exitBashError();
+        }
+        $this->logInfo("Databases dropped successfully");
+        $this->exitBashSuccess();
     }
 
     /**
@@ -143,11 +135,14 @@ class DatabaseShell extends AppShell
      */
     public function listall()
     {
-        $this->out('User databases on this system:');
-        $databases = $this->Database->getDatabaseList();
-
+        $this->out('Test databases not highlighted:');
+        $databases = (new CakeboxInfo)->getAppDatabases();
         foreach ($databases as $database) {
-            $this->out("  $database");
+            if (substr($database['name'], 0, 5) == 'test_') {
+                $this->out("  " . $database['name']);
+            } else {
+                $this->out("  <info>" . $database['name'] . "</info>");
+            }
         }
     }
 }

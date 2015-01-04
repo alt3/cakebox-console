@@ -34,6 +34,26 @@ class AppShell extends Shell
     }
 
     /**
+     * Exit PHP script with exit code 0 to inform bash about success.
+     *
+     * @return void
+     */
+    public function exitBashSuccess()
+    {
+        exit (0);
+    }
+
+    /**
+     * Exit PHP script with exit code 0 to inform bash about success.
+     *
+     * @return void
+     */
+    public function exitBashError()
+    {
+        exit (1);
+    }
+
+    /**
     * Convenience function adds a "hr" splitter element to the logs to easily
     * identify various actions when reading the plain logfile.
     *
@@ -45,7 +65,7 @@ class AppShell extends Shell
         $this->out($message, 1, Shell::QUIET);
         log::info($message);
     }
-    
+
     /**
      * Only output debug message to screen when script is run with --verbose argument
      *
@@ -60,12 +80,18 @@ class AppShell extends Shell
     /**
      * Always output info message to screen (even when using --quiet).
      *
-     * @param string $message
+     * @param string|array $message
      * @return void
      */
     public function logInfo($message) {
-        log::info($message);
-        $this->out($message, 1, Shell::QUIET);
+        if (is_string($message)) {
+            log::info($message);
+            $this->out($message, 1, Shell::QUIET);
+            return;
+        }
+        foreach ($message as $entry) {
+            $this->out($entry, 1, Shell::QUIET);
+        }
     }
 
     /**
@@ -87,7 +113,7 @@ class AppShell extends Shell
     */
     public function logError($message) {
         log::warning($message);
-        $this->out("<error>$message</error>", 1, Shell::QUIET);
+        $this->out("<error>$message</error> <info>See cakebox log for details.</info>", 1, Shell::QUIET);
     }
 
 }

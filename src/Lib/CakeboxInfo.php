@@ -40,6 +40,29 @@ class CakeboxInfo
     public $databaseMeta = [
         'mysql' => [
             'system_databases' => [ 'mysql', 'information_schema', 'performance_schema', 'test' ]
+        ],
+        'test_prefix' => 'test_',
+        'default_local_user' => 'cakebox',
+        'default_local_password' => 'secret'
+    ];
+
+    /**
+     * @var array Hash with framework specific information.
+     */
+    public $frameworkMeta = [
+        'cakephp2' => [
+            'repository' => 'https://github.com/cakephp/cakephp.git',
+            'webroot' => 'app/webroot',
+            'writable_dirs' => ['app/tmp'],
+            'salt' => 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi',
+            'cipher' => '76859309657453542496749683645'
+        ],
+        'cakephp3' => [
+            'webroot' => 'webroot'
+        ],
+        'laravel' => [
+            'webroot' => 'public',
+            'writable_dirs' => ['app/storage']
         ]
     ];
 
@@ -893,8 +916,8 @@ class CakeboxInfo
     /**
      * Fetch commits for a repository from the Github API.
      *
-     * @param string $repository Github repository shortname (owner/repo)
-     * @param string $limit Number of results to return
+     * @param string $repository Github repository shortname (owner/repo).
+     * @param string $limit Number of results to return.
      * @return array Array
      */
     public function getRepositoryCommits($repository, $limit = null)
@@ -914,7 +937,7 @@ class CakeboxInfo
         try {
             $http = new Client();
             $response = $http->get("https://api.github.com/repos/$repository/commits$limit");
-            if (!$response->isOk()){
+            if (!$response->isOk()) {
                 return null;
             }
             $result = json_decode($response->body(), true);
