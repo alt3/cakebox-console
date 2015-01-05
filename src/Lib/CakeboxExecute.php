@@ -97,6 +97,21 @@ class CakeboxExecute
     }
 
     /**
+     * Run a git config command as vagrant user.
+     *
+     * @param string $path Full path of directory to be created.
+     * @return boolean True on success
+     */
+    public function gitConfig($gitKey, $value)
+    {
+        log::debug("Updating global git configuration $gitKey to $value");
+        if (!$this->shell("git config --global $gitKey $value", 'vagrant')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Run `composer create-project` for a given package as user vagrant.
      *
      * @param string $package Name of the composer package (e.g. `cakephp/app`).

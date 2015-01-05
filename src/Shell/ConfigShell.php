@@ -12,9 +12,9 @@ class ConfigShell extends AppShell
     /**
      * @var array Shell Tasks used by this shell.
      */
-    public $tasks = [
-        'Exec'
-    ];
+#    public $tasks = [
+#        'Exec'
+#    ];
 
     /**
      * Define available subcommands, arguments and options.
@@ -58,46 +58,47 @@ class ConfigShell extends AppShell
         $this->logStart("Configuring git globals");
 
         if (!isset($this->params['username']) && !isset($this->params['email'])) {
-            $this->logWarning("* Skipping: no options passed");
-            $this->Exec->exitBashSuccess();
+            $this->exitBashWarning("* Skipping: no options passed");
         }
 
         if (isset($this->params['username'])) {
             $username = $this->params['username'];
             $this->logInfo("* Setting git user.name to $username");
-            $this->Exec->runCommand("git config --global user.name $username", "vagrant");
+            if (!$this->execute->gitConfig("user.name", $username)) {
+                $this->exitBashError("Error updating git config.");
+            }
         }
 
         if (isset($this->params['email'])) {
             $email = $this->params['email'];
             $this->logInfo("* Setting git user.email to $email");
-            $this->Exec->runCommand("git config --global user.email $email", "vagrant");
+            if (!$this->execute->gitConfig("user.email", $email)) {
+                $this->exitBashError("Error updating git config.");
+            }
         }
-
-        // Provide feedback
-        $this->logInfo("Configuration updated successfully");
-        $this->Exec->exitBashSuccess();
+        $this->exitBashSuccess("Git configuration updated successfully");
     }
 
     /**
-     * Update cakebox-console repository and run composer update.
+     * Self-update cakebox-console by updating git repository first and then
+     * running composer update.
      *
      * @return void
      */
-    public function update()
-    {
-        $this->out("Updating cakebox console and management website");
-
-     # Git pull cakebox-console
-        $this->out("* Updating repository");
-        if ($this->Exec->runCommand("cd /cakebox/console; git fetch; git reset --hard origin/master", 'vagrant')) {
-            $this->out("Error git pulling cakebox-console");
-        }
-
-     # Composer update cakebox-console
-        $this->out("* Updating composer");
-        if ($this->Exec->runCommand("cd /cakebox/console; composer update --prefer-dist --no-dev", 'vagrant')) {
-            $this->out("Error composer updating");
-        }
-    }
+    // public function update()
+    // {
+    //     $this->out("Updating cakebox console and management website");
+    //
+    //     # Git pull cakebox-console
+    //     $this->out("* Updating repository");
+    //     if ($this->Exec->runCommand("cd /cakebox/console; git fetch; git reset --hard origin/master", 'vagrant')) {
+    //         $this->out("Error git pulling cakebox-console");
+    //     }
+    //
+    //     # Composer update cakebox-console
+    //     $this->out("* Updating composer");
+    //     if ($this->Exec->runCommand("cd /cakebox/console; composer update --prefer-dist --no-dev", 'vagrant')) {
+    //         $this->out("Error composer updating");
+    //     }
+    // }
 }
