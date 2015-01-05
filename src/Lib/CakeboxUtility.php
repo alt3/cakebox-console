@@ -275,28 +275,6 @@ class CakeboxUtility
     }
 
     /**
-     * Convenience function to update CakePHP3 app.php configuration file.
-     *
-     * @param string $file Full path to the app.php file.
-     * @param string $url FQDN used to expose the application.
-     * @return boolean True if the file was updated successfully
-     */
-    public static function updateCake3Configuration($file, $url)
-    {
-        $database = CakeboxUtility::normalizeDatabaseName($url);
-        $result = CakeboxUtility::updateConfigFile($file, [
-            "'username' => 'my_app'" => "'username' => 'cakebox'",
-            "'database' => 'my_app'" => "'database' => '$database'",
-            "'database' => 'test_myapp'" => "'database' => 'test_$database'"
-            ]);
-        if ($result == false) {
-            log::error("Error updating CakePHP3 config file");
-            return false;
-        }
-        return true;
-    }
-    
-    /**
      * Set globally writable permissions on the "tmp" and "logs" directory.
      *
      * This is not the most secure default, but it gets people up and running quickly.
@@ -362,25 +340,38 @@ class CakeboxUtility
     }
 
     /**
-     * Check if a directory is either non-existent or empty. Useful before running
-     * commands which require empty directories (e.g. git clone).
+     * Run readiness test to see if a directory can be used for composer/git
+     * installations.
      *
      * @param string $directory Full path to directory to check.
      * @return bool
      */
     public function dirAvailable($directory)
     {
-        log::debug("Checking if directory is available for framework installation");
+        log::debug("Checking installation directory readiness");
+
+        # Directory does not exist
+        log::debug("* Checking if installation directory exists");
         if (!file_exists($directory)) {
-            log::debug("* Available: directory does not exist");
+            log::debug("* Pass: directory does not exist");
             return true;
         }
-        if (($files = scandir($directory)) && count($files) <= 2) {
-            log::debug("* Available: directory exists but is empty");
-            return true;
+
+        # Directory exists but is not empty
+        log::debug("* Checking if existing directory is empty");
+        $files = scandir($directory);
+        if (count($files) > 2) {
+            log::error("* Fail: directory exists but is NOT empty");
+            return false;
         }
-        log::error("* Directory exists and is NOT empty");
-        return false;
+
+        # Check if the directory is writable by vagrant user
+        $execute = new CakeboxExecute();
+        if (!$execute->isVagrantWritable($directory)) {
+            return false;
+        }
+        Log::debug("* Pass: directory is writable");
+        return true;
     }
 
     /**
@@ -389,7 +380,7 @@ class CakeboxUtility
      * @param string $randomText Text used generating the hash.
      * @return string Containg sha256 salt/cipher
      */
-    public function genSaltCipher($randomText)
+    public function getSaltCipher($randomText)
     {
         return hash('sha256', $randomText . php_uname() . microtime(true));
     }

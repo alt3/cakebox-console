@@ -342,6 +342,29 @@ class CakeboxExecute
     }
 
     /**
+     * Checks if a directory is writable by the vagrant user.
+     *
+     * @param string $directory Full path to the directory.
+     * @return boolean True if writable
+     */
+    public function isVagrantWritable($directory) {
+        log::debug("* Checking if directory is writable by vagrant user");
+
+        if (!is_dir($directory)) {
+            log::error("* Directory does not exist");
+            return false;
+        }
+
+        $testfile = $directory . DS . CakeboxUtility::getSaltCipher('heart-this');
+        if (!$this->shell("touch $testfile; rm $testfile", 'vagrant')) {
+            log::error("* Directory is NOT writable");
+            return false;
+        }
+        log::debug("* Directory is writable");
+        return true;
+    }
+
+    /**
      * Create a symbolic link in /etc/nginx/sites-enabled as root.
      *
      * @param string $siteFile Name of the nginx site file witouht leading path.
@@ -393,6 +416,31 @@ class CakeboxExecute
     }
 
     /**
+     * Convenience function to update CakePHP3 app.php configuration file.
+     *
+     * @param string $appdir Full path to the application directory (APP)
+     * @param string $url FQDN used to expose the application.
+     * @return boolean True if the file was updated successfully
+     */
+    public function updateCake3Configuration($appdir, $url)
+    {
+        $this->_log("Updating config file app.php");
+        $appFile = $appdir . DS . "config" . DS . "app.php";
+        $database = CakeboxUtility::normalizeDatabaseName($url);
+
+        $result = CakeboxUtility::updateConfigFile($appFile, [
+            "'username' => 'my_app'" => "'username' => 'cakebox'",
+            "'database' => 'my_app'" => "'database' => '$database'",
+            "'database' => 'test_myapp'" => "'database' => 'test_$database'"
+            ]);
+            if ($result == false) {
+                $this->_log("Error updating config file");
+                return false;
+            }
+            return true;
+        }
+
+    /**
     * Convenience function to update all required CakePHP2 configuration files.
     *
     * @param string $appdir Full path to the application directory (APP).
@@ -404,9 +452,10 @@ class CakeboxExecute
         # Update salt/cipher in core.php
         $this->_log("Updating core.php");
         $coreFile = $appdir . DS . "app" . DS . "Config" . DS . "core.php";
+
         $res = CakeboxUtility::updateConfigFile($coreFile, [
-            $this->cbi->frameworkMeta['cakephp2']['salt'] => CakeboxUtility::genSaltCipher($coreFile),
-            $this->cbi->frameworkMeta['cakephp2']['cipher'] => CakeboxUtility::genSaltCipher($coreFile)
+            $this->cbi->frameworkMeta['cakephp2']['salt'] => CakeboxUtility::getSaltCipher($coreFile),
+            $this->cbi->frameworkMeta['cakephp2']['cipher'] => CakeboxUtility::getSaltCipher($coreFile)
         ]);
         if ($res == false) {
             $this->_error("Error updating core file");

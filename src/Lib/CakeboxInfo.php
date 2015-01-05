@@ -51,16 +51,22 @@ class CakeboxInfo
      */
     public $frameworkMeta = [
         'cakephp2' => [
-            'repository' => 'https://github.com/cakephp/cakephp.git',
+            'installation_method' => 'git',
+            'source' => 'https://github.com/cakephp/cakephp.git',
+            'source_ssh' => 'git@github.com:cakephp/cakephp.git',
             'webroot' => 'app/webroot',
             'writable_dirs' => ['app/tmp'],
             'salt' => 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi',
             'cipher' => '76859309657453542496749683645'
         ],
         'cakephp3' => [
+            'installation_method' => 'composer',
+            'source' => 'cakephp/app',
             'webroot' => 'webroot'
         ],
         'laravel' => [
+            'installation_method' => 'composer',
+            'source' => 'laravel/laravel',
             'webroot' => 'public',
             'writable_dirs' => ['app/storage']
         ]
@@ -750,7 +756,7 @@ class CakeboxInfo
         }
 
         // Initial checks failed, try detecting (legacy) Cake applications by searching for valid VERSION.txt
-        if ($this->getCakeVersionFile($appdir)) {
+        if ($this->getCakeVersionFromFile($appdir)) {
             return 'cakephp';
         }
         return false;
