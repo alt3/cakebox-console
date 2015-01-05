@@ -50,7 +50,7 @@ class PackageShell extends AppShell
             $this->exitBashWarning("* Skipping: package already installed");
         }
 
-        if ($this->execute->installPackage($package) == false) {
+        if (!$this->execute->installPackage($package)) {
             $this->exitBashError('Error installing package.');
         }
         $this->exitBashSuccess("Package installed successfully.");
