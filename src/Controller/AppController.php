@@ -21,9 +21,23 @@ class AppController extends Controller
     public $uses = false;
 
     /**
+    * @var Components available to all views
+    */
+    public $components = [
+        'Flash',
+        'RequestHandler',
+        'Security',
+        'Csrf',
+        'BootstrapUI.Flash'
+    ];
+
+    /**
      * @var Helpers available to all views
      */
-    public $helpers = ['Cakebox'];
+    public $helpers = [
+        'Cakebox',
+        'BootstrapUI.Form'
+    ];
 
     /**
      * CakeboxInfo instance available to all Controllers
@@ -39,10 +53,6 @@ class AppController extends Controller
      */
     public function initialize()
     {
-        $this->loadComponent('Flash');
-        $this->loadComponent('RequestHandler');
-        $this->loadComponent('Security');
-        $this->loadComponent('Csrf');
         $this->cbi = new CakeboxInfo;
     }
 
