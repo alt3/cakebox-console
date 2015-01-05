@@ -31,7 +31,7 @@
 					<input id="Field" name="Field" type="checkbox" class="field login-checkbox" value="First Choice" tabindex="4" />
 					<label class="choice" for="Field"><?= __('Keep me signed in') ?></label>
 				</span>
-				<button class="login-action btn btn-primary"><?= __('Sign in') ?></button>
+				<a href="/dashboards" class="login-action btn btn-primary"><?= __('Sign in') ?></a>
 			</div>
 
 		</form>
