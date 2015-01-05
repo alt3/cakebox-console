@@ -80,25 +80,17 @@ class ConfigShell extends AppShell
     }
 
     /**
-     * Self-update cakebox-console by updating git repository first and then
-     * running composer update.
+     * Self-update cakebox-console repository and composer packages.
      *
      * @return void
      */
-    // public function update()
-    // {
-    //     $this->out("Updating cakebox console and management website");
-    //
-    //     # Git pull cakebox-console
-    //     $this->out("* Updating repository");
-    //     if ($this->Exec->runCommand("cd /cakebox/console; git fetch; git reset --hard origin/master", 'vagrant')) {
-    //         $this->out("Error git pulling cakebox-console");
-    //     }
-    //
-    //     # Composer update cakebox-console
-    //     $this->out("* Updating composer");
-    //     if ($this->Exec->runCommand("cd /cakebox/console; composer update --prefer-dist --no-dev", 'vagrant')) {
-    //         $this->out("Error composer updating");
-    //     }
-    // }
+     public function update()
+    {
+        $this->out("Self-updating cakebox console and website");
+        $this->out("Please wait... this can take a moment");
+        if (!$this->execute->selfUpdate()) {
+            $this->exitBashError("Error updating application.");
+        }
+        $this->exitBashSuccess("Update completed successfully");
+    }
 }

@@ -112,6 +112,32 @@ class CakeboxExecute
     }
 
     /**
+     * Self-update cakebox console and dashboard by updating git repository and
+     * running composer update.
+     *
+     * @return boolean True on success
+     */
+    public function selfUpdate()
+    {
+        log::debug("Self-updating cakebox-console...");
+
+        Log::debug("* Updating git repository");
+        $command = 'cd /cakebox/console; git fetch; git reset --hard origin/master';
+        if (!$this->shell($command, 'vagrant')) {
+            return false;
+        }
+
+        Log::debug("* Updating composer packages");
+        $command = 'cd /cakebox/console; composer update --prefer-dist --no-dev';
+        if (!$this->shell($command, 'vagrant')) {
+            return false;
+        }
+
+        Log::debug("* Self-update completed successfully");
+        return true;
+    }
+
+    /**
      * Run `composer create-project` for a given package as user vagrant.
      *
      * @param string $package Name of the composer package (e.g. `cakephp/app`).
@@ -171,6 +197,8 @@ class CakeboxExecute
         }
         return true;
     }
+
+
 
     /**
      * Perform sanity checks against SSH preconditions before git cloning using SSH
