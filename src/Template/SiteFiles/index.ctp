@@ -1,5 +1,8 @@
+<?php
+use App\Form\SiteFileForm;
+?>
 
-<div class="col-sm-12 column">
+<div class="col-sm-10 column">
 
 	<!-- Sitefiles widget -->
 	<div class="widget stacked widget-table action-table">
@@ -7,12 +10,15 @@
 		<div class="widget-header">
 			<i class="fa fa-file-text-o"></i>
 			<h3><?= __('Nginx site configuration files') ?></h3>
-		</div> <!-- /widget-header -->
+			<button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#addModal">Add</button>
+		</div>
 
 		<div class="widget-content">
 			<div class="panel-body">
 				<table class="table collection">
-					<caption><?= __('As found in ') . $data['directories']['sites-available'] ?></caption>
+					<caption>
+						<?= __('As found in ') . $data['directories']['sites-available'] ?>
+					</caption>
 					<thead>
 						<tr>
 							<th>#</th>
@@ -51,7 +57,8 @@
 
 </div>
 
-<!-- Modal -->
+
+<!-- View Modal -->
 <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -69,6 +76,36 @@
 	</div>
 </div>
 
+
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel"><?= __('New Nginx website') ?></h4>
+			</div>
+			<div class="modal-body">
+				<?php
+					$form = new SiteFileForm();
+					echo $this->Form->create($form, [
+						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json'],
+						['id' => 'form-submit']
+					]);
+					echo $this->Form->input('url', [
+					]);
+					echo $this->Form->input('webroot');
+					echo $this->Form->end();
+				?>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="form-submit" class="btn btn-primary" data-dismiss="modal"><?= __('Submit') ?></button>
+				<button type="button" class="btn btn-default" data-dismiss="modal"><?= __('Cancel') ?></button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 $('#fileModal').on('show.bs.modal', function (event) {
 	var modal = $(this)
@@ -79,8 +116,36 @@ $('#fileModal').on('show.bs.modal', function (event) {
 		console.log(modal)
 		modal.find('.modal-body').html('<pre>' + data.content + '</pre>')
 	})
+	.fail(function() {
+		alert( 'So sorry, something went wrong fetching the file...' )
+	})
 })
-.fail(function() {
-	alert( 'So sorry, something went wrong fetching the file...' )
-})
+
+</script>
+
+<!-- Add modal -->
+<script>
+$('#form-submit').click(function() {
+	$.ajax({
+		url: "/sitefiles/ajax_add.json",
+		type: "POST",
+		headers: {
+			'X-CSRF-Token': $('input[name="_csrfToken"]').attr('value')
+		},
+		data: {
+			url: $('#url').val(),
+			webroot: $('#webroot').val()
+		}
+	})
+	.success(function( msg ) {
+		alert( msg.message );
+		//alert( msg.webroot);
+		//alert( msg.url);
+	})
+	.fail(function( msg ) {
+		console.dir(msg)
+		alert( msg.responseText );
+	})
+
+});
 </script>
