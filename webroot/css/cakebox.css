@@ -107,6 +107,15 @@ td.actions div button i {
     margin-top: 60px;
 }
 
+
+/**
+ * Forms
+ */
+.form-control-feedback {
+    margin-top: 11px;
+    font-size: 18px;
+}
+
 /*------------------------------------------------------------------
 [ Growl / .msgGrowl ]
 */
