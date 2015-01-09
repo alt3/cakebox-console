@@ -25,7 +25,7 @@ $(document).ready(function(){
 * @todo Make generic
 */
 function loadTabStatus() {
-	var jqxhr = $.getJSON( 'https://cakebox/dashboards/checks.json', function(data) {
+	var jqxhr = $.getJSON( '../dashboards/checks.json', function(data) {
 		// loop through each category
 		$.each( data, function( category, checks ) {
 			failCount = 0
@@ -62,7 +62,7 @@ function loadTabStatus() {
 * Ajax load Software tab
 */
 function loadTabSoftware() {
-	var jqxhr = $.getJSON( 'https://cakebox/dashboards/software.json', function(data) {
+	var jqxhr = $.getJSON( '../dashboards/software.json', function(data) {
 		console.dir(data)
 
 		// fill OS panel
