@@ -92,12 +92,17 @@ use App\Form\SiteFileForm;
 						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json'],
 						['id' => 'form-submit']
 					]);
-					echo $this->Form->input('url', [
-						'label' => ['class' => 'control-label']
-					]);
-					echo $this->Form->input('webroot', [
-						'label' => ['class' => 'control-label']
-					]);
+				?>
+
+				<div class="alert alert-danger alert-dismissible collapse" role="alert">
+					<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<span>
+						ajax-loaded message
+					</span>
+				</div>
+				<?php
+					echo $this->Form->input('url');
+					echo $this->Form->input('webroot');
 					echo $this->Form->end();
 				?>
 			</div>

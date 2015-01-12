@@ -38,7 +38,7 @@ class RestValidationException extends BadRequestException
 	 */
 	public function getErrors()
 	{
-		return $this->_validationErrors;
+		return ['validation_errors' => $this->_validationErrors ];
 	}
 
 }

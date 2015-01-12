@@ -46,6 +46,10 @@ body, p {
 .main > .container > .row {
     /*margin-left: -30px;*/
 }
+.collapse {
+	visibility: visible !important;		/** fix to get jQuery show() working */
+}
+
 
 /**
  * Overrides due to font-awesome upgrade
@@ -115,6 +119,9 @@ td.actions div button i {
     margin-top: 11px;
     font-size: 18px;
 }
+
+
+
 
 /*------------------------------------------------------------------
 [ Growl / .msgGrowl ]

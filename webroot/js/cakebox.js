@@ -11,6 +11,14 @@ $(document).ready(function(){
 	});
 
 	/*--------------------------------------------------
+	 * Use jQuery for dismissing alerts (since BS3 removes
+	 * the element from DOM making re-use impossible )
+	 *------------------------------------------------*/
+	$('.alert .close').on('click',function(){
+		$(this).parent().hide();
+	});
+
+	/*--------------------------------------------------
 	 * Show Growl message for not-implemented-yet
 	 *------------------------------------------------*/
 	$('.todo').on('click', function () {
@@ -69,6 +77,8 @@ $(document).ready(function(){
 		$.ajax({
 			url: url,
 			type: "POST",
+			// Note => explicit X-CSRF header disabled for now because we are
+			//         passing the token as part of the form fields as well.
 			// headers: {
 			// 	'X-CSRF-Token': $('input[name="_csrfToken"]').attr('value')
 			// },
@@ -79,6 +89,20 @@ $(document).ready(function(){
 		})
 		.fail(function( msg ) {
 			var response = msg.responseJSON
+			alert(msg.responseText)
+
+			// remove previous validation feedback
+			clearFormFeedback(form)
+
+			// Check for non-validation errors first
+			if (!response.validation_errors) {
+				setFormToValidated(form)
+				form.find('.alert > span').html(msg.responseJSON.message)
+				form.find('.alert').show()
+				return
+			}
+
+			// Still here, process validation errors
 			var inputs = form.find(":input")
 
 			inputs.each(function(index, input){
@@ -97,7 +121,7 @@ $(document).ready(function(){
 				formGroup.removeClass('has-error has-feedback')
 
 				// handle passed/failed validations
-				var errors = response.errors[input.name]
+				var errors = response.validation_errors[input.name]
 
 				if (!errors) {
 					formGroup.addClass('has-success has-feedback')
@@ -118,10 +142,28 @@ $(document).ready(function(){
 
 	});
 
-
-
 });
 
+/*--------------------------------------------------
+* Remove all form validation feedback
+*------------------------------------------------*/
+function clearFormFeedback(form) {
+	form.find(":input").each( function(index, input) {
+		var formGroup = $('input[name="' + input.name + '"]').closest('.form-group')
+		formGroup.removeClass('has-error has-success')
+	})
+}
+
+/*--------------------------------------------------
+* Set all form validation feedback to success
+*------------------------------------------------*/
+function setFormToValidated(form) {
+	form.find(":input").each( function(index, input) {
+		var formGroup = $('input[name="' + input.name + '"]').closest('.form-group')
+		formGroup.addClass('has-feedback has-success')
+		formGroup.append('<span class="fa fa-check form-control-feedback" aria-hidden="true"></span>')
+	})
+}
 
 /*--------------------------------------------------
  * Generic Growl message for failed ajax fetches.
