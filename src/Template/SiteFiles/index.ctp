@@ -89,6 +89,7 @@ use App\Form\SiteFileForm;
 				<?php
 					$form = new SiteFileForm();
 					echo $this->Form->create($form, [
+						//'horizontal' => true,
 						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json'],
 						['id' => 'form-submit']
 					]);
@@ -103,6 +104,7 @@ use App\Form\SiteFileForm;
 				<?php
 					echo $this->Form->input('url');
 					echo $this->Form->input('webroot');
+					echo $this->Form->input('force');
 					echo $this->Form->end();
 				?>
 			</div>

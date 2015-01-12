@@ -261,7 +261,7 @@ class CakeboxExecute
 
         // Check for existing site file
         $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
-        $this->_log("Creating virtual host file");
+        $this->_log("Creating virtual host file for $url");
         if (file_exists($siteFile)) {
             if ($force == false) {
                 $this->_error("* Site file $siteFile already exists. Use --force to drop.");

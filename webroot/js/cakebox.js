@@ -89,54 +89,38 @@ $(document).ready(function(){
 		})
 		.fail(function( msg ) {
 			var response = msg.responseJSON
-			alert(msg.responseText)
-
-			// remove previous validation feedback
+			var validationErrors = response.validation_errors
 			clearFormFeedback(form)
 
-			// Check for non-validation errors first
-			if (!response.validation_errors) {
+			// Display error message only if all fields validated
+			if (!validationErrors) {
 				setFormToValidated(form)
 				form.find('.alert > span').html(msg.responseJSON.message)
 				form.find('.alert').show()
 				return
 			}
 
-			// Still here, process validation errors
-			var inputs = form.find(":input")
-
-			inputs.each(function(index, input){
-
+			// One or more fields did not pass validation
+			var inputs = form.find(".form-group.has-feedback :input")
+			$.each(inputs, function (index, input) {
 				var formGroup = $('input[name="' + input.name + '"]').closest('.form-group')
-				var feedback = formGroup.find('.form-control-feedback')
-				var help = formGroup.find('.help-block')
 
-				// remove previous feedback
-				if (feedback.length) {
-					feedback.remove()
-				}
-				if (help.length) {
-					help.remove()
-				}
-				formGroup.removeClass('has-error has-feedback')
-
-				// handle passed/failed validations
-				var errors = response.validation_errors[input.name]
-
-				if (!errors) {
-					formGroup.addClass('has-success has-feedback')
+				// set to success if no validation errors are set
+				if(!validationErrors[input.name]) {
+					formGroup.addClass('has-success')
 					formGroup.append('<span class="fa fa-check form-control-feedback" aria-hidden="true"></span>')
+					return true
 				}
 
-				if (errors) {
-					var list = ''
-					$.each(errors, function (inputName, errorMessage) {
-						list += '<li>' + errorMessage + '</li>'
-					})
-					formGroup.addClass('has-error has-feedback')
-					formGroup.append('<span class="fa fa-times form-control-feedback" aria-hidden="true"></span>')
-					formGroup.append('<span class="help-block"><ul class="list-unstyled">' + list + '</span>')
-				}
+				// set validation errors
+				var list = ''
+				$.each(validationErrors[input.name], function (validationRule, validationMessage) {
+					list += '<li>' + validationMessage + '</li>'
+				})
+				formGroup.addClass('has-error')
+				formGroup.append('<span class="fa fa-times form-control-feedback" aria-hidden="true"></span>')
+				formGroup.append('<span class="help-block"><ul class="list-unstyled">' + list + '</span>')
+
 			})
 		})
 
@@ -148,9 +132,13 @@ $(document).ready(function(){
 * Remove all form validation feedback
 *------------------------------------------------*/
 function clearFormFeedback(form) {
-	form.find(":input").each( function(index, input) {
+	form.find(".form-group.has-feedback :input").each( function(index, input) {
+	//form.find(":input.has-feedback").each( function(index, input) {
 		var formGroup = $('input[name="' + input.name + '"]').closest('.form-group')
 		formGroup.removeClass('has-error has-success')
+		formGroup.find('.form-control-feedback').remove()
+		formGroup.find('.help-block').remove()
+
 	})
 }
 
@@ -158,9 +146,10 @@ function clearFormFeedback(form) {
 * Set all form validation feedback to success
 *------------------------------------------------*/
 function setFormToValidated(form) {
-	form.find(":input").each( function(index, input) {
-		var formGroup = $('input[name="' + input.name + '"]').closest('.form-group')
-		formGroup.addClass('has-feedback has-success')
+	form.find(".form-group.has-feedback :input").each( function(index, input) {
+		var formGroup = $('input[name="' + input.name + '"]').closest('.form-group .has-feedback')
+		//formGroup.addClass('has-feedback has-success')
+		formGroup.addClass('has-success')
 		formGroup.append('<span class="fa fa-check form-control-feedback" aria-hidden="true"></span>')
 	})
 }

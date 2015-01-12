@@ -70,14 +70,16 @@ class SiteFilesController extends AppController
             throw new RestValidationException($form->errors());
         }
 
-        if (is_dir($this->request->data['webroot'])) {
-            throw new RestException('Directory already exists');
-        }
+		if (!$this->request->data['force']) {
+			if (file_exists('/etc/nginx/sites-available/' . $this->request->data['url'])) {
+				throw new RestException('Website already exists. Use force to overwrite.');
+			}
+		}
 
         // Shell new Execute object
         $execute = new CakeboxExecute();
-        if ($execute->mkVagrantDir($this->request->data['webroot']) == false) {
-            throw new RestException('Error creating directory', $execute->errors(), 401);
+        if ($execute->addSite($this->request->data['url'], $this->request->data['webroot'], true) == false) {
+            throw new RestException('Error creating website. See cakebox.log for details.', null , 401);
         }
 
         // still here, things went well

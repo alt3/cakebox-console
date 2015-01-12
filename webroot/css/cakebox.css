@@ -50,6 +50,13 @@ body, p {
 	visibility: visible !important;		/** fix to get jQuery show() working */
 }
 
+/**
+ * Overrides for elements not using Google's Open Sans font
+ */
+input, button, select, textarea {
+    font: inherit;
+}
+
 
 /**
  * Overrides due to font-awesome upgrade
