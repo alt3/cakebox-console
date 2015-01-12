@@ -9,8 +9,8 @@ use App\Form\SiteFileForm;
 
 		<div class="widget-header">
 			<i class="fa fa-file-text-o"></i>
-			<h3><?= __('New Nginx site') ?></h3>
-			<a href="#" class="ajax-form-modal btn btn-default btn-sm pull-right" data-target="#formModalAdd" alt="<?= __('New Nginx site') ?>"><?= __('Add') ?></a>
+			<h3><?= __('Nginx site configuration files') ?></h3>
+			<a href="#" class="ajax-form-modal btn btn-default btn-sm pull-right" data-target="#formModalAdd" alt="<?= __('New Nginx website') ?>"><?= __('Add') ?></a>
 		</div>
 
 		<div class="widget-content">
