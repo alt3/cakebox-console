@@ -45,7 +45,7 @@ class RestException extends BadRequestException
 	 */
 	public function getErrors()
 	{
-		return $this->_errors;
+		return ['errors' => $this->_errors ];
 	}
 
 }

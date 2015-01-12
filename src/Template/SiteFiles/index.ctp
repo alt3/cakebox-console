@@ -10,7 +10,7 @@ use App\Form\SiteFileForm;
 		<div class="widget-header">
 			<i class="fa fa-file-text-o"></i>
 			<h3><?= __('Nginx site configuration files') ?></h3>
-			<button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#addModal">Add</button>
+			<a href="#" class="ajax-form-modal btn btn-default btn-sm pull-right" data-target="#formModalAdd" alt="<?= __('New Nginx website') ?>"><?= __('Add') ?></a>
 		</div>
 
 		<div class="widget-content">
@@ -77,8 +77,8 @@ use App\Form\SiteFileForm;
 </div>
 
 
-<!-- Add Modal -->
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- Form Modal -->
+<div class="modal fade" id="formModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -89,18 +89,28 @@ use App\Form\SiteFileForm;
 				<?php
 					$form = new SiteFileForm();
 					echo $this->Form->create($form, [
+						//'horizontal' => true,
 						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json'],
 						['id' => 'form-submit']
 					]);
-					echo $this->Form->input('url', [
-					]);
+				?>
+
+				<div class="alert alert-danger alert-dismissible collapse" role="alert">
+					<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<span>
+						ajax-loaded message
+					</span>
+				</div>
+				<?php
+					echo $this->Form->input('url');
 					echo $this->Form->input('webroot');
+					echo $this->Form->input('force');
 					echo $this->Form->end();
 				?>
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="form-submit" class="btn btn-primary" data-dismiss="modal"><?= __('Submit') ?></button>
 				<button type="button" class="btn btn-default" data-dismiss="modal"><?= __('Cancel') ?></button>
+				<button type="button" id="form-submit" class="btn btn-primary"><?= __('Submit') ?></button>
 			</div>
 		</div>
 	</div>
@@ -120,32 +130,4 @@ $('#fileModal').on('show.bs.modal', function (event) {
 		alert( 'So sorry, something went wrong fetching the file...' )
 	})
 })
-
-</script>
-
-<!-- Add modal -->
-<script>
-$('#form-submit').click(function() {
-	$.ajax({
-		url: "/sitefiles/ajax_add.json",
-		type: "POST",
-		headers: {
-			'X-CSRF-Token': $('input[name="_csrfToken"]').attr('value')
-		},
-		data: {
-			url: $('#url').val(),
-			webroot: $('#webroot').val()
-		}
-	})
-	.success(function( msg ) {
-		alert( msg.message );
-		//alert( msg.webroot);
-		//alert( msg.url);
-	})
-	.fail(function( msg ) {
-		console.dir(msg)
-		alert( msg.responseText );
-	})
-
-});
 </script>
