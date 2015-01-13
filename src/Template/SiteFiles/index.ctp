@@ -10,7 +10,6 @@ use App\Form\SiteFileForm;
 		<div class="widget-header">
 			<i class="fa fa-file-text-o"></i>
 			<h3><?= __('Nginx site configuration files') ?></h3>
-			<a href="#" class="ajax-form-modal btn btn-default btn-sm pull-right" data-target="#formModalAdd" alt="<?= __('New Nginx website') ?>"><?= __('Add') ?></a>
 		</div>
 
 		<div class="widget-content">
@@ -55,8 +54,14 @@ use App\Form\SiteFileForm;
 
 	</div> <!-- /widget -->
 
-</div>
+</div> <!-- col-sm-10 -->
 
+<!-- Actions -->
+<div class="col-sm-2 column">
+	<div class="actions">
+		<a href="#" class="ajax-form-modal btn btn-default btn-block btn-sm" data-target="#formModalAdd" alt="<?= __('New Website') ?>"><?= __('New Website') ?></a>
+	</div>
+</div>
 
 <!-- View Modal -->
 <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

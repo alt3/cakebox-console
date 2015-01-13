@@ -110,6 +110,12 @@ td.actions div button i {
     font-size: 16px;
 }
 
+div.actions a {
+    margin-bottom: 10px;
+    background-color: red;
+}
+
+
 
 /**
  * Modals
