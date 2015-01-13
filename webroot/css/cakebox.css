@@ -34,7 +34,7 @@ body, p {
  * Login
  */
 .account-container {
-    margin-top: 17%;
+    margin-top: 10%;
 }
 
 /**
@@ -110,6 +110,12 @@ td.actions div button i {
     font-size: 16px;
 }
 
+div.actions a {
+    margin-bottom: 10px;
+    background-color: red;
+}
+
+
 
 /**
  * Modals
@@ -126,7 +132,9 @@ td.actions div button i {
     margin-top: 11px;
     font-size: 18px;
 }
-
+.form-group {
+    margin-bottom: 25px;
+}
 
 
 
@@ -325,6 +333,11 @@ li.check .fa-danger {
     color: red;
 }
 
+div.packages i.fa-times {
+    margin-left: 2px;
+    margin-top: -4px;
+    color: red;
+}
 
 /**
  * Footer

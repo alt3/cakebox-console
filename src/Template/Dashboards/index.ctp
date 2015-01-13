@@ -95,9 +95,13 @@ use Cake\Utility\Inflector;
 								<?= $app['framework_human'] ?> <?= $app['framework_version'] ?>
 							</td>
 							<td class="td-actions">
-								<a href="javascript:;" class="btn btn-xs btn-primary">
-									<i class="btn-icon-only fa fa-share"></i>
-								</a>
+								<?php
+									echo $this->Html->link(
+										'<i class="btn-icon-only fa fa-share"></i>' . '',
+										['controller'=>'applications', 'action'=>'index'],
+										['escape' => false, 'class' => 'btn btn-xs btn-primary']
+									);
+								?>
 							</td>
 						</tr>
 					<?php endforeach ?>
@@ -205,12 +209,12 @@ use Cake\Utility\Inflector;
 		<div class="widget-header">
 			<button type="button" class="close" id="close-sponsors" data-dismiss="widget" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<i class="fa fa-bullhorn"></i>
-			<h3><?= __('Our Sponsors') ?></h3>
+			<h3><?= __('Your Sponsors') ?></h3>
 		</div> <!-- /widget-header -->
 
 		<div class="widget-content">
-			<p>Theme license donated by Rod Howard from <?= $this->Html->link('Jumpstart Themes', 'http://jumpstartthemes.com') ?></p>
-			<p>Box image cdn-hosted by our friends at <?= $this->Html->link('Your Name Here', 'http://google.com') ?></p>
+			<p>Theme use granted by Rod Howard from <?= $this->Html->link('Jumpstart Themes', 'http://jumpstartthemes.com') ?></p>
+			<p>Box image CDN provided by <?= $this->Html->link('Your Name Here', 'http://google.com') ?></p>
 		</div> <!-- /widget-content -->
 
 	</div> <!-- /widget -->
@@ -283,10 +287,10 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>About</h4>
 				<ul>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div> <!-- /span3 -->
 
@@ -294,10 +298,10 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>Support</h4>
 				<ul>
-					<li><a class="#">Documentation</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#" class="todo">Documentation</a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div>
 
@@ -306,9 +310,9 @@ use Cake\Utility\Inflector;
 				<h4>Legal</h4>
 				<ul>
 					<li><a class="ajax-file-modal" id="license" href="#" rel="dashboards/license.json">License</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div>
 
@@ -341,7 +345,7 @@ use Cake\Utility\Inflector;
 							echo $this->Html->link('Jumpstart Themes', 'https://jumpstartthemes.com', ['title' => 'Jumpstart Themes: Effortless Twitter Bootstrap Themes']);
 						?>
 					</li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div>
 
