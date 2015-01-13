@@ -325,6 +325,12 @@ li.check .fa-danger {
     color: red;
 }
 
+div.packages i.fa-times {
+    margin-left: 2px;
+    margin-top: -4px;
+    color: red;
+}
+
 /**
  * Footer
  */
