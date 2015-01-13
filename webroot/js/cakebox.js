@@ -24,8 +24,8 @@ $(document).ready(function(){
 	$('.todo').on('click', function () {
 		$.msgGrowl ({
 			type: 'error',
-			title: 'Not Implemented',
-			text: "Not implemented yet. Feel to submit a PR to speed up things."
+			title: 'Not Implemented Yet',
+			text: "Feel free to submit a PR to speed up things."
 		});
 	});
 
