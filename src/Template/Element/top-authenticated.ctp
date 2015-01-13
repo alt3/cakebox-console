@@ -13,7 +13,7 @@
 				<span class="sr-only"><?= __('Toggle navigation'); ?></span>
 				<i class="fa fa-cog"></i>
 			</button>
-			<a class="navbar-brand" href="dashboards">Cakebox Admin<span class="logo-version">0.1.0</span></a>
+			<a class="navbar-brand" href="dashboards">Cakebox Admin<span class="logo-version">v0.1.0</span></a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
