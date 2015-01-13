@@ -34,7 +34,7 @@ body, p {
  * Login
  */
 .account-container {
-    margin-top: 17%;
+    margin-top: 10%;
 }
 
 /**
@@ -324,7 +324,6 @@ li.check .fa-check {
 li.check .fa-danger {
     color: red;
 }
-
 
 /**
  * Footer

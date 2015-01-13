@@ -12,7 +12,7 @@
 
 		<form action="dashboards" method="post">
 
-			<h1><?= __('Sing in') ?></h1>
+			<h1><?= __('Sign in') ?></h1>
 			<div class="login-fields">
 				<p><?= __('Unleash your box') ?></p>
 				<div class="field">
