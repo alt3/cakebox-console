@@ -95,9 +95,13 @@ use Cake\Utility\Inflector;
 								<?= $app['framework_human'] ?> <?= $app['framework_version'] ?>
 							</td>
 							<td class="td-actions">
-								<a href="javascript:;" class="btn btn-xs btn-primary">
-									<i class="btn-icon-only fa fa-share"></i>
-								</a>
+								<?php
+									echo $this->Html->link(
+										'<i class="btn-icon-only fa fa-share"></i>' . '',
+										['controller'=>'applications', 'action'=>'index'],
+										['escape' => false, 'class' => 'btn btn-xs btn-primary']
+									);
+								?>
 							</td>
 						</tr>
 					<?php endforeach ?>
