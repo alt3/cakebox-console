@@ -1,8 +1,10 @@
 $(document).ready(function(){
 
 	/*--------------------------------------------------
-	 * Load the donut using the "data" variable set in
-	 * the Dashboards index view.
+	 * Load the flot donut using the "data" variable set
+	 * in the Dashboards index view
+	 *
+	 * http://www.flotcharts.org
 	 *------------------------------------------------*/
 	$.plot($("#donut-chart"), donutData,
 	{
