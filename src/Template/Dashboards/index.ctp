@@ -209,12 +209,12 @@ use Cake\Utility\Inflector;
 		<div class="widget-header">
 			<button type="button" class="close" id="close-sponsors" data-dismiss="widget" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<i class="fa fa-bullhorn"></i>
-			<h3><?= __('Our Sponsors') ?></h3>
+			<h3><?= __('Your Sponsors') ?></h3>
 		</div> <!-- /widget-header -->
 
 		<div class="widget-content">
-			<p>Theme license donated by Rod Howard from <?= $this->Html->link('Jumpstart Themes', 'http://jumpstartthemes.com') ?></p>
-			<p>Box image cdn-hosted by our friends at <?= $this->Html->link('Your Name Here', 'http://google.com') ?></p>
+			<p>Theme use granted by Rod Howard from <?= $this->Html->link('Jumpstart Themes', 'http://jumpstartthemes.com') ?></p>
+			<p>Box image CDN provided by <?= $this->Html->link('Your Name Here', 'http://google.com') ?></p>
 		</div> <!-- /widget-content -->
 
 	</div> <!-- /widget -->
