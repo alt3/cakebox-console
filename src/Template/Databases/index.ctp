@@ -47,6 +47,6 @@
 <!-- Actions -->
 <div class="col-sm-2 column">
 	<div class="actions">
-		<a href="#" class="todo btn btn-default btn-block btn-sm" alt="<?= __('New Database') ?>"><?= __('New Database') ?></a>
+		<a href="#" class="todo btn btn-default btn-block" alt="<?= __('New Database') ?>"><?= __('New Database') ?></a>
 	</div>
 </div>
