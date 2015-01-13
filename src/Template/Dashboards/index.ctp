@@ -283,10 +283,10 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>About</h4>
 				<ul>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div> <!-- /span3 -->
 
@@ -294,10 +294,10 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>Support</h4>
 				<ul>
-					<li><a class="#">Documentation</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#" class="todo">Documentation</a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div>
 
@@ -306,9 +306,9 @@ use Cake\Utility\Inflector;
 				<h4>Legal</h4>
 				<ul>
 					<li><a class="ajax-file-modal" id="license" href="#" rel="dashboards/license.json">License</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div>
 
@@ -341,7 +341,7 @@ use Cake\Utility\Inflector;
 							echo $this->Html->link('Jumpstart Themes', 'https://jumpstartthemes.com', ['title' => 'Jumpstart Themes: Effortless Twitter Bootstrap Themes']);
 						?>
 					</li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div>
 
