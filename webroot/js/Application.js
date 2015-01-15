@@ -1,19 +1,19 @@
-$(function () {
-	
-	Application.init ();
-	
-});
+// $(function () {
+//
+// 	Application.init ();
+//
+// });
 
 
 
 var Application = function () {
-	
+
 	var validationRules = getValidationRules ();
-	
+
 	return { init: init, validationRules: validationRules };
-	
+
 	function init () {
-		
+
 		enableBackToTop ();
 		enableLightbox ();
 		enableCirque ();
@@ -22,7 +22,7 @@ var Application = function () {
 
 		$('.ui-tooltip').tooltip();
 	    $('.ui-popover').popover();
-    
+
 
 	}
 
@@ -44,7 +44,7 @@ var Application = function () {
 
 		backToTop.appendTo ('body');
 		icon.appendTo (backToTop);
-		
+
 	    backToTop.hide();
 
 	    $(window).scroll(function () {
@@ -63,25 +63,24 @@ var Application = function () {
 	        }, 600);
 	    });
 	}
-	
 	function enableEnhancedAccordion () {
-		$('.accordion-toggle').on('click', function (e) {			
+		$('.accordion-toggle').on('click', function (e) {
 	         $(e.target).parent ().parent ().parent ().addClass('open');
 	    });
-	
 	    $('.accordion-toggle').on('click', function (e) {
 	        $(this).parents ('.panel').siblings ().removeClass ('open');
 	    });
-	    
+
 	}
-	
+
+
 	function getValidationRules () {
 		var custom = {
 	    	focusCleanup: false,
-			
+
 			wrapper: 'div',
 			errorElement: 'span',
-			
+
 			highlight: function(element) {
 				$(element).parents ('.form-group').removeClass ('success').addClass('error');
 			},
@@ -92,10 +91,10 @@ var Application = function () {
 			errorPlacement: function(error, element) {
 				error.prependTo(element.parents ('.form-group'));
 			}
-	    	
+
 	    };
-	    
+
 	    return custom;
 	}
-	
+
 }();

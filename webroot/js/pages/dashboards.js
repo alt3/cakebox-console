@@ -1,11 +1,14 @@
-$(document).ready(function(){
+
+$(document).ready(function() {
 
 	/*--------------------------------------------------
-	 * Load the flot donut using the "data" variable set
-	 * in the Dashboards index view
+	 * Load the flot donut using the "donutData" global
+	 * variable set in the Dashboards index view.
 	 *
 	 * http://www.flotcharts.org
 	 *------------------------------------------------*/
+	//console.dir(donutData)
+
 	$.plot($("#donut-chart"), donutData,
 	{
 		colors: ["#F90", "#222", "#777", "#AAA"],

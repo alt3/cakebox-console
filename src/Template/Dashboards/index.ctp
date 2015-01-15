@@ -381,12 +381,10 @@ use Cake\Utility\Inflector;
 		];
 	}
 
-	// create inline var "data" so it becomes available in the donut script
+	// Create inline Javascript variable "donutData"
 	echo $this->Html->scriptBlock(
-		"var donutData = " . json_encode($flotData) ,
+		"var donutData = " . json_encode($flotData),
 		['inline' => false]
 	);
 
-	// load the dashboard js
-	echo $this->Html->script('pages/dashboards');
 ?>
