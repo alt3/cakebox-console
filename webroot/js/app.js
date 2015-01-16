@@ -1,28 +1,50 @@
-/*
- * Global functions
- */
-$(document).ready(function() {
+/*------------------------------------------------------------------
 
-	/*--------------------------------------------------
-	 * Make modals draggable using jQuery UI
-	 *------------------------------------------------*/
+  [Globally Applied Application Script]
+
+  [Table of Contents]
+
+	1. Make Bootstrap Modals Draggable
+	2. Make Bootstrap Alerts Hideable
+	3. MsgGrowl: Not Implemented Yet
+	4. Generic Ajax File Modal Listener
+	5. Generic Ajax Form Modal Listener
+	6. Generic Ajax Form Poster
+	7. Remove Form Validation Feedback
+	8. All Form Validation Feedback To Success
+	9. Allow Form Submit Using Enter Key
+	10. MsgGrowl: Generic Ajax Fetch Errors
+
+-------------------------------------------------------------------*/
+
+
+
+
+/*------------------------------------------------------------------
+* 1. Make Bootstrap Modals Draggable (using jQuery-UI)
+* ---------------------------------------------------------------*/
+$(document).ready(function() {
 	$(".modal-dialog").draggable({
 		handle: ".modal-header"
 	})
+})
 
-//	alert('app loaded')
-
-	/*--------------------------------------------------
-	 * Use jQuery for dismissing alerts (since BS3 removes
-	 * the element from DOM making re-use impossible )
-	 *------------------------------------------------*/
+/*------------------------------------------------------------------
+ * 2. Make Bootstrap Alerts Hideable
+ *
+ * Use jQuery for hiding the alerts on close instead of removing
+ * them from DOM completely (as done by Bootstrap) to allow re-use.
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
 	$('.alert .close').on('click',function(){
 		$(this).parent().hide();
 	})
+})
 
-	/*--------------------------------------------------
-	 * Show Growl message for not-implemented-yet
-	 *------------------------------------------------*/
+/*------------------------------------------------------------------
+ * 3. MsgGrowl: Not Implemented Yet
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
 	$('.todo').on('click', function () {
 		$.msgGrowl ({
 			type: 'error',
@@ -30,10 +52,12 @@ $(document).ready(function() {
 			text: "Feel free to submit a PR to speed things up."
 		})
 	})
+})
 
-	/*--------------------------------------------------
-	 * Listen for generic ajax file-modals
-	 *------------------------------------------------*/
+/*------------------------------------------------------------------
+ * 4. Generic Ajax File Modal Listener
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
 	$('.ajax-file-modal').on('click', function () {
 		var modal = $('#ajaxModal')
 		var title = S($(this).attr('id')).humanize().s
@@ -48,29 +72,24 @@ $(document).ready(function() {
 			ajaxFetchError()
 		})
 	})
+})
 
-	/*--------------------------------------------------
-	* Listen for generic ajax form-modals
-	*------------------------------------------------*/
+/*------------------------------------------------------------------
+ * 5. Generic Ajax Form Modal Listener
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
 	$('.ajax-form-modal').on('click', function () {
 		var modal = $($(this).attr('data-target'))
 		var title = $(this).attr('alt')
 		$('.modal-title').html(title)
 		modal.modal('show')
 	})
+})
 
-	/*--------------------------------------------------
-	* Enable form submit using the Enter key
-	*------------------------------------------------*/
-	$('form').keypress(function(e) {
-		if (e.keyCode == 13) {
-			$(this).closest('.modal-content').find('#form-submit').trigger('click')
-		}
-	});
-
-	/*--------------------------------------------------
-	* Ajax (all) post form data. Includes CSRF token.
-	*------------------------------------------------*/
+/*------------------------------------------------------------------
+ * 6. Generic Ajax Form Poster (including CSRF token)
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
 	$('#form-submit').click(function() {
 		var form = $(this).closest('.modal-content').find('form')
 		var url = form.attr('action')
@@ -85,9 +104,6 @@ $(document).ready(function() {
 			// 	'X-CSRF-Token': $('input[name="_csrfToken"]').attr('value')
 			// },
 			data: data
-		})
-		.success(function( msg ) {
-			alert( msg.message );
 		})
 		.fail(function( msg ) {
 			var response = msg.responseJSON
@@ -125,14 +141,18 @@ $(document).ready(function() {
 
 			})
 		})
+		.success(function( msg ) {
+			var target = $('.index-main .alert span.message')
+			target.html(msg.message)
+			target.closest('div').show()
+			$('.modal.in').modal('hide')
+		})
+	})
+})
 
-	});
-
-}); // END OF READY
-
-/*--------------------------------------------------
-* Remove all form validation feedback
-*------------------------------------------------*/
+/*------------------------------------------------------------------
+ * 7. Remove Form Validation Feedback
+ * ---------------------------------------------------------------*/
 function clearFormFeedback(form) {
 	form.find(".form-group.has-feedback :input").each( function(index, input) {
 	//form.find(":input.has-feedback").each( function(index, input) {
@@ -144,9 +164,9 @@ function clearFormFeedback(form) {
 	})
 }
 
-/*--------------------------------------------------
-* Set all form validation feedback to success
-*------------------------------------------------*/
+/*------------------------------------------------------------------
+ * 8. All Form Validation Feedback To Success
+ * ---------------------------------------------------------------*/
 function setFormToValidated(form) {
 	form.find(".form-group.has-feedback :input").each( function(index, input) {
 		var formGroup = $('input[name="' + input.name + '"]').closest('.form-group .has-feedback')
@@ -156,9 +176,20 @@ function setFormToValidated(form) {
 	})
 }
 
-/*--------------------------------------------------
- * Generic Growl message for failed ajax fetches.
- *------------------------------------------------*/
+/*------------------------------------------------------------------
+ * 9. Allow Form Submit Using Enter Key
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
+	$('form').keypress(function(e) {
+		if (e.keyCode == 13) {
+			$(this).closest('.modal-content').find('#form-submit').trigger('click')
+		}
+	})
+})
+
+/*------------------------------------------------------------------
+ * 10. MsgGrowl: Generic Ajax Fetch Errors
+ * ---------------------------------------------------------------*/
 function ajaxFetchError(event) {
 	$.msgGrowl ({
 		type: 'error',
