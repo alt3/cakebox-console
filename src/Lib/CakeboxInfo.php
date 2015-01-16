@@ -900,7 +900,11 @@ class CakeboxInfo
     }
 
     /**
-     * Fetch contributor statistics for a repository from the Github API.
+     * Return Github API statistics the 5 most recent contributors by extracting
+     * merged Pull Requests in the dev branch of any given repository.
+     *
+     * - Limit fetch query 10 results assuming no more than 50% is rejected
+     * - Merged PRs found by extracting elements with non-empty "merged_at" subkey
      *
      * @param string $repository Github repository shortname (owner/repo).
      * @return array Array
@@ -913,8 +917,11 @@ class CakeboxInfo
         }
 
         $http = new Client();
-        $response = $http->get("https://api.github.com/repos/$repository/stats/contributors");
-        $result = json_decode($response->body(), true);
+        $response = $http->get("https://api.github.com/repos/$repository/pulls?base=dev&state=closed&page=1&per_page=10");
+        $result = Hash::extract(json_decode($response->body(), true), "{n}[merged_at]");
+        if (count($result > 5)) {
+            $result = array_slice($result, 0, 5);
+        }
         Cache::write('contributors', $result, 'short');
         return $result;
     }
