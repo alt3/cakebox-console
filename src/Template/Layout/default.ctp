@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Default Bootstrap 3.x layout
+ * Default layout using Bootstrap 3.x
  */
 $cakeDescription = 'Cakebox Admin';
 
@@ -12,47 +13,65 @@ $cakeDescription = 'Cakebox Admin';
 	<?= $this->Html->charset() ?>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>
-		<?= $cakeDescription ?>:
-		<?= $this->fetch('title') ?>
-	</title>
+	<title><?= $cakeDescription ?>: <?= $this->fetch('title') ?></title>
 	<?= $this->Html->meta('icon') ?>
 
-	<!-- 3rd party css -->
-	<?= $this->Html->css('bootstrap/bootstrap.min') ?>
-	<?= $this->Html->css('https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600') ?>
-	<?= $this->Html->css('https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css') ?>
-	<?= $this->Html->css('../js/jquery-plugins/msgGrowl/css/msgGrowl'); ?>
-
-	<!-- Base Admin theme -->
-	<?= $this->Html->css('theme/base-admin-3') ?>
-	<?= $this->Html->css('theme/base-admin-3-responsive') ?>
-
-	<!-- Conditional page-specific css/js -->
 	<?php
-		if ($this->request->here == '/') {
-			echo $this->Html->css('pages/signin');
+		// Generate page specific dotted filename (without extension) so it can
+		// be used to load page specific Stylesheet and/or Javascript
+		if ($this->request->here == '/')
+		{
+			$pageAsset = 'login';
 		}
-		if ($this->request->here == '/dashboards') {
-			echo $this->Html->css('pages/dashboard');
+		else
+		{
+			$pageAsset = preg_replace('/^\//', '', $this->request->here);
+			$pageAsset = preg_replace('/\//', '.', $pageAsset);
+		}
+
+		// Load stylesheets in this order
+		$stylesheets = [
+			'cdn-fallback/bootstrap/bootstrap.min',
+			'cdn-fallback/font-awesome/css/font-awesome.min',
+			'cdn-fallback/jquery-plugins/msgGrowl/msgGrowl',
+			'theme/base-admin-3',
+			'theme/base-admin-3-responsive',
+			'app',
+		];
+
+		if (file_exists(WWW_ROOT . 'css' . DS . 'pages' . DS . $pageAsset . '.css'))
+		{
+			$stylesheets[] = "pages/$pageAsset";
+		}
+
+		foreach ($stylesheets as $stylesheet)
+		{
+			echo $this->Html->css($stylesheet);
+		}
+
+		// Load Javascripts in this order
+		$scripts = [
+			'cdn-fallback/jquery/jquery.min',
+			'cdn-fallback/jquery-ui/jquery-ui.min',
+			'cdn-fallback/bootstrap/bootstrap.min',
+			'cdn-fallback/string/string.min',
+			'cdn-fallback/jquery-plugins/msgGrowl/msgGrowl.min',
+			'cdn-fallback/jquery-plugins/flot/jquery.flot.min',
+			'cdn-fallback/jquery-plugins/flot/jquery.flot.pie.min',
+			'cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min',
+			'app'
+		];
+
+		if (file_exists(WWW_ROOT . 'js' . DS . 'pages' . DS . $pageAsset . '.js'))
+		{
+			$scripts[] = "pages/$pageAsset";
+		}
+
+		foreach ($scripts as $script)
+		{
+			echo $this->Html->script($script);
 		}
 	?>
-
-	<!-- Cakebox overrides -->
-	<?= $this->Html->css('cakebox') ?>
-
-	<!-- Bootstrap Core JS (v3.3.1) -->
-	<?php echo $this->Html->script('jquery.js') ?>
-	<?php echo $this->Html->script('https://code.jquery.com/ui/1.11.1/jquery-ui.min.js') ?>
-	<?php echo $this->Html->script('https://cdn.rawgit.com/jprichardson/string.js/master/lib/string.min.js'); ?>
-
-	<?= $this->Html->script('bootstrap.js') ?>
-
-	<?= $this->Html->script('jquery-plugins/msgGrowl/js/msgGrowl.js') ?>
-
-	<!-- Load cakebox js last -->
-	<?= $this->Html->script('cakebox.js') ?>
-
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -61,14 +80,17 @@ $cakeDescription = 'Cakebox Admin';
 	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-	<!-- Load extra meta, css and scripts IF defined in the used View as blocks -->
-	<?= $this->fetch('meta') ?>
-	<?= $this->fetch('css') ?>
-	<?= $this->fetch('script') ?>
+	<?php
+		// Loads extra meta, css and scripts but only if they are defined in
+		// the used View as blocks
+		echo $this->fetch('meta');
+		echo $this->fetch('css');
+		echo $this->fetch('script');
+	?>
 </head>
 <body>
-	<!-- @todo: hook into Auth -->
 	<?php
+		// @todo: hook into Auth
 	 	if ($this->request->here == '/') {
 			echo $this->element('top-anonymous');
 		} else {
@@ -86,15 +108,6 @@ $cakeDescription = 'Cakebox Admin';
 	</div>
 
 	<?= $this->element('beta') ?>
-
-	<!-- @todo: move and selectively) load these scripts -->
-	<?php
-		echo $this->Html->script('jquery-plugins/flot-0.8.3/jquery.flot.min');
-		echo $this->Html->script('jquery-plugins/flot-0.8.3/jquery.flot.pie.min');
-		echo $this->Html->script('jquery-plugins/flot-0.8.3/jquery.flot.resize.min');
-		echo $this->Html->script('Application.js');
-	?>
-
 
 </body>
 </html>

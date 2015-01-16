@@ -131,42 +131,42 @@ use Cake\Utility\Inflector;
 				<?php
 					// Applications
 					 echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-code-fork"></i><span class="shortcut-label" />' . __('Applications'),
+						'<i class="shortcut-icon fa fa-code-fork"></i><span class="shortcut-label"></span>' . __('Applications'),
 						['controller'=>'applications', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false, 'title' => 'Not implemented yet']
 					 );
 
 					// Databases
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-database"></i><span class="shortcut-label" />' . __('Databases'),
+						'<i class="shortcut-icon fa fa-database"></i><span class="shortcut-label"></span>' . __('Databases'),
 						['controller'=>'databases', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false, 'title' => 'Not implemented yet']
 					);
 
 					// Site files
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label" />' . __('Site Files'),
+						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label"></span>' . __('Site Files'),
 						['controller'=>'sitefiles', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 
 					// Pro Tips
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-lightbulb-o"></i><span class="shortcut-label" />' . __('Pro Tips'),
+						'<i class="shortcut-icon fa fa-lightbulb-o"></i><span class="shortcut-label"></span>' . __('Pro Tips'),
 						'#',
 						['class' => 'shortcut todo', 'escape' => false]
 					);
 
 					// Virtual Machine
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-cube"></i><span class="shortcut-label" />' . __('Virtual Machine'),
+						'<i class="shortcut-icon fa fa-cube"></i><span class="shortcut-label"></span>' . __('Virtual Machine'),
 						['controller'=>'dashboards', 'action'=>'vm'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 
 					// Kibana: dirty https tp http hack until figured out how to do otherwise
 					$kibanaLink = $this->Html->link(
-						'<i class="shortcut-icon fa fa-bar-chart"></i><span class="shortcut-label" />' . __('Kibana'),
+						'<i class="shortcut-icon fa fa-bar-chart"></i><span class="shortcut-label"></span>' . __('Kibana'),
 						[
 							'_port' => '5601',
 							'controller' => false,
@@ -178,7 +178,7 @@ use Cake\Utility\Inflector;
 
 					// Elasticsearch: dirty https tp http hack until figured out how to do otherwise
 					$elasticSearchLink = $this->Html->link(
-						'<i class="shortcut-icon fa fa-search"></i><span class="shortcut-label" />' . __('Elasticsearch'),
+						'<i class="shortcut-icon fa fa-search"></i><span class="shortcut-label"></span>' . __('Elasticsearch'),
 						[
 							'_port' => '9200',
 							'controller' => false,
@@ -190,7 +190,7 @@ use Cake\Utility\Inflector;
 
 					// Credits
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-thumbs-up"></i><span class="shortcut-label" />' . __('Credits'),
+						'<i class="shortcut-icon fa fa-thumbs-up"></i><span class="shortcut-label"></span>' . __('Credits'),
 						'#',
 						['class' => 'shortcut todo', 'escape' => false]
 					);
@@ -381,12 +381,10 @@ use Cake\Utility\Inflector;
 		];
 	}
 
-	// create inline var "data" so it becomes available in the donut script
+	// Create inline Javascript variable "donutData"
 	echo $this->Html->scriptBlock(
-		"var donutData = " . json_encode($flotData) ,
+		"var donutData = " . json_encode($flotData),
 		['inline' => false]
 	);
 
-	// load the dashboard js
-	echo $this->Html->script('pages/dashboards');
 ?>

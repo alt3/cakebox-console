@@ -1,4 +1,5 @@
-$(document).ready(function(){
+
+fallback.ready(function() {
 
 	// Ajax load status tab
 	$('#tab-status a').click(function (e) {
@@ -17,7 +18,6 @@ $(document).ready(function(){
 	})
 
 });
-
 
 /*
 * Ajax load Status tab
