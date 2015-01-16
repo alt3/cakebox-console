@@ -188,28 +188,20 @@ li.pull-request:last-child {
 	margin-left: 15px;
 	border: 1px solid #c0c0c0;
 }
-
 .pull-request .details {
 	padding-top: 0px;
+	padding-left: 35px;
 }
 .pull-request .details a{
 	font-weight: bolder;
-	margin-left: 22px;
 }
-.pull-request .details p{
-	margin-left: 22px;
-	margin-top: -2px;
-	margin-bottom: 0px;
-	color: #777;
-}
-.pull-request .details a.sha-link{
-	font-size: 10px;
-	margin-left: 1px;
+.pull-request .details .link{
 	font-weight: normal;
-	/*font-style: italic;*/
+	font-size: 12px;
+	margin-left: 2px;
 }
 
-.commit-day {
+.pull-request .date .day {
 	display: block;
 	margin-bottom: .22em;
 	margin-left: 15px;
@@ -217,7 +209,7 @@ li.pull-request:last-child {
 	font-size: 24px;
 	color: #888;
 }
-.commit-month {
+.pull-request .date .month {
 	display: block;
 	margin-left: 18px;
 	font-size: 12px;

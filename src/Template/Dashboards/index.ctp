@@ -243,17 +243,22 @@ use Cake\Utility\Inflector;
 									<?= $this->Html->image($pullRequest['user']['avatar_url'] . '&size=40', ['alt' => $pullRequest['user']['login']]) ?>
 								</div>
 								<div class="col-xs-9 details">
-									<!-- <span> -->
-										<?= $this->Html->link($pullRequest['user']['login'], $pullRequest['user']['html_url']) ?>
-										<p class="message">
-											<?= $pullRequest['title'] ?>
-											<?= $this->Html->link('(' . substr($pullRequest['head']['sha'], 0, 7) . ')', $pullRequest['html_url'], ['class' => 'sha-link']) ?>
-										</p>
-									<!-- </span> -->
+									<?= $this->Html->link($pullRequest['user']['login'], $pullRequest['user']['html_url']) ?>
+
+									<span class="message">
+										<?= $pullRequest['title'] ?>
+										<?php
+											echo $this->Html->link(
+												'<i class="fa fa-share"></i>' . '',
+												$pullRequest['html_url'],
+												['escape' => false, 'class' => 'link']
+											);
+										?>
+									</span>
 								</div>
 								<div class="col-xs-2 date pull-right">
-									<span class="commit-day"><?= (new DateTime($pullRequest['merged_at']))->format("d") ?></span>
-									<span class="commit-month"><?= (new DateTime($pullRequest['merged_at']))->format("M") ?></span>
+									<span class="day"><?= (new DateTime($pullRequest['merged_at']))->format("d") ?></span>
+									<span class="month"><?= (new DateTime($pullRequest['merged_at']))->format("M") ?></span>
 								</div>
 							</div>
 						</li>
