@@ -19,13 +19,13 @@ class SiteFileForm extends Form
 	{
 		return $validator
 			->requirePresence('url')
-			->add('url', 'length', [
-				'rule' => ['minLength', 10],
-				'message' => 'A minimum of 10 characters is required'])
-			->add('url', 'format', [
-				'rule' => 'email',
-				'message' => 'A valid email address is required',
-				])
+			// ->add('url', 'length', [
+			// 	'rule' => ['minLength', 10],
+			// 	'message' => 'A minimum of 10 characters is required'])
+			// ->add('url', 'format', [
+			// 	'rule' => 'email',
+			// 	'message' => 'A valid email address is required',
+			// 	])
 			->requirePresence('webroot');
 	}
 }

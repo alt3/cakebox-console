@@ -84,7 +84,7 @@ class SiteFilesController extends AppController
 
         // still here, things went well
         $this->set([
-           'message' => 'Directory created successfully',
+           'message' => 'Website created successfully',
            'url' => $this->request->data['url'],
            'webroot' => $this->request->data['webroot'],
            '_serialize' => ['message', 'url', 'webroot']

@@ -6,13 +6,14 @@
 
 	1. Make Bootstrap Modals Draggable
 	2. Make Bootstrap Alerts Hideable
-	3. Show MsgGrowl For Not Implemented Yet
-	4. Generic Ajax File Content Modal Listener
+	3. MsgGrowl: Not Implemented Yet
+	4. Generic Ajax File Modal Listener
 	5. Generic Ajax Form Modal Listener
-	6. Allow Form Submit Using Enter Key
-	7. Ajax Post All Form Data (including CSRF token)
-	8. Set All Form Validation Feedback To Success
-	9. Generic Growl Message for Ajax Fetch Errors
+	6. Generic Ajax Form Poster
+	7. Remove Form Validation Feedback
+	8. All Form Validation Feedback To Success
+	9. Allow Form Submit Using Enter Key
+	10. MsgGrowl: Generic Ajax Fetch Errors
 
 -------------------------------------------------------------------*/
 
@@ -41,7 +42,7 @@ $(document).ready(function() {
 })
 
 /*------------------------------------------------------------------
- * 3. Show MsgGrowl For Not Implemented Yet
+ * 3. MsgGrowl: Not Implemented Yet
  * ---------------------------------------------------------------*/
 $(document).ready(function() {
 	$('.todo').on('click', function () {
@@ -54,7 +55,7 @@ $(document).ready(function() {
 })
 
 /*------------------------------------------------------------------
- * 4. Generic Ajax File Content Modal Listener
+ * 4. Generic Ajax File Modal Listener
  * ---------------------------------------------------------------*/
 $(document).ready(function() {
 	$('.ajax-file-modal').on('click', function () {
@@ -86,18 +87,7 @@ $(document).ready(function() {
 })
 
 /*------------------------------------------------------------------
- * 6. Allow Form Submit Using Enter Key
- * ---------------------------------------------------------------*/
-$(document).ready(function() {
-	$('form').keypress(function(e) {
-		if (e.keyCode == 13) {
-			$(this).closest('.modal-content').find('#form-submit').trigger('click')
-		}
-	})
-})
-
-/*------------------------------------------------------------------
- * 7. Ajax Post All Form Data (including CSRF token)
+ * 6. Generic Ajax Form Poster (including CSRF token)
  * ---------------------------------------------------------------*/
 $(document).ready(function() {
 	$('#form-submit').click(function() {
@@ -114,9 +104,6 @@ $(document).ready(function() {
 			// 	'X-CSRF-Token': $('input[name="_csrfToken"]').attr('value')
 			// },
 			data: data
-		})
-		.success(function( msg ) {
-			alert( msg.message );
 		})
 		.fail(function( msg ) {
 			var response = msg.responseJSON
@@ -154,11 +141,17 @@ $(document).ready(function() {
 
 			})
 		})
+		.success(function( msg ) {
+			var target = $('.index-main .alert span.message')
+			target.html(msg.message)
+			target.closest('div').show()
+			$('.modal.in').modal('hide')
+		})
 	})
 })
 
 /*------------------------------------------------------------------
- * 7. Remove Existing Form Validation Feedback
+ * 7. Remove Form Validation Feedback
  * ---------------------------------------------------------------*/
 function clearFormFeedback(form) {
 	form.find(".form-group.has-feedback :input").each( function(index, input) {
@@ -172,7 +165,7 @@ function clearFormFeedback(form) {
 }
 
 /*------------------------------------------------------------------
- * 8. Set All Form Validation Feedback To Success
+ * 8. All Form Validation Feedback To Success
  * ---------------------------------------------------------------*/
 function setFormToValidated(form) {
 	form.find(".form-group.has-feedback :input").each( function(index, input) {
@@ -184,7 +177,18 @@ function setFormToValidated(form) {
 }
 
 /*------------------------------------------------------------------
- * 9. Generic Growl Message for Ajax Fetch Errors
+ * 9. Allow Form Submit Using Enter Key
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
+	$('form').keypress(function(e) {
+		if (e.keyCode == 13) {
+			$(this).closest('.modal-content').find('#form-submit').trigger('click')
+		}
+	})
+})
+
+/*------------------------------------------------------------------
+ * 10. MsgGrowl: Generic Ajax Fetch Errors
  * ---------------------------------------------------------------*/
 function ajaxFetchError(event) {
 	$.msgGrowl ({
