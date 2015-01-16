@@ -37,7 +37,7 @@ $(document).ready(function() {
 		},
 		tooltips: true
 	})
-))
+})
 
 /*------------------------------------------------------------------
  * 2. Sponsors Widget Close Listener
