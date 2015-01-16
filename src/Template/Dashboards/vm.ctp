@@ -212,10 +212,3 @@ use Cake\Utility\Inflector;
 		</div>
 	</div>
 </div>
-
-
-
-
-
-
-<?php echo $this->Html->script('pages/dashboards.vm'); ?>

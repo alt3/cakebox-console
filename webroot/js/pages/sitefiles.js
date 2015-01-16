@@ -1,3 +1,24 @@
+/*==================================================================
+
+  [Page Specific Script]
+
+	=> /sitefiles
+
+  [Table of Contents]
+
+	1. Ajax Load File Modal
+
+===================================================================*/
+
+
+
+
+/*------------------------------------------------------------------
+ * 1. Ajax Load File Modal
+ *
+ * Open a Bootstrap modal and ajax-load the content of an Nginx site
+ * configuration file as modal body-content.
+* ---------------------------------------------------------------*/
 $( document ).ready(function() {
 
 	$('#fileModal').on('show.bs.modal', function (event) {
