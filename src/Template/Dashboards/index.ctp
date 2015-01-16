@@ -230,30 +230,30 @@ use Cake\Utility\Inflector;
 
 		<div class="widget-content">
 
-			<ul class="commit-items list-unstyled">
-				<?php if (count($data['commits']) == 0): ?>
+			<ul class="pull-requests list-unstyled">
+				<?php if (count($data['contributors']) == 0): ?>
 						<li class="commit-item api-failure">
 							<p class="text-danger"><?= __('Looks the Github API is having an off day'); ?><i class="fa fa-exclamation-circle"></i></p>
 						</li>
 				<?php else: ?>
-					<?php foreach($data['commits'] as $commit): ?>
-						<li class="commit-item">
+					<?php foreach($data['contributors'] as $pullRequest): ?>
+						<li class="pull-request">
 							<div class="row row-list">
 								<div class="col-xs-1 avatar">
-									<?= $this->Html->image($commit['author']['avatar_url'] . '&size=40', ['alt' => $commit['author']['login']]) ?>
+									<?= $this->Html->image($pullRequest['user']['avatar_url'] . '&size=40', ['alt' => $pullRequest['user']['login']]) ?>
 								</div>
 								<div class="col-xs-9 details">
 									<!-- <span> -->
-										<?= $this->Html->link($commit['author']['login'], $commit['author']['html_url']) ?>
+										<?= $this->Html->link($pullRequest['user']['login'], $pullRequest['user']['html_url']) ?>
 										<p class="message">
-											<?= $commit['commit']['message'] ?>
-											<?= $this->Html->link('(' . substr($commit['sha'], 0, 7) . ')', $commit['html_url'], ['class' => 'sha-link']) ?>
+											<?= $pullRequest['title'] ?>
+											<?= $this->Html->link('(' . substr($pullRequest['head']['sha'], 0, 7) . ')', $pullRequest['html_url'], ['class' => 'sha-link']) ?>
 										</p>
 									<!-- </span> -->
 								</div>
 								<div class="col-xs-2 date pull-right">
-									<span class="commit-day"><?= (new DateTime($commit['commit']['committer']['date']))->format("d") ?></span>
-									<span class="commit-month"><?= (new DateTime($commit['commit']['committer']['date']))->format("M") ?></span>
+									<span class="commit-day"><?= (new DateTime($pullRequest['merged_at']))->format("d") ?></span>
+									<span class="commit-month"><?= (new DateTime($pullRequest['merged_at']))->format("M") ?></span>
 								</div>
 							</div>
 						</li>
