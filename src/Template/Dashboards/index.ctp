@@ -94,7 +94,7 @@ use Cake\Utility\Inflector;
 							<td class="app-version">
 								<?= $app['framework_human'] ?> <?= $app['framework_version'] ?>
 							</td>
-							<td class="td-actions">
+							<td class="app-actions">
 								<?php
 									echo $this->Html->link(
 										'<i class="btn-icon-only fa fa-share"></i>' . '',

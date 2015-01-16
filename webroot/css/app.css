@@ -1,10 +1,20 @@
 body {
-    background: #e9e9e9 url(../img/tiny_grid.png) repeat 0 0;
+    background: #fff;
 }
 body, p {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
     font-size: 14px;
+	color: #666;
 }
+h1, h2, h3, h4, h5, h6 {
+	font-family: inherit;
+	font-weight: bolder;
+}
+a, a:link, a:visited, a:hover, a:active {
+	color: #4183c4;
+    /*font-weight: bolder;*/
+}
+
 
 /**
  * Beta
@@ -61,6 +71,12 @@ input, button, select, textarea {
 /**
  * Overrides due to font-awesome upgrade
  */
+.widget .widget-header h3 {
+	font-weight: bolder;
+	font-size: inherit;
+	left: 8px;
+}
+
 .widget .widget-header [class^="fa-"], .widget .widget-header [class*=" fa-"] {
     display: inline-block;
     margin-top: -3px;
@@ -100,6 +116,7 @@ caption {
 /**
  * Index tables
  */
+
 td.actions div button {
     margin-right: 10px;
 }
@@ -109,9 +126,9 @@ td.actions div button:last-child {
 td.actions div button i {
     font-size: 16px;
 }
-
 div.actions a {
     margin-bottom: 10px;
+    color: #333;
 }
 
 /**
@@ -176,11 +193,19 @@ ul.pair li span.key {
 */
 td.app-name a {
     padding-left: 4px;
+    font-weight: bolder;
 }
 .app-framework-icon {
     margin-left: 4px;
     margin-right: 5px;
 }
+.app-actions {
+    text-align: center;
+}
+.app-actions i {
+    color: #fff;
+}
+
 
 .row.stats > div {
     text-align: center;
@@ -203,12 +228,13 @@ td.app-name a {
     padding-right: 14px;
 }
 .shortcuts .shortcut {
-    /*width: 112px;*/
     margin-right: 10px;
+    color: #666;
 }
 .shortcut-label {
     font-size: 13px;
 }
+
 
 .stat-chart {
     padding-bottom: 0.8em;  /* use this to align stats widget height with shortcuts height */
@@ -285,7 +311,7 @@ li.commit-item:last-child {
     padding-top: 0px;
 }
 .commit-item .details a{
-    font-weight: 600;
+    font-weight: bolder;
     margin-left: 22px;
 }
 .commit-item .details p{
@@ -346,4 +372,15 @@ div.packages i.fa-times {
     font-size: 23px;
     vertical-align: top;
     margin-right: 5px;
+}
+
+/**
+* Extra
+*/
+.extra {
+    font-size: 12px;
+}
+.extra ul li a {
+    color: #666;
+
 }
