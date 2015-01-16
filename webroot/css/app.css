@@ -1,3 +1,19 @@
+/*------------------------------------------------------------------
+
+  [Application wide/global stylesheet]
+
+   1. Beta Banner
+   2. Top Navigation
+   3. Widgets
+   4. Index Tables
+   5. Modals
+   6. Forms
+   7. msgGrowl
+   8. Key/Value Pairs
+   9. Footer
+
+-------------------------------------------------------------------*/
+
 body {
     background: #fff;
 }
@@ -12,23 +28,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 a, a:link, a:visited, a:hover, a:active {
 	color: #4183c4;
-    /*font-weight: bolder;*/
 }
 
+/* elements no longer using BaseAdmin's Google Open Sans font */
+input, button, select, textarea {
+    font: inherit;
+}
 
-/**
- * Beta
- */
+/*------------------------------------------------------------------
+ * 1. Beta Banner
+ * ---------------------------------------------------------------*/
 #beta{
     position: fixed;
     top: 0;
     right: 0;
 }
 
-
-/**
-* Top-navigation
-*/
+/*------------------------------------------------------------------
+ * 2. Top Navigation
+ * ---------------------------------------------------------------*/
  .logo-version {
      margin-left: 6px;
      font-size: 11px;
@@ -39,17 +57,7 @@ a, a:link, a:visited, a:hover, a:active {
      visibility: visible;
  }
 
-
- /**
- * Login
- */
-.account-container {
-    margin-top: 10%;
-}
-
-/**
-* Overrides due to bootstrap-upgrade
-*/
+/* Overrides due to bootstrap-upgrade */
 .navbar > .container {
     padding-right: 15px;
 }
@@ -60,17 +68,9 @@ a, a:link, a:visited, a:hover, a:active {
 	visibility: visible !important;		/** fix to get jQuery show() working */
 }
 
-/**
- * Overrides for elements not using Google's Open Sans font
- */
-input, button, select, textarea {
-    font: inherit;
-}
-
-
-/**
- * Overrides due to font-awesome upgrade
- */
+/*------------------------------------------------------------------
+ * 3. Widgets
+ * ---------------------------------------------------------------*/
 .widget .widget-header h3 {
 	font-weight: bolder;
 	font-size: inherit;
@@ -112,11 +112,9 @@ caption {
     color: #fff;
 }
 
-
-/**
- * Index tables
- */
-
+/*------------------------------------------------------------------
+ * 4. Index Tables
+ * ---------------------------------------------------------------*/
 td.actions div button {
     margin-right: 10px;
 }
@@ -131,17 +129,16 @@ div.actions a {
     color: #333;
 }
 
-/**
- * Modals
- */
+/*------------------------------------------------------------------
+ * 5. Modals
+ * ---------------------------------------------------------------*/
 .modal-dialog {
     margin-top: 60px;
 }
 
-
-/**
- * Forms
- */
+/*------------------------------------------------------------------
+ * 6. Forms
+ * ---------------------------------------------------------------*/
 .form-control-feedback {
     margin-top: 11px;
     font-size: 18px;
@@ -150,11 +147,9 @@ div.actions a {
     margin-bottom: 25px;
 }
 
-
-
 /*------------------------------------------------------------------
-[ Growl / .msgGrowl ]
-*/
+ * 7. msgGrowl
+ * ---------------------------------------------------------------*/
 .msgGrowl.success .msgGrowl-content {
     background: url(../img/notifications/success-32.png) no-repeat 7px 13px;
 }
@@ -168,10 +163,9 @@ div.actions a {
     background: url(../img/notifications/alert-32.png) no-repeat 7px 13px;
 }
 
-
-/**
- * Key/value pairs
- */
+/*------------------------------------------------------------------
+ * 8. Key/Value Pairs
+ * ---------------------------------------------------------------*/
 ul.pair {
     display: table;
 }
@@ -186,201 +180,9 @@ ul.pair li span.key {
     padding-right: 20px;
 }
 
-
-
-/**
-* Dashboard
-*/
-td.app-name a {
-    padding-left: 4px;
-    font-weight: bolder;
-}
-.app-framework-icon {
-    margin-left: 4px;
-    margin-right: 5px;
-}
-.app-actions {
-    text-align: center;
-}
-.app-actions i {
-    color: #fff;
-}
-
-
-.row.stats > div {
-    text-align: center;
-}
-.stat-value {
-    font-size: 45px;
-    padding-bottom: 5px;
-}
-.stat-key {
-    font-size: 14px;
-    font-weight: bold;
-    color: #999;
-}
-[class^="icon-"],
-[class*="icon-"] {
-    padding-right: 2px;
-}
-[class^="icon-"]:not(.fa),
-[class*="icon-"]:not(.fa) {
-    padding-right: 14px;
-}
-.shortcuts .shortcut {
-    margin-right: 10px;
-    color: #666;
-}
-.shortcut-label {
-    font-size: 13px;
-}
-
-
-.stat-chart {
-    padding-bottom: 0.8em;  /* use this to align stats widget height with shortcuts height */
-}
-.stat-time {
-    padding-top: 1.2em;
-}
-
-.stat-value {
-    letter-spacing: -4px;
-    margin-bottom: 0.11em;
-
-}
-.uptime-component {
-    padding-right: 10px;
-}
-.uptime-value {
-
-}
-.uptime-key {
-    font-size: 26px;
-    padding: 0;
-    margin: 0;
-}
-.uptime-title {
-    font-size: 13px;
-}
-
-/**
-* Shortcuts widget
-*/
-a.shortcut > i {
-    display: inline;
-}
-
-/**
-* Flot
-*/
-.legendColorBox {
-    padding-right: 4px;
-}
-
-
-/**
- * Contributions
- */
-ul.commit-items {
-    padding: 0px;
-    margin: 1em 0px 0px;
-}
-li.commit-item {
-    border-bottom: 1px dotted #CCC;
-    padding-bottom: 0.5em;
-    margin-bottom: 1em;
-}
-li.commit-item.api-failure {
-    margin-left: 15px;
-}
-li.commit-item.api-failure i{
-    margin-left: 5px;
-}
-li.commit-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.commit-item .avatar img {
-    margin-top: 1px;
-    margin-left: 15px;
-    border: 1px solid #c0c0c0;
-}
-
-.commit-item .details {
-    padding-top: 0px;
-}
-.commit-item .details a{
-    font-weight: bolder;
-    margin-left: 22px;
-}
-.commit-item .details p{
-    margin-left: 22px;
-    margin-top: -2px;
-    margin-bottom: 0px;
-    color: #777;
-}
-.commit-item .details a.sha-link{
-    font-size: 10px;
-    margin-left: 1px;
-    font-weight: normal;
-    /*font-style: italic;*/
-}
-
-.commit-day {
-    display: block;
-    margin-bottom: .22em;
-    margin-left: 15px;
-    margin-top: 2px;
-    font-size: 24px;
-    color: #888;
-}
-.commit-month {
-    display: block;
-    margin-left: 18px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #888;
-}
-
-/**
-* Page VM
-*/
-li.check i {
-    margin-right: 10px;
-}
-li.check .fa-check {
-    color: green;
-}
-li.check .fa-danger {
-    color: red;
-}
-
-div.packages i.fa-times {
-    margin-left: 2px;
-    margin-top: -4px;
-    color: red;
-}
-
-/**
- * Footer
- */
+/*------------------------------------------------------------------
+* 9. Footer
+* ---------------------------------------------------------------*/
 #back-to-top {
     background-color: #1a1a1a;
-}
-.footer-icon {
-    font-size: 23px;
-    vertical-align: top;
-    margin-right: 5px;
-}
-
-/**
-* Extra
-*/
-.extra {
-    font-size: 12px;
-}
-.extra ul li a {
-    color: #666;
-
 }

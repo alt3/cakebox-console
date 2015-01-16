@@ -1,0 +1,23 @@
+/*------------------------------------------------------------------
+
+  [Page specific stylesheet]
+
+  /dashboards/vm
+
+-------------------------------------------------------------------*/
+
+li.check i {
+	margin-right: 10px;
+}
+li.check .fa-check {
+	color: green;
+}
+li.check .fa-danger {
+	color: red;
+}
+
+div.packages i.fa-times {
+	margin-left: 2px;
+	margin-top: -4px;
+	color: red;
+}

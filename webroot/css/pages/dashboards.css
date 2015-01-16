@@ -1,39 +1,34 @@
 /*------------------------------------------------------------------
 
-[Dashboard Stylesheet]
+  [Dashboard specific stylesheet]
 
-	Project:		Base Admin
-	Version:		1.0
-	Last change:	05/21/2012
-	Assigned to:	Rod Howard (rh)
-
-
-
-[Table of contents]
-
-	1. Shortcuts
-	2. Stats
-	3. Task List
-	4. News Item
+   1. Stats
+   2. Flot
+   3. Application List
+   4. Shortcuts
+   5. Recent Contributions
+   6. Extra Footer
+   7. @media (untested)
 
 -------------------------------------------------------------------*/
 
-body {
-	/*font-family: "Comic Sans"*/
-}
+
 
 
 
 /*------------------------------------------------------------------
-[2. Stats / .stats]
-*/
+ * 1. Stats
+ * ---------------------------------------------------------------*/
+.widget-content.dashboard-stats {
+	padding-bottom: 0;
+}
 
 .stats {
 	width: 100%;
 	display: table;
 	padding: 0 0 0 10px;
-	margin-top: .5em;
-	margin-bottom: 1.9em;
+	margin-top: 1em;
+	margin-bottom: 2.55em;	/* use this to align stats widget height with shortcuts height */
 }
 
 .stats .stat {
@@ -72,127 +67,196 @@ body {
 }
 
 
+.row.stats > div {
+	text-align: center;
+}
+.stat-value {
+	font-size: 45px;
+	padding-bottom: 5px;
+}
+.stat-key {
+	font-size: 13px;
+	font-weight: bold;
+	color: #999;
+}
 
 
+.stat-chart {
+	padding-bottom: 0;  /* use this to align stats widget height with shortcuts height */
+}
+.stat-time {
+	padding-top: 1.2em;
+}
+
+.stat-value {
+	letter-spacing: -4px;
+	margin-bottom: 0.11em;
+
+}
+.uptime-component {
+	padding-right: 10px;
+}
+.uptime-value {
+
+}
+.uptime-key {
+	font-size: 26px;
+	padding: 0;
+	margin: 0;
+}
+.uptime-title {
+	font-size: 13px;
+}
 
 /*------------------------------------------------------------------
-[3. News Item / .news-items]
-*/
-
-.news-items {
-	padding: 0;
-	margin: 1em 0 0;
+ * 2. Flot
+ * ---------------------------------------------------------------*/
+.legendColorBox {
+	padding-right: 4px;
 }
 
-.news-items li {
-	display: table;
-	padding: 0 2em 0 1.5em;
-	padding-bottom: 1em;
-	margin-bottom: 1em;
-
-	border-bottom: 1px dotted #CCC;
+/*------------------------------------------------------------------
+ * 3. Application List
+ * ---------------------------------------------------------------*/
+td.app-name a {
+	padding-left: 4px;
+	font-weight: bolder;
+}
+.app-framework-icon {
+	margin-left: 4px;
+	margin-right: 5px;
+}
+.app-actions {
+	text-align: center;
+}
+.app-actions i {
+	color: #fff;
 }
 
-.news-items li:last-child { padding-bottom: 0; border: none; }
+/*------------------------------------------------------------------
+ * 4. Shortcuts
+ * ---------------------------------------------------------------*/
 
-.news-item-date {
-	display: table-cell;
+[class^="icon-"],
+[class*="icon-"] {
+	padding-right: 2px;
 }
-
-.news-item-detail {
-	display: table-cell;
+[class^="icon-"]:not(.fa),
+[class*="icon-"]:not(.fa) {
+	padding-right: 14px;
 }
-
-.news-item-title {
+.shortcuts .shortcut {
+	margin-right: 10px;
+	color: #666;
+}
+.shortcut-label {
 	font-size: 13px;
-	font-weight: 600;
+}
+a.shortcut > i {
+	display: inline;
 }
 
-.news-item-date {
-	width: 75px;
-	vertical-align: middle;
-
-	text-align: right;
+/*------------------------------------------------------------------
+ * 5. Recent Contributions
+ * ---------------------------------------------------------------*/
+ul.commit-items {
+	padding: 0px;
+	margin: 1em 0px 0px;
+}
+li.commit-item {
+	border-bottom: 1px dotted #CCC;
+	padding-bottom: 0.5em;
+	margin-bottom: 1em;
+}
+li.commit-item.api-failure {
+	margin-left: 15px;
+}
+li.commit-item.api-failure i{
+	margin-left: 5px;
+}
+li.commit-item:last-child {
+	border-bottom: none;
+	margin-bottom: 0;
 }
 
-.news-item-day {
+.commit-item .avatar img {
+	margin-top: 1px;
+	margin-left: 15px;
+	border: 1px solid #c0c0c0;
+}
+
+.commit-item .details {
+	padding-top: 0px;
+}
+.commit-item .details a{
+	font-weight: bolder;
+	margin-left: 22px;
+}
+.commit-item .details p{
+	margin-left: 22px;
+	margin-top: -2px;
+	margin-bottom: 0px;
+	color: #777;
+}
+.commit-item .details a.sha-link{
+	font-size: 10px;
+	margin-left: 1px;
+	font-weight: normal;
+	/*font-style: italic;*/
+}
+
+.commit-day {
 	display: block;
-	margin-bottom: .25em;
-
+	margin-bottom: .22em;
+	margin-left: 15px;
+	margin-top: 2px;
 	font-size: 24px;
 	color: #888;
 }
-
-.news-item-preview {
-	margin-bottom: 0;
-
-	color: #777;
-}
-
-.news-item-month {
+.commit-month {
 	display: block;
-	padding-right: 1px;
-
+	margin-left: 18px;
 	font-size: 12px;
 	font-weight: 600;
 	color: #888;
 }
 
-
+/*------------------------------------------------------------------
+ * 6. Extra Footer
+ * ---------------------------------------------------------------*/
+.extra {
+	font-size: 12px;
+}
+.extra ul li a {
+	color: #666;
+}
+.extra-icon {
+	font-size: 23px;
+	vertical-align: top;
+	margin-right: 5px;
+}
 
 /*------------------------------------------------------------------
-[4. Action Table / .action-table]
-*/
-
-.action-table .btn-small {
-	padding: 4px 5px 5px;
-
-	font-size: 10px;
-}
-
-.action-table .td-actions {
-	width: 80px;
-
-	text-align: center;
-}
-
-	.action-table .td-actions .btn {
-		margin-right: .5em;
-	}
-
-	.action-table .td-actions .btn:last-child {
-		margin-rigth: 0;
-	}
-
-
-
-
-
-
-
+* 7. @media (untested)
+* ---------------------------------------------------------------*/
 @media (max-width: 979px) {
 
 }
 
-
 @media (max-width: 480px) {
 
 	.stats .stat {
-
 		margin-bottom: 3em;
 	}
 
 	.stats .stat .stat-value {
 		margin-bottom: .15em;
-
 		font-size: 20px;
 	}
 
 	.stats {
 		float: left;
-
 		display: block;
-
 		margin-bottom: 0;
 	}
 

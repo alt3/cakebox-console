@@ -15,7 +15,7 @@ use Cake\Utility\Inflector;
 			<h3><?= __('Stats') ?></h3>
 		</div> <!-- /widget-header -->
 
-		<div class="widget-content">
+		<div class="widget-content dashboard-stats">
 
 			<div class="row stats">
 
@@ -323,7 +323,7 @@ use Cake\Utility\Inflector;
 					<li>
 						<?php
 							echo $this->Html->link(
-								'<i class="footer-icon fa fa-github"></i>' . 'Github',
+								'<i class="extra-icon fa fa-github"></i>' . 'Github',
 								'https://github.com/alt3/cakebox-console',
 								['escape' => false, 'escapeTitle' => false, 'title' => 'View our sourcecode on Github']
 							);
@@ -333,7 +333,7 @@ use Cake\Utility\Inflector;
 					<li>
 						<?php
 							echo $this->Html->link(
-								$this->Html->image("frameworks/cakephp.icon.png", ['class' => 'footer-icon']) . 'CakePHP',
+								$this->Html->image("frameworks/cakephp.icon.png", ['class' => 'extra-icon']) . 'CakePHP',
 								"http://cakephp.org",
 								['escape' => false, 'escapeTitle' => false, 'title' => 'CakePHP: the rapid development php framework']
 							);
