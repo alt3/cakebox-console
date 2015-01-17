@@ -67,7 +67,7 @@ use App\Form\SiteFileForm;
 <!-- Actions -->
 <div class="col-sm-2 column">
 	<div class="actions">
-		<a href="#" class="ajax-form-modal btn btn-default btn-block" data-target="#formModalAdd" alt="<?= __('New Website') ?>"><?= __('New Website') ?></a>
+		<a href="#" class="ajax-form-modal btn btn-primary btn-block" data-target="#formModalAdd" alt="<?= __('New Website') ?>"><?= __('New Website') ?></a>
 	</div>
 </div>
 

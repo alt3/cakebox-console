@@ -51,7 +51,7 @@
 <!-- Actions -->
 <div class="col-sm-2 column">
 	<div class="actions">
-		<a href="#" class="todo btn btn-default btn-block" alt="<?= __('New Application') ?>"><?= __('New Application') ?></a>
+		<a href="#" class="todo btn btn-primary btn-block" alt="<?= __('New Application') ?>"><?= __('New Application') ?></a>
 	</div>
 </div>
 

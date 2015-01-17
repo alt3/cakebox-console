@@ -37,6 +37,11 @@ input, button, select, textarea {
     font: inherit;
 }
 
+a.btn-primary, a.btn-primary:hover, a.btn-primary:visited, a.btn-primary:active {
+    color: #fff;
+}
+
+
 /*------------------------------------------------------------------
  * 1. Beta Banner
  * ---------------------------------------------------------------*/
