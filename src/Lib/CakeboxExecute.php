@@ -198,8 +198,6 @@ class CakeboxExecute
         return true;
     }
 
-
-
     /**
      * Perform sanity checks against SSH preconditions before git cloning using SSH
      *
@@ -230,10 +228,14 @@ class CakeboxExecute
      */
     public function reloadNginx()
     {
-        // check config before reload attempt to not break running server
+        $this->_log("Reloading Nginx webserver");
+
+        $this->_log("* Checking configuration");
         if ($this->shell("nginx -t", 'root') == false) {
             return false;
         }
+
+        $this->_log("* Restarting service");
         if ($this->shell("service nginx reload", 'root') == false) {
             return false;
         }
@@ -291,7 +293,54 @@ class CakeboxExecute
         }
 
         // Reload nginx service to effectuate changes
-        $this->_log("Reloading webserver");
+        if ($this->reloadNginx() == false) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Create a new Nginx website by generating a virtual host file, creating a
+     * symoblic link and reloading the webserver.
+     *
+     * @param string $url Fully Qualified Domain Name used to expose the site.
+     * @param string $webroot Full path to the site's webroot directory.
+     * @param bool $force Optional, true to overwrite existing file.
+     * @return boolean True on success
+     */
+    public function removeSite($url)
+    {
+        $this->flushLogs();
+
+        // Prevent removing default Cakebox site
+        if ($url == 'default') {
+            $this->_error("Removing 'default' as <url> is prohibited as this would destroy the default Cakebox site");
+            return false;
+        }
+        $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
+        if (!file_exists($siteFile)) {
+            $this->_error("Site file $siteFile does not exist");
+            return false;
+        }
+
+        $this->_log("Deleting virtual host file $siteFile");
+        if (!$this->shell("rm $siteFile", 'root')) {
+            $this->_error("Error deleting file");
+            return false;
+        }
+
+        $symlink = $this->cbi->webserverMeta['nginx']['sites-enabled'] . DS . $url;
+        if (!is_link($symlink)) {
+            $this->_log("* Skipping unlink... $symlink does not exist");
+        } else {
+            $this->_log("Removing symbolic link $symlink");
+            if (!$this->shell("unlink $symlink", 'root')) {
+                $this->_error("Error removing symlink");
+                return false;
+            }
+        }
+
+        // Reload nginx service to effectuate changes
         if ($this->reloadNginx() == false) {
             return false;
         }
