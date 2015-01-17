@@ -32,7 +32,7 @@ use Cake\Utility\Inflector;
 
 				<div class="col-xs-4">
 					<span class="stat-value"><?= $data['counters']['sites'] ?></span>
-					<span class="stat-key"><?= __('Site Files'); ?></span>
+					<span class="stat-key"><?= __('Virtual Hosts'); ?></span>
 				</div>
 
 			</div> <!-- /stats -->
@@ -145,7 +145,7 @@ use Cake\Utility\Inflector;
 
 					// Site files
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label"></span>' . __('Site Files'),
+						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label"></span>' . __('Virtual Hosts'),
 						['controller'=>'sitefiles', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false]
 					);

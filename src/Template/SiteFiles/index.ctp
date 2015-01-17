@@ -8,7 +8,7 @@ use App\Form\SiteFileForm;
 	<div class="alert alert-success alert-dismissible collapse" role="alert">
 		<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		<span class="message">
-			ajax-loaded success message
+			ajax-loaded message
 		</span>
 	</div>
 
@@ -17,7 +17,7 @@ use App\Form\SiteFileForm;
 
 		<div class="widget-header">
 			<i class="fa fa-file-text-o"></i>
-			<h3><?= __('Nginx site configuration files') ?></h3>
+			<h3><?= __('Nginx Virtual Hosts') ?></h3>
 		</div>
 
 		<div class="widget-content">
@@ -29,7 +29,7 @@ use App\Form\SiteFileForm;
 					<thead>
 						<tr>
 							<th>#</th>
-							<th><?= __("Filename") ?></th>
+							<th><?= __("Site File") ?></th>
 							<th><?= __("Enabled") ?></th>
 							<th><?= __("Last Modified") ?></th>
 							<th></th>
@@ -67,7 +67,7 @@ use App\Form\SiteFileForm;
 <!-- Actions -->
 <div class="col-sm-2 column">
 	<div class="actions">
-		<a href="#" class="ajax-form-modal btn btn-primary btn-block" data-target="#formModalAdd" alt="<?= __('New Website') ?>"><?= __('New Website') ?></a>
+		<a href="#" class="ajax-form-modal btn btn-primary btn-block" data-target="#formModalAdd" alt="<?= __('New Virtual Host') ?>"><?= __('New Virtual Host') ?></a>
 	</div>
 </div>
 
