@@ -60,10 +60,11 @@ $(document).ready(function() {
  * 4. Generic Ajax File Modal Listener
  * ---------------------------------------------------------------*/
 $(document).ready(function() {
-	$('.ajax-file-modal').on('click', function () {
+	$('.ajax-file-modal').on('click', function( event ) {
+		event.preventDefault();
 		var modal = $('#ajaxModal')
 		var title = S($(this).attr('id')).humanize().s
-		var link = $(this).attr('rel')
+		var link = $(this).attr('href')
 		$('.modal-title').html(title)
 
 		var jqxhr = $.getJSON(link, function(data) {
@@ -82,7 +83,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$('.ajax-form-modal').on('click', function () {
 		var modal = $($(this).attr('data-target'))
-		var title = $(this).attr('alt')
+		var title = $(this).text()
 		$('.modal-title').html(title)
 		modal.modal('show')
 	})

@@ -67,17 +67,17 @@ use App\Form\SiteFileForm;
 <!-- Actions -->
 <div class="col-sm-2 column">
 	<div class="actions">
-		<a href="#" class="ajax-form-modal btn btn-primary btn-block" data-target="#formModalAdd" alt="<?= __('New Virtual Host') ?>"><?= __('New Virtual Host') ?></a>
+		<a href="#" class="ajax-form-modal btn btn-primary btn-block" data-target="#formModalAdd"><?= __('New Virtual Host') ?></a>
 	</div>
 </div>
 
 <!-- View Modal -->
-<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel">ajax-loaded-title</h4>
+				<h4 class="modal-title">ajax-loaded-title</h4>
 			</div>
 			<div class="modal-body">
 				ajax-loaded-content
@@ -91,20 +91,18 @@ use App\Form\SiteFileForm;
 
 
 <!-- Form Modal -->
-<div class="modal fade" id="formModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="formModalAdd" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel"><?= __('New Nginx website') ?></h4>
+				<h4 class="modal-title"><?= __('New Nginx website') ?></h4>
 			</div>
 			<div class="modal-body">
 				<?php
 					$form = new SiteFileForm();
 					echo $this->Form->create($form, [
-						//'horizontal' => true,
-						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json'],
-						['id' => 'form-submit']
+						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json']
 					]);
 				?>
 
