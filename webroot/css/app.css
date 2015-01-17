@@ -124,6 +124,7 @@ caption {
  * ---------------------------------------------------------------*/
 td.actions div button {
     margin-right: 10px;
+    border-radius: 3px !important;
 }
 td.actions div button:last-child {
     margin-right: 0;
