@@ -14,6 +14,7 @@
 	8. All Form Validation Feedback To Success
 	9. Allow Form Submit Using Enter Key
 	10. MsgGrowl: Generic Ajax Fetch Errors
+	11. Generic Ajax Delete Action
 
 -------------------------------------------------------------------*/
 
@@ -113,7 +114,7 @@ $(document).ready(function() {
 			// Display error message only if all fields validated
 			if (!validationErrors) {
 				setFormToValidated(form)
-				form.find('.alert > span').html(msg.responseJSON.message)
+				form.find('.alert > span').html(response.message)
 				form.find('.alert').show()
 				return
 			}
@@ -142,10 +143,8 @@ $(document).ready(function() {
 			})
 		})
 		.success(function( msg ) {
-			var target = $('.index-main .alert span.message')
-			target.html(msg.message)
-			target.closest('div').show()
-			$('.modal.in').modal('hide')
+			window.location.href = window.location.href + "?success";
+			location.reload();
 		})
 	})
 })
@@ -155,7 +154,6 @@ $(document).ready(function() {
  * ---------------------------------------------------------------*/
 function clearFormFeedback(form) {
 	form.find(".form-group.has-feedback :input").each( function(index, input) {
-	//form.find(":input.has-feedback").each( function(index, input) {
 		var formGroup = $('input[name="' + input.name + '"]').closest('.form-group')
 		formGroup.removeClass('has-error has-success')
 		formGroup.find('.form-control-feedback').remove()
@@ -170,7 +168,6 @@ function clearFormFeedback(form) {
 function setFormToValidated(form) {
 	form.find(".form-group.has-feedback :input").each( function(index, input) {
 		var formGroup = $('input[name="' + input.name + '"]').closest('.form-group .has-feedback')
-		//formGroup.addClass('has-feedback has-success')
 		formGroup.addClass('has-success')
 		formGroup.append('<span class="fa fa-check form-control-feedback" aria-hidden="true"></span>')
 	})
@@ -197,3 +194,56 @@ function ajaxFetchError(event) {
 		text: 'So sorry... something went wrong fetching the remote data'
 	});
 }
+
+/*------------------------------------------------------------------
+ * 11. Generic Ajax Delete Action
+ * ---------------------------------------------------------------*/
+$( document ).ready(function() {
+
+	$('td.actions button.delete').on('click',function(){
+		var id = $(this).closest('tr').find('td.filename').html()
+		var url = $(this).attr('rel') + '.json'
+		var row = $(this).closest('tr')
+		var alertDiv = $('.index-main .alert span.message').closest('div')
+
+		$.ajax({
+			url: url,
+			type: "POST",
+			data: {'id': id}
+		})
+		.fail(function( msg ) {
+			var response = msg.responseJSON
+			alertDiv.removeClass('alert-success')
+			alertDiv.addClass('alert-danger')
+			alertDiv.find('span.message').html(response.message)
+			alertDiv.show()
+		})
+		.success(function( msg ) {
+			row.remove()
+
+			$.each($('tbody tr .index'), function (index, td) {
+				td.textContent = index + 1
+			})
+
+			alertDiv.removeClass('alert-danger')
+			alertDiv.addClass('alert-success')
+			alertDiv.find('span.message').html(msg.message)
+			alertDiv.show()
+		})
+	})
+})
+
+/*------------------------------------------------------------------
+ * 12. Index Add Success Message After Page Reload
+ *
+ * Temporary (and ugly) workaround to prevent (re)building the various index
+ * pages after a successful /add action. Looks for query parameter `success`
+ * in the URL and displays a generic success message when it is found.
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
+	if(/[?&]success/.test(location.href)){
+		var target = $('.index-main .alert span.message')
+		target.html("Action completed successfully");
+		target.closest('div').show()
+	}
+})

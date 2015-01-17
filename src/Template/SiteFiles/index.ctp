@@ -38,7 +38,7 @@ use App\Form\SiteFileForm;
 					<tbody>
 						<?php foreach ($data['sitefiles'] as $key => $file): ?>
 							<tr>
-								<td><?= $key + 1 ?></td>
+								<td class="index"><?= $key + 1 ?></td>
 								<td class="filename"><?= $file['name'] ?></td>
 								<td><?= $file['enabled'] ? __('Yes') : __('No') ?></td>
 								<td><?= $this->Time->format($file['modified'], 'YYYY-MM-dd'); ?></td>
@@ -47,7 +47,7 @@ use App\Form\SiteFileForm;
 										<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#fileModal">
 											<?= __('View') ?>
 										</button>
-										<button type="button" class="btn btn-danger btn-sm todo">
+										<button type="button" class="btn btn-danger btn-sm delete" rel="sitefiles/ajax_delete">
 											<?= __('Delete') ?>
 										</button>
 									</div>
