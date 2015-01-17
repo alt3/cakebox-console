@@ -143,10 +143,8 @@ $(document).ready(function() {
 			})
 		})
 		.success(function( msg ) {
-			var target = $('.index-main .alert span.message')
-			target.html(msg.message)
-			target.closest('div').show()
-			$('.modal.in').modal('hide')
+			window.location.href = window.location.href + "?success";
+			location.reload();
 		})
 	})
 })
@@ -233,4 +231,19 @@ $( document ).ready(function() {
 			alertDiv.show()
 		})
 	})
+})
+
+/*------------------------------------------------------------------
+ * 12. Index Add Success Message After Page Reload
+ *
+ * Temporary (and ugly) workaround to prevent (re)building the various index
+ * pages after a successful /add action. Looks for query parameter `success`
+ * in the URL and displays a generic success message when it is found.
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
+	if(/[?&]success/.test(location.href)){
+		var target = $('.index-main .alert span.message')
+		target.html("Action completed successfully");
+		target.closest('div').show()
+	}
 })
