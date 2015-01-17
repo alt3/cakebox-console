@@ -18,7 +18,7 @@
                         <div class="faq-text">
                             <h4><?= __("Utilize the cakebox command line") ?></h4>
                             <p>
-                                Run <em>cakebox commands</em> inside your virtual machine to create databases, configure virtual hosts and install fully configured applications.
+                                Run <em>cakebox CLI commands</em> inside your virtual machine to create databases, configure virtual hosts and install fully configured applications.
                                 For more information run:
                             </p>
                             <ul>
