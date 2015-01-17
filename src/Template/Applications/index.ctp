@@ -30,9 +30,6 @@
 								</td>
 								<td class="actions">
 									<div class="btn-group pull-right">
-										<button type="button" class="todo btn btn-default btn-sm">
-											<?= __('View') ?>
-										</button>
 										<button type="button" class="btn btn-danger btn-sm todo">
 											<?= __('Delete') ?>
 										</button>

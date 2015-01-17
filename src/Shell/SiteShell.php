@@ -44,6 +44,20 @@ class SiteShell extends AppShell
             ]
         ]);
 
+        $parser->addSubcommand('remove', [
+            'parser' => [
+                'description' => [
+                    __("Removes an Nginx website by deleting virtual hosts file, unlinking sites-enabled and reloading Nginx.")
+                ],
+                'arguments' => [
+                    'url' => [
+                        'help' => __('Fully qualified domain name used to expose the site.'),
+                        'required' => true
+                    ]
+                ]
+            ]
+        ]);
+
         $parser->addSubcommand('listall', [
             'parser' => [
                 'description' => [
@@ -74,11 +88,30 @@ class SiteShell extends AppShell
 
         # Site file either does not exist or --force option used
         if ($this->execute->addSite($url, $webroot, true) == false) {
-            $this->logInfo($this->execute->debug());
-            $this->logError("Error creating site file");
-            $this->exitBashError();
+            $this->exitBashError("Error creating site file");
         }
         $this->exitBashSuccess("Website created successfully.\n<info>Don't forget to update your hosts file</info>");
+    }
+
+    /**
+     * Remove an Nginx website by removing virtual hosts file, removing symbolic
+     * link and reloading the webserver.
+     *
+     * @param string $url Fully Qualified Domain Name used to expose the site.
+     * @return void
+     */
+    public function remove($url)
+    {
+        $this->logStart("Removing website $url");
+        $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
+        if (!file_exists($siteFile)) {
+            $this->exitBashWarning("* Skipping: virtual host does not exist.");
+        }
+
+        if ($this->execute->removeSite($url) == false) {
+            $this->exitBashError("Error removing website");
+        }
+        $this->exitBashSuccess("Website removed successfully.");
     }
 
     /**
