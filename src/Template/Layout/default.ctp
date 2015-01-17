@@ -19,12 +19,9 @@ $cakeDescription = 'Cakebox Admin';
 	<?php
 		// Generate page specific dotted filename (without extension) so it can
 		// be used to load page specific Stylesheet and/or Javascript
-		if ($this->request->here == '/')
-		{
+		if ($this->request->here == '/') {
 			$pageAsset = 'login';
-		}
-		else
-		{
+		} else {
 			$pageAsset = preg_replace('/^\//', '', $this->request->here);
 			$pageAsset = preg_replace('/\//', '.', $pageAsset);
 		}
@@ -39,13 +36,11 @@ $cakeDescription = 'Cakebox Admin';
 			'app',
 		];
 
-		if (file_exists(WWW_ROOT . 'css' . DS . 'pages' . DS . $pageAsset . '.css'))
-		{
+		if (file_exists(WWW_ROOT . 'css' . DS . 'pages' . DS . $pageAsset . '.css')) {
 			$stylesheets[] = "pages/$pageAsset";
 		}
 
-		foreach ($stylesheets as $stylesheet)
-		{
+		foreach ($stylesheets as $stylesheet) {
 			echo $this->Html->css($stylesheet);
 		}
 
@@ -62,13 +57,11 @@ $cakeDescription = 'Cakebox Admin';
 			'app'
 		];
 
-		if (file_exists(WWW_ROOT . 'js' . DS . 'pages' . DS . $pageAsset . '.js'))
-		{
+		if (file_exists(WWW_ROOT . 'js' . DS . 'pages' . DS . $pageAsset . '.js')) {
 			$scripts[] = "pages/$pageAsset";
 		}
 
-		foreach ($scripts as $script)
-		{
+		foreach ($scripts as $script) {
 			echo $this->Html->script($script);
 		}
 	?>
