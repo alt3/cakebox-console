@@ -1,4 +1,24 @@
-$(document).ready(function(){
+/*==================================================================
+
+  [Page Specific Script]
+
+	=> /sitefiles
+
+  [Table of Contents]
+
+	1. Tab Click Listeners
+	2. Ajax Load Status Tab
+	3. Ajax Load Software Tab
+
+===================================================================*/
+
+
+
+
+/*------------------------------------------------------------------
+ * 1. Tab Click Listeners
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
 
 	// Ajax load status tab
 	$('#tab-status a').click(function (e) {
@@ -15,17 +35,13 @@ $(document).ready(function(){
 			loadTabSoftware()
 		}
 	})
+})
 
-});
-
-
-/*
-* Ajax load Status tab
-*
-* @todo Make generic
-*/
+/*------------------------------------------------------------------
+ * 2. Ajax Load Status Tab
+ * ---------------------------------------------------------------*/
 function loadTabStatus() {
-	var jqxhr = $.getJSON( 'https://cakebox/dashboards/checks.json', function(data) {
+	var jqxhr = $.getJSON( '../dashboards/checks.json', function(data) {
 		// loop through each category
 		$.each( data, function( category, checks ) {
 			failCount = 0
@@ -58,11 +74,11 @@ function loadTabStatus() {
 	})
 }
 
-/**
-* Ajax load Software tab
-*/
+/*------------------------------------------------------------------
+ * 3. Ajax Load Software Tab
+ * ---------------------------------------------------------------*/
 function loadTabSoftware() {
-	var jqxhr = $.getJSON( 'https://cakebox/dashboards/software.json', function(data) {
+	var jqxhr = $.getJSON( '../dashboards/software.json', function(data) {
 		console.dir(data)
 
 		// fill OS panel

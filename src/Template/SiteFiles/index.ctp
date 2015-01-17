@@ -2,15 +2,22 @@
 use App\Form\SiteFileForm;
 ?>
 
-<div class="col-sm-10 column">
+<div class="index-main col-sm-10 column">
+
+	<!-- Ajax success message -->
+	<div class="alert alert-success alert-dismissible collapse" role="alert">
+		<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<span class="message">
+			ajax-loaded message
+		</span>
+	</div>
 
 	<!-- Sitefiles widget -->
 	<div class="widget stacked widget-table action-table">
 
 		<div class="widget-header">
 			<i class="fa fa-file-text-o"></i>
-			<h3><?= __('Nginx site configuration files') ?></h3>
-			<button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#addModal">Add</button>
+			<h3><?= __('Nginx Virtual Hosts') ?></h3>
 		</div>
 
 		<div class="widget-content">
@@ -22,7 +29,7 @@ use App\Form\SiteFileForm;
 					<thead>
 						<tr>
 							<th>#</th>
-							<th><?= __("Filename") ?></th>
+							<th><?= __("Site File") ?></th>
 							<th><?= __("Enabled") ?></th>
 							<th><?= __("Last Modified") ?></th>
 							<th></th>
@@ -31,7 +38,7 @@ use App\Form\SiteFileForm;
 					<tbody>
 						<?php foreach ($data['sitefiles'] as $key => $file): ?>
 							<tr>
-								<td><?= $key + 1 ?></td>
+								<td class="index"><?= $key + 1 ?></td>
 								<td class="filename"><?= $file['name'] ?></td>
 								<td><?= $file['enabled'] ? __('Yes') : __('No') ?></td>
 								<td><?= $this->Time->format($file['modified'], 'YYYY-MM-dd'); ?></td>
@@ -40,7 +47,7 @@ use App\Form\SiteFileForm;
 										<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#fileModal">
 											<?= __('View') ?>
 										</button>
-										<button type="button" class="btn btn-danger btn-sm todo">
+										<button type="button" class="confirm delete btn btn-danger btn-sm" rel="sitefiles/ajax_delete">
 											<?= __('Delete') ?>
 										</button>
 									</div>
@@ -55,16 +62,22 @@ use App\Form\SiteFileForm;
 
 	</div> <!-- /widget -->
 
+</div> <!-- col-sm-10 -->
+
+<!-- Actions -->
+<div class="col-sm-2 column">
+	<div class="actions">
+		<a href="#" class="ajax-form-modal btn btn-primary btn-block" data-target="#formModalAdd"><?= __('New Virtual Host') ?></a>
+	</div>
 </div>
 
-
 <!-- View Modal -->
-<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel">ajax-loaded-title</h4>
+				<h4 class="modal-title">ajax-loaded-title</h4>
 			</div>
 			<div class="modal-body">
 				ajax-loaded-content
@@ -77,75 +90,39 @@ use App\Form\SiteFileForm;
 </div>
 
 
-<!-- Add Modal -->
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- Form Modal -->
+<div class="modal fade" id="formModalAdd" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel"><?= __('New Nginx website') ?></h4>
+				<h4 class="modal-title"><?= __('New Nginx website') ?></h4>
 			</div>
 			<div class="modal-body">
 				<?php
 					$form = new SiteFileForm();
 					echo $this->Form->create($form, [
-						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json'],
-						['id' => 'form-submit']
+						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json']
 					]);
-					echo $this->Form->input('url', [
-					]);
+				?>
+
+				<div class="alert alert-danger alert-dismissible collapse" role="alert">
+					<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<span>
+						ajax-loaded error message
+					</span>
+				</div>
+				<?php
+					echo $this->Form->input('url');
 					echo $this->Form->input('webroot');
+					echo $this->Form->input('force');
 					echo $this->Form->end();
 				?>
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="form-submit" class="btn btn-primary" data-dismiss="modal"><?= __('Submit') ?></button>
 				<button type="button" class="btn btn-default" data-dismiss="modal"><?= __('Cancel') ?></button>
+				<button type="button" id="form-submit" class="btn btn-primary"><?= __('Submit') ?></button>
 			</div>
 		</div>
 	</div>
 </div>
-
-<script>
-$('#fileModal').on('show.bs.modal', function (event) {
-	var modal = $(this)
-	var button = $(event.relatedTarget) // Button that triggered the modal
-	var filename = button.closest('tr').find('td.filename').html()
-	$('.modal-title').html('/etc/nginx/sites-available/' + filename)
-	var jqxhr = $.getJSON( 'sitefiles/file/' + filename + '.json', function(data) {
-		console.log(modal)
-		modal.find('.modal-body').html('<pre>' + data.content + '</pre>')
-	})
-	.fail(function() {
-		alert( 'So sorry, something went wrong fetching the file...' )
-	})
-})
-
-</script>
-
-<!-- Add modal -->
-<script>
-$('#form-submit').click(function() {
-	$.ajax({
-		url: "/sitefiles/ajax_add.json",
-		type: "POST",
-		headers: {
-			'X-CSRF-Token': $('input[name="_csrfToken"]').attr('value')
-		},
-		data: {
-			url: $('#url').val(),
-			webroot: $('#webroot').val()
-		}
-	})
-	.success(function( msg ) {
-		alert( msg.message );
-		//alert( msg.webroot);
-		//alert( msg.url);
-	})
-	.fail(function( msg ) {
-		console.dir(msg)
-		alert( msg.responseText );
-	})
-
-});
-</script>

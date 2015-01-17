@@ -35,16 +35,26 @@ class AppExceptionRenderer extends \Cake\Error\ExceptionRenderer
 		}
 		$this->controller->response->statusCode($code);
 
-		// Add errors to the view vars if the (custom App) Exception supportsd
-		// the getErrors() method.
+		// Prepare additional error information if the custom Exception supports
+		// the getErrors() method AND returns at least one error.
 		if (method_exists($exception, 'getErrors')) {
+		 	$errors = $exception->getErrors();
+			if (count($errors)) {
+				$errorKey = key($errors);
+				$errors = $errors[$errorKey];
+			} else {
+				unset($errors);
+			}
+		}
+
+		if (isset($errors)) {
 			 $this->controller->set(array(
 			 	'message' => $message,
 			 	'url' => h($url),
 			 	'error' => $exception,
-				'errors' => $exception->getErrors(),
+				$errorKey => $errors,
 			 	'code' => $code,
-			 	'_serialize' => array('message', 'url', 'code', 'errors')
+			 	'_serialize' => array('message', 'url', 'code', $errorKey)
 			 ));
 		} else {
 			 $this->controller->set(array(

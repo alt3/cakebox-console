@@ -1,0 +1,199 @@
+/*------------------------------------------------------------------
+
+  [Globally Applied Application Stylesheet]
+
+  [Table of Contents]
+
+	1. Beta Banner
+	2. Top Navigation
+	3. Widgets
+	4. Index Tables
+	5. Modals
+	6. Forms
+	7. msgGrowl
+	8. Key/Value Pairs
+	9. Footer
+
+-------------------------------------------------------------------*/
+
+body {
+    background: #fff;
+}
+body, p {
+	font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+    font-size: 14px;
+	color: #666;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: inherit;
+	font-weight: bolder;
+}
+a, a:link, a:visited, a:hover, a:active {
+	color: #4183c4;
+}
+
+/* elements no longer using BaseAdmin's Google Open Sans font */
+input, button, select, textarea {
+    font: inherit;
+}
+
+a.btn-primary,
+a.btn-primary:hover,
+a.btn-primary:visited,
+a.btn-primary:active,
+a.btn-primary:focus {
+    color: #fff;
+}
+
+
+/*------------------------------------------------------------------
+ * 1. Beta Banner
+ * ---------------------------------------------------------------*/
+#beta{
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+/*------------------------------------------------------------------
+ * 2. Top Navigation
+ * ---------------------------------------------------------------*/
+ .logo-version {
+     margin-left: 6px;
+     font-size: 11px;
+     color: #666;
+
+ }
+ .subnav-collapse.collapse {
+     visibility: visible;
+ }
+
+/* Overrides due to bootstrap-upgrade */
+.navbar > .container {
+    padding-right: 15px;
+}
+.main > .container > .row {
+    /*margin-left: -30px;*/
+}
+.collapse {
+	visibility: visible !important;		/** fix to get jQuery show() working */
+}
+
+/*------------------------------------------------------------------
+ * 3. Widgets
+ * ---------------------------------------------------------------*/
+.widget .widget-header h3 {
+	font-weight: bolder;
+	font-size: inherit;
+	left: 8px;
+}
+
+.widget .widget-header [class^="fa-"], .widget .widget-header [class*=" fa-"] {
+    display: inline-block;
+    margin-top: -3px;
+    margin-left: 13px;
+    margin-right: -2px;
+    font-size: 16px;
+    color: #555;
+    verti
+    cal-align: middle;
+}
+.widget-header > button.close {
+    margin: 8px 15px 0px 8px ;
+}
+.stacked:before {
+    bottom: 0;
+}
+.stacked:after, .stacked:before {
+    bottom: 0;
+}
+caption {
+    font-size: 13px;
+}
+
+/* Widget - danger */
+.widget.danger {
+    border-color: -moz-use-text-color #C12E2A #C12E2A;
+}
+.widget.danger .widget-header {
+    background-image: linear-gradient(to bottom, #D9534F 0%, #C9302C 100%);
+}
+.widget.danger .widget-header i,
+.widget.danger .widget-header h3 {
+    color: #fff;
+}
+
+/*------------------------------------------------------------------
+ * 4. Index Tables
+ * ---------------------------------------------------------------*/
+td.actions div button {
+    margin-right: 10px;
+    border-radius: 3px !important;
+}
+td.actions div button:last-child {
+    margin-right: 0;
+}
+td.actions div button i {
+    font-size: 16px;
+}
+div.actions a {
+    margin-bottom: 10px;
+}
+
+/*------------------------------------------------------------------
+ * 5. Modals
+ * ---------------------------------------------------------------*/
+.modal-dialog {
+    margin-top: 60px;
+}
+
+/*------------------------------------------------------------------
+ * 6. Forms
+ * ---------------------------------------------------------------*/
+.form-control-feedback {
+    margin-top: 11px;
+    font-size: 18px;
+}
+.form-group {
+    margin-bottom: 25px;
+}
+
+/*------------------------------------------------------------------
+ * 7. msgGrowl
+ * ---------------------------------------------------------------*/
+.msgGrowl.success .msgGrowl-content {
+    background: url(../img/notifications/success-32.png) no-repeat 7px 13px;
+}
+.msgGrowl.error .msgGrowl-content {
+    background: url(../img/notifications/error-32.png) no-repeat 7px 13px;
+}
+.msgGrowl.info .msgGrowl-content {
+    background: url(../img/notifications/info-32.png) no-repeat 7px 13px;
+}
+.msgGrowl.warning .msgGrowl-content {
+    background: url(../img/notifications/alert-32.png) no-repeat 7px 13px;
+}
+
+/*------------------------------------------------------------------
+ * 8. Key/Value Pairs
+ * ---------------------------------------------------------------*/
+ul.pair {
+    display: table;
+}
+ul.pair li {
+    display: table-row;
+}
+ul.pair li span {
+    display: table-cell;
+}
+ul.pair li span.key {
+    font-weight: bold;
+    padding-right: 20px;
+}
+
+/*------------------------------------------------------------------
+* 9. Footer
+* ---------------------------------------------------------------*/
+#back-to-top {
+    background-color: #1a1a1a;
+}

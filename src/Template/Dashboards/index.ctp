@@ -15,7 +15,7 @@ use Cake\Utility\Inflector;
 			<h3><?= __('Stats') ?></h3>
 		</div> <!-- /widget-header -->
 
-		<div class="widget-content">
+		<div class="widget-content dashboard-stats">
 
 			<div class="row stats">
 
@@ -32,7 +32,7 @@ use Cake\Utility\Inflector;
 
 				<div class="col-xs-4">
 					<span class="stat-value"><?= $data['counters']['sites'] ?></span>
-					<span class="stat-key"><?= __('Site Files'); ?></span>
+					<span class="stat-key"><?= __('Virtual Hosts'); ?></span>
 				</div>
 
 			</div> <!-- /stats -->
@@ -94,10 +94,14 @@ use Cake\Utility\Inflector;
 							<td class="app-version">
 								<?= $app['framework_human'] ?> <?= $app['framework_version'] ?>
 							</td>
-							<td class="td-actions">
-								<a href="javascript:;" class="btn btn-xs btn-primary">
-									<i class="btn-icon-only fa fa-share"></i>
-								</a>
+							<td class="app-actions">
+								<?php
+									echo $this->Html->link(
+										'<i class="btn-icon-only fa fa-share"></i>' . '',
+										['controller'=>'applications', 'action'=>'index'],
+										['escape' => false, 'class' => 'btn btn-xs btn-primary']
+									);
+								?>
 							</td>
 						</tr>
 					<?php endforeach ?>
@@ -127,42 +131,42 @@ use Cake\Utility\Inflector;
 				<?php
 					// Applications
 					 echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-code-fork"></i><span class="shortcut-label" />' . __('Applications'),
+						'<i class="shortcut-icon fa fa-code-fork"></i><span class="shortcut-label"></span>' . __('Applications'),
 						['controller'=>'applications', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false, 'title' => 'Not implemented yet']
 					 );
 
 					// Databases
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-database"></i><span class="shortcut-label" />' . __('Databases'),
+						'<i class="shortcut-icon fa fa-database"></i><span class="shortcut-label"></span>' . __('Databases'),
 						['controller'=>'databases', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false, 'title' => 'Not implemented yet']
 					);
 
 					// Site files
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label" />' . __('Site Files'),
+						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label"></span>' . __('Virtual Hosts'),
 						['controller'=>'sitefiles', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 
 					// Pro Tips
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-lightbulb-o"></i><span class="shortcut-label" />' . __('Pro Tips'),
-						'#',
-						['class' => 'shortcut todo', 'escape' => false]
+						'<i class="shortcut-icon fa fa-lightbulb-o"></i><span class="shortcut-label"></span>' . __('Pro Tips!'),
+						['controller'=>'dashboards', 'action'=>'usage'],
+						['class' => 'shortcut', 'escape' => false]
 					);
 
 					// Virtual Machine
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-cube"></i><span class="shortcut-label" />' . __('Virtual Machine'),
+						'<i class="shortcut-icon fa fa-cube"></i><span class="shortcut-label"></span>' . __('Virtual Machine'),
 						['controller'=>'dashboards', 'action'=>'vm'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 
 					// Kibana: dirty https tp http hack until figured out how to do otherwise
 					$kibanaLink = $this->Html->link(
-						'<i class="shortcut-icon fa fa-bar-chart"></i><span class="shortcut-label" />' . __('Kibana'),
+						'<i class="shortcut-icon fa fa-bar-chart"></i><span class="shortcut-label"></span>' . __('Kibana'),
 						[
 							'_port' => '5601',
 							'controller' => false,
@@ -174,7 +178,7 @@ use Cake\Utility\Inflector;
 
 					// Elasticsearch: dirty https tp http hack until figured out how to do otherwise
 					$elasticSearchLink = $this->Html->link(
-						'<i class="shortcut-icon fa fa-search"></i><span class="shortcut-label" />' . __('Elasticsearch'),
+						'<i class="shortcut-icon fa fa-search"></i><span class="shortcut-label"></span>' . __('Elasticsearch'),
 						[
 							'_port' => '9200',
 							'controller' => false,
@@ -186,7 +190,7 @@ use Cake\Utility\Inflector;
 
 					// Credits
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-thumbs-up"></i><span class="shortcut-label" />' . __('Credits'),
+						'<i class="shortcut-icon fa fa-thumbs-up"></i><span class="shortcut-label"></span>' . __('Credits'),
 						'#',
 						['class' => 'shortcut todo', 'escape' => false]
 					);
@@ -205,12 +209,12 @@ use Cake\Utility\Inflector;
 		<div class="widget-header">
 			<button type="button" class="close" id="close-sponsors" data-dismiss="widget" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<i class="fa fa-bullhorn"></i>
-			<h3><?= __('Our Sponsors') ?></h3>
+			<h3><?= __('Your Sponsors') ?></h3>
 		</div> <!-- /widget-header -->
 
 		<div class="widget-content">
-			<p>Theme license donated by Rod Howard from <?= $this->Html->link('Jumpstart Themes', 'http://jumpstartthemes.com') ?></p>
-			<p>Box image cdn-hosted by our friends at <?= $this->Html->link('Your Name Here', 'http://google.com') ?></p>
+			<p>Theme use granted by Rod Howard from <?= $this->Html->link('Jumpstart Themes', 'http://jumpstartthemes.com') ?></p>
+			<p>Box image CDN provided by <?= $this->Html->link('Your Name Here', 'http://google.com') ?></p>
 		</div> <!-- /widget-content -->
 
 	</div> <!-- /widget -->
@@ -226,30 +230,35 @@ use Cake\Utility\Inflector;
 
 		<div class="widget-content">
 
-			<ul class="commit-items list-unstyled">
-				<?php if (count($data['commits']) == 0): ?>
+			<ul class="pull-requests list-unstyled">
+				<?php if (count($data['contributors']) == 0): ?>
 						<li class="commit-item api-failure">
 							<p class="text-danger"><?= __('Looks the Github API is having an off day'); ?><i class="fa fa-exclamation-circle"></i></p>
 						</li>
 				<?php else: ?>
-					<?php foreach($data['commits'] as $commit): ?>
-						<li class="commit-item">
+					<?php foreach($data['contributors'] as $pullRequest): ?>
+						<li class="pull-request">
 							<div class="row row-list">
 								<div class="col-xs-1 avatar">
-									<?= $this->Html->image($commit['author']['avatar_url'] . '&size=40', ['alt' => $commit['author']['login']]) ?>
+									<?= $this->Html->image($pullRequest['user']['avatar_url'] . '&amp;size=40', ['alt' => $pullRequest['user']['login']]) ?>
 								</div>
 								<div class="col-xs-9 details">
-									<!-- <span> -->
-										<?= $this->Html->link($commit['author']['login'], $commit['author']['html_url']) ?>
-										<p class="message">
-											<?= $commit['commit']['message'] ?>
-											<?= $this->Html->link('(' . substr($commit['sha'], 0, 7) . ')', $commit['html_url'], ['class' => 'sha-link']) ?>
-										</p>
-									<!-- </span> -->
+									<?= $this->Html->link($pullRequest['user']['login'], $pullRequest['user']['html_url']) ?>
+
+									<span class="message">
+										<?= $pullRequest['title'] ?>
+										<?php
+											echo $this->Html->link(
+												'<i class="fa fa-share"></i>' . '',
+												$pullRequest['html_url'],
+												['escape' => false, 'class' => 'link']
+											);
+										?>
+									</span>
 								</div>
 								<div class="col-xs-2 date pull-right">
-									<span class="commit-day"><?= (new DateTime($commit['commit']['committer']['date']))->format("d") ?></span>
-									<span class="commit-month"><?= (new DateTime($commit['commit']['committer']['date']))->format("M") ?></span>
+									<span class="day"><?= (new DateTime($pullRequest['merged_at']))->format("d") ?></span>
+									<span class="month"><?= (new DateTime($pullRequest['merged_at']))->format("M") ?></span>
 								</div>
 							</div>
 						</li>
@@ -283,10 +292,10 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>About</h4>
 				<ul>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div> <!-- /span3 -->
 
@@ -294,10 +303,10 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>Support</h4>
 				<ul>
-					<li><a class="#">Documentation</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#" class="todo">Documentation</a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div>
 
@@ -305,10 +314,10 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>Legal</h4>
 				<ul>
-					<li><a class="ajax-file-modal" id="license" href="#" rel="dashboards/license.json">License</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a class="ajax-file-modal" id="license" href="dashboards/license.json">License</a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div>
 
@@ -319,7 +328,7 @@ use Cake\Utility\Inflector;
 					<li>
 						<?php
 							echo $this->Html->link(
-								'<i class="footer-icon fa fa-github"></i>' . 'Github',
+								'<i class="extra-icon fa fa-github"></i>' . 'Github',
 								'https://github.com/alt3/cakebox-console',
 								['escape' => false, 'escapeTitle' => false, 'title' => 'View our sourcecode on Github']
 							);
@@ -329,7 +338,7 @@ use Cake\Utility\Inflector;
 					<li>
 						<?php
 							echo $this->Html->link(
-								$this->Html->image("frameworks/cakephp.icon.png", ['class' => 'footer-icon']) . 'CakePHP',
+								$this->Html->image("frameworks/cakephp.icon.png", ['class' => 'extra-icon']) . 'CakePHP',
 								"http://cakephp.org",
 								['escape' => false, 'escapeTitle' => false, 'title' => 'CakePHP: the rapid development php framework']
 							);
@@ -341,7 +350,7 @@ use Cake\Utility\Inflector;
 							echo $this->Html->link('Jumpstart Themes', 'https://jumpstartthemes.com', ['title' => 'Jumpstart Themes: Effortless Twitter Bootstrap Themes']);
 						?>
 					</li>
-					<li><a href="#">&gt; Placeholder &lt;</a></li>
+					<li><a href="#"></a></li>
 				</ul>
 			</div>
 
@@ -365,7 +374,6 @@ use Cake\Utility\Inflector;
 	</div>
 </div>
 
-
 <?php
 	// Count the number of app per unique framework to feed the donut
 	$frameworks = array_values(array_unique(Hash::extract($data['apps'], '{n}.framework_human')));
@@ -377,12 +385,10 @@ use Cake\Utility\Inflector;
 		];
 	}
 
-	// create inline var "data" so it becomes available in the donut script
+	// Create inline Javascript variable "donutData"
 	echo $this->Html->scriptBlock(
-		"var donutData = " . json_encode($flotData) ,
+		"var donutData = " . json_encode($flotData),
 		['inline' => false]
 	);
 
-	// load the dashboard js
-	echo $this->Html->script('pages/dashboards');
 ?>

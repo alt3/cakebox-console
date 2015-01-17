@@ -13,7 +13,7 @@
 				<span class="sr-only"><?= __('Toggle navigation'); ?></span>
 				<i class="fa fa-cog"></i>
 			</button>
-			<a class="navbar-brand" href="dashboards">Cakebox Admin<span class="logo-version">0.1.0</span></a>
+			<a class="navbar-brand" href="dashboards">Cakebox Admin<span class="logo-version">v<?= $version ?></span></a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -51,7 +51,7 @@
 					<li class="active">
 						<?php
 							echo $this->Html->link(
-								'<i class="fa fa-home"></i><span />' . __('Dashboard'),
+								'<i class="fa fa-home"></i><span></span>' . __('Dashboard'),
 								['controller' => 'dashboards', 'action' => 'index'],
 								['class' => 'shortcut', 'escape' => false]
 							);
@@ -62,7 +62,7 @@
 					<li>
 						<?php
 							echo $this->Html->link(
-								'<i class="fa fa-cloud-download"></i><span />' . __('Backups'),
+								'<i class="fa fa-cloud-download"></i><span></span>' . __('Backups'),
 								'#',
 								['class' => 'shortcut todo', 'escape' => false]
 							);
@@ -73,7 +73,7 @@
 					<li>
 						<?php
 							echo $this->Html->link(
-								'<i class="fa fa-cog"></i><span />' . __('Settings'),
+								'<i class="fa fa-cog"></i><span></span>' . __('Settings'),
 								'#',
 								['class' => 'shortcut todo', 'escape' => false]
 							);
@@ -84,7 +84,7 @@
 					<li>
 						<?php
 							echo $this->Html->link(
-								'<i class="fa fa-question-circle"></i><span />' . __('Help'),
+								'<i class="fa fa-question-circle"></i><span></span>' . __('Help'),
 								'#',
 								['class' => 'shortcut todo', 'escape' => false]
 							);
@@ -95,7 +95,7 @@
 					<li>
 						<?php
 							echo $this->Html->link(
-								'<i class="fa fa-github"></i><span />' . __('Contribute'),
+								'<i class="fa fa-github"></i><span></span>' . __('Contribute'),
 								'https://www.github.com/alt3/cakebox-console',
 								['class' => 'shortcut', 'escape' => false]
 							);

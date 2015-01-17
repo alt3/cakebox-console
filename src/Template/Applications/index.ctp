@@ -1,5 +1,5 @@
 
-<div class="col-sm-12 column">
+<div class="col-sm-10 column">
 
 	<!-- Sitefiles widget -->
 	<div class="widget stacked widget-table action-table">
@@ -30,9 +30,6 @@
 								</td>
 								<td class="actions">
 									<div class="btn-group pull-right">
-										<button type="button" class="todo btn btn-default btn-sm">
-											<?= __('View') ?>
-										</button>
 										<button type="button" class="btn btn-danger btn-sm todo">
 											<?= __('Delete') ?>
 										</button>
@@ -45,9 +42,14 @@
 			</div>
 
 		</div> <!-- /widget-content -->
-
 	</div> <!-- /widget -->
+</div> <!-- col-sm-10 -->
 
+<!-- Actions -->
+<div class="col-sm-2 column">
+	<div class="actions">
+		<a href="#" class="todo btn btn-primary btn-block"><?= __('New Application') ?></a>
+	</div>
 </div>
 
 <!-- Modal -->

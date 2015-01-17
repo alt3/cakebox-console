@@ -1,9 +1,28 @@
-$(document).ready(function(){
+/*==================================================================
 
-	/*--------------------------------------------------
-	 * Load the donut using the "data" variable set in
-	 * the Dashboards index view.
-	 *------------------------------------------------*/
+  [Page Specific Script]
+
+	=> /sitefiles
+
+  [Table of Contents]
+
+	1. Generate Flot Donut Chart
+	2. Sponsors Widget Close Listener
+
+===================================================================*/
+
+
+
+
+/*------------------------------------------------------------------
+ * 1. Generate Flot Donut Chart
+ *
+ * Generate the flor donut using "donutData" inline Javascript variable
+ * set in the Dashboards index view (http://www.flotcharts.org)
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
+	//console.dir(donutData)
+
 	$.plot($("#donut-chart"), donutData,
 	{
 		colors: ["#F90", "#222", "#777", "#AAA"],
@@ -17,13 +36,14 @@ $(document).ready(function(){
 			hoverable: true
 		},
 		tooltips: true
-	});
+	})
+})
 
-	/*--------------------------------------------------
-	 * Allow closing the sponsor widget
-	 *------------------------------------------------*/
+/*------------------------------------------------------------------
+ * 2. Sponsors Widget Close Listener
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
 	$("#close-sponsors").click(function() {
 		$( ".widget.sponsors" ).slideUp()
-	});
-
-});
+	})
+})

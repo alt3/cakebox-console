@@ -23,7 +23,8 @@ class DashboardsController extends AppController
                 'databases' => $this->cbi->getDatabaseCount(),
                 'sites' => $this->cbi->getNginxFileCount()
             ],
-            'commits' => $this->cbi->getRepositoryCommits('alt3/cakebox-console', 5)
+            'commits' => $this->cbi->getRepositoryCommits('alt3/cakebox-console', 5),
+			'contributors' => $this->cbi->getRepositoryContributors('alt3/cakebox-console')
         ];
 
         if ($this->cbi->getLatestCommitLocal() != $this->cbi->getLatestCommitRemote()) {
@@ -33,9 +34,23 @@ class DashboardsController extends AppController
         $this->set('data', $data);
     }
 
+    /**
+     * VM page
+     *
+     * @return void
+     */
     public function vm() {
         $data['vm'] = $this->cbi->getVmInfo();
         $this->set('data', $data);
+    }
+
+    /**
+     * Usage page
+     *
+     * @return void
+     */
+    public function usage() {
+
     }
 
     /**

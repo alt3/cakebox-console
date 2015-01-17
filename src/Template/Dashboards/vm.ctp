@@ -97,7 +97,7 @@ use Cake\Utility\Inflector;
 					<div id="status-security" class="widget stacked widget-table hidden">
 						<div class="widget-header">
 							<i class="fa fa-lock"></i>
-							<h3><?= __('Security') ?></h3>
+							<h3><?= __('Security (not implemented yet)') ?></h3>
 						</div>
 
 						<div class="widget-content">
@@ -212,10 +212,3 @@ use Cake\Utility\Inflector;
 		</div>
 	</div>
 </div>
-
-
-
-
-
-
-<?php echo $this->Html->script('pages/dashboards.vm'); ?>

@@ -1,4 +1,4 @@
-<div class="col-sm-12 column">
+<div class="col-sm-10 column">
 
 	<!-- Databases widget -->
 	<div class="widget stacked widget-table action-table">
@@ -42,5 +42,11 @@
 		</div> <!-- /widget-content -->
 
 	</div> <!-- /widget -->
+</div> <!-- col-sm-10 -->
 
+<!-- Actions -->
+<div class="col-sm-2 column">
+	<div class="actions">
+		<a href="#" class="todo btn btn-primary btn-block"><?= __('New Database') ?></a>
+	</div>
 </div>

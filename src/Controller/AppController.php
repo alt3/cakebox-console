@@ -63,6 +63,10 @@ class AppController extends Controller
      */
     public function beforeFilter(Event $event)
     {
+		// set cakebox version
+		$this->set(['version' => $this->cbi->cakeboxVersion()]);
+
+
         // Throw 404's for non-ajax connections to ajax_ prefixed actions
         if (substr($this->request->action, 0, 5) == 'ajax_') {
             if (!$this->request->is('ajax')) {
