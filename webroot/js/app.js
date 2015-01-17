@@ -15,6 +15,7 @@
 	9. Allow Form Submit Using Enter Key
 	10. MsgGrowl: Generic Ajax Fetch Errors
 	11. Generic Ajax Delete Action
+	12. Bootbox Listener
 
 -------------------------------------------------------------------*/
 
@@ -198,40 +199,38 @@ function ajaxFetchError(event) {
 /*------------------------------------------------------------------
  * 11. Generic Ajax Delete Action
  * ---------------------------------------------------------------*/
-$( document ).ready(function() {
+function ajaxDelete(trigger) {
 
-	$('td.actions button.delete').on('click',function(){
-		var id = $(this).closest('tr').find('td.filename').html()
-		var url = $(this).attr('rel') + '.json'
-		var row = $(this).closest('tr')
-		var alertDiv = $('.index-main .alert span.message').closest('div')
+	var id = trigger.closest('tr').find('td.filename').html()
+	var url = trigger.attr('rel') + '.json'
+	var row = trigger.closest('tr')
+	var alertDiv = $('.index-main .alert span.message').closest('div')
 
-		$.ajax({
-			url: url,
-			type: "POST",
-			data: {'id': id}
-		})
-		.fail(function( msg ) {
-			var response = msg.responseJSON
-			alertDiv.removeClass('alert-success')
-			alertDiv.addClass('alert-danger')
-			alertDiv.find('span.message').html(response.message)
-			alertDiv.show()
-		})
-		.success(function( msg ) {
-			row.remove()
-
-			$.each($('tbody tr .index'), function (index, td) {
-				td.textContent = index + 1
-			})
-
-			alertDiv.removeClass('alert-danger')
-			alertDiv.addClass('alert-success')
-			alertDiv.find('span.message').html(msg.message)
-			alertDiv.show()
-		})
+	$.ajax({
+		url: url,
+		type: "POST",
+		data: {'id': id}
 	})
-})
+	.fail(function( msg ) {
+		var response = msg.responseJSON
+		alertDiv.removeClass('alert-success')
+		alertDiv.addClass('alert-danger')
+		alertDiv.find('span.message').html(response.message)
+		alertDiv.show()
+	})
+	.success(function( msg ) {
+		row.remove()
+
+		$.each($('tbody tr .index'), function (index, td) {
+			td.textContent = index + 1
+		})
+
+		alertDiv.removeClass('alert-danger')
+		alertDiv.addClass('alert-success')
+		alertDiv.find('span.message').html(msg.message)
+		alertDiv.show()
+	})
+}
 
 /*------------------------------------------------------------------
  * 12. Index Add Success Message After Page Reload
@@ -246,4 +245,24 @@ $(document).ready(function() {
 		target.html("Action completed successfully");
 		target.closest('div').show()
 	}
+})
+
+/*------------------------------------------------------------------
+ * 12. Bootbox Listener (http://bootboxjs.com)
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
+	$(document).on("click", ".confirm", function(e) {
+		var trigger = $(this)
+		bootbox.confirm({
+			title: 'Are you sure?',
+			message: 'Please confirm.',
+			callback: function(result) {
+				if (result) {
+					if (trigger.hasClass('delete')) {
+						ajaxDelete(trigger)
+					}
+				}
+			}
+		})
+	})
 })

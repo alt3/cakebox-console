@@ -47,7 +47,7 @@ use App\Form\SiteFileForm;
 										<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#fileModal">
 											<?= __('View') ?>
 										</button>
-										<button type="button" class="btn btn-danger btn-sm delete" rel="sitefiles/ajax_delete">
+										<button type="button" class="confirm delete btn btn-danger btn-sm" rel="sitefiles/ajax_delete">
 											<?= __('Delete') ?>
 										</button>
 									</div>

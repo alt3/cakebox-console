@@ -50,6 +50,7 @@ $cakeDescription = 'Cakebox Admin';
 			'cdn-fallback/jquery-ui/jquery-ui.min',
 			'cdn-fallback/bootstrap/bootstrap.min',
 			'cdn-fallback/string/string.min',
+			'cdn-fallback/bootbox/bootbox.min',			
 			'cdn-fallback/jquery-plugins/msgGrowl/msgGrowl.min',
 			'cdn-fallback/jquery-plugins/flot/jquery.flot.min',
 			'cdn-fallback/jquery-plugins/flot/jquery.flot.pie.min',
