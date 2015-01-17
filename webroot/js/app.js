@@ -49,7 +49,7 @@ $(document).ready(function() {
 		$.msgGrowl ({
 			type: 'error',
 			title: 'Not Implemented Yet',
-			text: "Feel free to submit a PR to speed things up."
+			text: "Feel free to submit a PR"
 		})
 	})
 })

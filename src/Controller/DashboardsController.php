@@ -34,9 +34,23 @@ class DashboardsController extends AppController
         $this->set('data', $data);
     }
 
+    /**
+     * VM page
+     *
+     * @return void
+     */
     public function vm() {
         $data['vm'] = $this->cbi->getVmInfo();
         $this->set('data', $data);
+    }
+
+    /**
+     * Usage page
+     *
+     * @return void
+     */
+    public function usage() {
+
     }
 
     /**

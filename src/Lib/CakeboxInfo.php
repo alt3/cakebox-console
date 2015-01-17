@@ -158,6 +158,31 @@ class CakeboxInfo
     }
 
     /**
+     * Return version of cakebox-console as found in VERSION.txt
+     *
+     * @return \Cake\Database\Connection
+     */
+    public function cakeboxVersion()
+    {
+        $cached = Cache::read('version');
+        if ($cached) {
+            return $cached;
+        }
+
+        $file = ROOT . DS . 'VERSION.txt';
+        if (!file_exists($file)) {
+            return false;
+        }
+        $lines = file_get_contents($file);
+        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $lines, $matches);
+        if (empty($matches[1])) {
+            return false;
+        }
+        Cache::write('version', $matches[1]);
+        return $matches[1];
+    }
+
+    /**
      * Convenience function used to retrieve basic box info in a single call.
      *
      * @return array Named array

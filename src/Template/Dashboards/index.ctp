@@ -152,9 +152,9 @@ use Cake\Utility\Inflector;
 
 					// Pro Tips
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-lightbulb-o"></i><span class="shortcut-label"></span>' . __('Pro Tips'),
-						'#',
-						['class' => 'shortcut todo', 'escape' => false]
+						'<i class="shortcut-icon fa fa-lightbulb-o"></i><span class="shortcut-label"></span>' . __('Pro Tips!'),
+						['controller'=>'dashboards', 'action'=>'usage'],
+						['class' => 'shortcut', 'escape' => false]
 					);
 
 					// Virtual Machine
@@ -373,7 +373,6 @@ use Cake\Utility\Inflector;
 		</div>
 	</div>
 </div>
-
 
 <?php
 	// Count the number of app per unique framework to feed the donut
