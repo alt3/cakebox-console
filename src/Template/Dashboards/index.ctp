@@ -32,7 +32,7 @@ use Cake\Utility\Inflector;
 
 				<div class="col-xs-4">
 					<span class="stat-value"><?= $data['counters']['sites'] ?></span>
-					<span class="stat-key"><?= __('Site Files'); ?></span>
+					<span class="stat-key"><?= __('Virtual Hosts'); ?></span>
 				</div>
 
 			</div> <!-- /stats -->
@@ -145,7 +145,7 @@ use Cake\Utility\Inflector;
 
 					// Site files
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label"></span>' . __('Site Files'),
+						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label"></span>' . __('Virtual Hosts'),
 						['controller'=>'sitefiles', 'action'=>'index'],
 						['class' => 'shortcut', 'escape' => false]
 					);
@@ -240,7 +240,7 @@ use Cake\Utility\Inflector;
 						<li class="pull-request">
 							<div class="row row-list">
 								<div class="col-xs-1 avatar">
-									<?= $this->Html->image($pullRequest['user']['avatar_url'] . '&size=40', ['alt' => $pullRequest['user']['login']]) ?>
+									<?= $this->Html->image($pullRequest['user']['avatar_url'] . '&amp;size=40', ['alt' => $pullRequest['user']['login']]) ?>
 								</div>
 								<div class="col-xs-9 details">
 									<?= $this->Html->link($pullRequest['user']['login'], $pullRequest['user']['html_url']) ?>
@@ -314,7 +314,7 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>Legal</h4>
 				<ul>
-					<li><a class="ajax-file-modal" id="license" href="#" rel="dashboards/license.json">License</a></li>
+					<li><a class="ajax-file-modal" id="license" href="dashboards/license.json">License</a></li>
 					<li><a href="#"></a></li>
 					<li><a href="#"></a></li>
 					<li><a href="#"></a></li>

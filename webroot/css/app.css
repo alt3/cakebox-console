@@ -37,6 +37,15 @@ input, button, select, textarea {
     font: inherit;
 }
 
+a.btn-primary,
+a.btn-primary:hover,
+a.btn-primary:visited,
+a.btn-primary:active,
+a.btn-primary:focus {
+    color: #fff;
+}
+
+
 /*------------------------------------------------------------------
  * 1. Beta Banner
  * ---------------------------------------------------------------*/
@@ -119,6 +128,7 @@ caption {
  * ---------------------------------------------------------------*/
 td.actions div button {
     margin-right: 10px;
+    border-radius: 3px !important;
 }
 td.actions div button:last-child {
     margin-right: 0;
@@ -128,7 +138,6 @@ td.actions div button i {
 }
 div.actions a {
     margin-bottom: 10px;
-    color: #333;
 }
 
 /*------------------------------------------------------------------

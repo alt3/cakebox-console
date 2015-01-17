@@ -8,7 +8,7 @@ use App\Form\SiteFileForm;
 	<div class="alert alert-success alert-dismissible collapse" role="alert">
 		<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		<span class="message">
-			ajax-loaded success message
+			ajax-loaded message
 		</span>
 	</div>
 
@@ -17,7 +17,7 @@ use App\Form\SiteFileForm;
 
 		<div class="widget-header">
 			<i class="fa fa-file-text-o"></i>
-			<h3><?= __('Nginx site configuration files') ?></h3>
+			<h3><?= __('Nginx Virtual Hosts') ?></h3>
 		</div>
 
 		<div class="widget-content">
@@ -29,7 +29,7 @@ use App\Form\SiteFileForm;
 					<thead>
 						<tr>
 							<th>#</th>
-							<th><?= __("Filename") ?></th>
+							<th><?= __("Site File") ?></th>
 							<th><?= __("Enabled") ?></th>
 							<th><?= __("Last Modified") ?></th>
 							<th></th>
@@ -47,7 +47,7 @@ use App\Form\SiteFileForm;
 										<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#fileModal">
 											<?= __('View') ?>
 										</button>
-										<button type="button" class="btn btn-danger btn-sm delete" rel="sitefiles/ajax_delete">
+										<button type="button" class="confirm delete btn btn-danger btn-sm" rel="sitefiles/ajax_delete">
 											<?= __('Delete') ?>
 										</button>
 									</div>
@@ -67,17 +67,17 @@ use App\Form\SiteFileForm;
 <!-- Actions -->
 <div class="col-sm-2 column">
 	<div class="actions">
-		<a href="#" class="ajax-form-modal btn btn-default btn-block" data-target="#formModalAdd" alt="<?= __('New Website') ?>"><?= __('New Website') ?></a>
+		<a href="#" class="ajax-form-modal btn btn-primary btn-block" data-target="#formModalAdd"><?= __('New Virtual Host') ?></a>
 	</div>
 </div>
 
 <!-- View Modal -->
-<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel">ajax-loaded-title</h4>
+				<h4 class="modal-title">ajax-loaded-title</h4>
 			</div>
 			<div class="modal-body">
 				ajax-loaded-content
@@ -91,20 +91,18 @@ use App\Form\SiteFileForm;
 
 
 <!-- Form Modal -->
-<div class="modal fade" id="formModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="formModalAdd" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel"><?= __('New Nginx website') ?></h4>
+				<h4 class="modal-title"><?= __('New Nginx website') ?></h4>
 			</div>
 			<div class="modal-body">
 				<?php
 					$form = new SiteFileForm();
 					echo $this->Form->create($form, [
-						//'horizontal' => true,
-						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json'],
-						['id' => 'form-submit']
+						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json']
 					]);
 				?>
 

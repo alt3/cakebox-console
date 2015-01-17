@@ -113,7 +113,7 @@ class SiteFilesController extends AppController
         }
 
         $this->set([
-            'message' => "Website $id deleted successfully. Please note that the webroot directory was NOT deleted.",
+            'message' => "Website $id deleted successfully.",
             '_serialize' => ['message']
         ]);
     }
