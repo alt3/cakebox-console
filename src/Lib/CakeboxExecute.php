@@ -254,6 +254,7 @@ class CakeboxExecute
     public function addSite($url, $webroot, $force = false)
     {
         $this->flushLogs();
+        $this->_logStart("Creating website $url");
 
         // Prevent overwriting default Cakebox site
         if ($url == 'default') {
@@ -311,6 +312,7 @@ class CakeboxExecute
     public function removeSite($url)
     {
         $this->flushLogs();
+        $this->_logStart("Deleting website $url");
 
         // Prevent removing default Cakebox site
         if ($url == 'default') {
@@ -318,12 +320,12 @@ class CakeboxExecute
             return false;
         }
         $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
-        if (!file_exists($siteFile)) {
+        if (!is_file($siteFile)) {
             $this->_error("Site file $siteFile does not exist");
             return false;
         }
 
-        $this->_log("Deleting virtual host file $siteFile");
+        $this->_log("* Deleting virtual host file $siteFile");
         if (!$this->shell("rm $siteFile", 'root')) {
             $this->_error("Error deleting file");
             return false;
@@ -333,7 +335,7 @@ class CakeboxExecute
         if (!is_link($symlink)) {
             $this->_log("* Skipping unlink... $symlink does not exist");
         } else {
-            $this->_log("Removing symbolic link $symlink");
+            $this->_log("* Removing symbolic link $symlink");
             if (!$this->shell("unlink $symlink", 'root')) {
                 $this->_error("Error removing symlink");
                 return false;
@@ -344,6 +346,7 @@ class CakeboxExecute
         if ($this->reloadNginx() == false) {
             return false;
         }
+        $this->_log("Website deleted successully");
         return true;
     }
 
@@ -593,6 +596,19 @@ class CakeboxExecute
     protected function flushLogs()
     {
         $this->_debug = [];
+    }
+
+    /**
+     * Convenience function adds a "hr" splitter element to the logs to easily
+     * identify various actions when reading the plain logfile.
+     *
+     * @param string $message
+     * @return void
+     */
+    protected function _logStart($message) {
+        log::debug(str_repeat("=", 80));
+        Log::debug($message);
+        $this->_debug[] = $message;
     }
 
     /**
