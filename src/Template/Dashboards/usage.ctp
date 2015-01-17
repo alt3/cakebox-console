@@ -103,7 +103,7 @@
             <?php
                 echo $this->Html->link(__('Read The Docs!'),
                     '#',
-                    ['class' => 'btn btn-primary btn-usage-docs']
+                    ['class' => 'todo btn btn-primary btn-usage-docs']
                 );
                 echo $this->Html->link(__('Report Issues'),
                     'https://github.com/alt3/cakebox-console/issues',
