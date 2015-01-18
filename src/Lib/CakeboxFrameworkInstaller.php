@@ -284,6 +284,7 @@ class CakeboxFrameworkInstaller
                 $this->options['webroot'] = $this->options['path'] . DS . $this->cbi->frameworkMeta['laravel']['webroot'];
                 unset ($this->options['majorversion']);
                 unset ($this->options['template']);
+                break;
 
             default:
                 throw new \Exception("Unsupported framework");
