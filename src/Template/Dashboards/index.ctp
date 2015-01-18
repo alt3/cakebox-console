@@ -303,7 +303,7 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>Support</h4>
 				<ul>
-					<li><a href="#" class="todo">Documentation</a></li>
+					<li><a href="https://cakebox.readthedocs.org" class="todo">Documentation</a></li>
 					<li><a href="#"></a></li>
 					<li><a href="#"></a></li>
 					<li><a href="#"></a></li>
@@ -317,7 +317,7 @@ use Cake\Utility\Inflector;
 					<li>
 						<?php
 							echo $this->Html->link(
-								__('Sign in'),
+								__('License'),
 								['controller' => 'Dashboards', 'action' => 'license.json'],
 								['class' => 'ajax-file-modal', 'id' => 'license']
 							);

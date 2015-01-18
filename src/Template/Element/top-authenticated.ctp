@@ -91,7 +91,7 @@
 						<?php
 							echo $this->Html->link(
 								'<i class="fa fa-question-circle"></i><span></span>' . __('Help'),
-								'#',
+								'https://cakebox.readthedocs.org',
 								['class' => 'shortcut todo', 'escape' => false]
 							);
 						?>
