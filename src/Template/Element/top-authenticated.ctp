@@ -13,7 +13,13 @@
 				<span class="sr-only"><?= __('Toggle navigation'); ?></span>
 				<i class="fa fa-cog"></i>
 			</button>
-			<a class="navbar-brand" href="dashboards">Cakebox Dashboard<span class="logo-version">v<?= $version ?></span></a>
+			<?php
+				echo $this->Html->link(
+					"Cakebox Dashboard<span class='logo-version'>v$version</span>",
+					['controller' => 'Dashboards', 'action' => 'index'],
+					['class' => 'navbar-brand', 'escape' => false]
+				);
+			?>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -52,7 +58,7 @@
 						<?php
 							echo $this->Html->link(
 								'<i class="fa fa-home"></i><span></span>' . __('Dashboard'),
-								['controller' => 'dashboards', 'action' => 'index'],
+								['controller' => 'Dashboards', 'action' => 'index'],
 								['class' => 'shortcut', 'escape' => false]
 							);
 						?>

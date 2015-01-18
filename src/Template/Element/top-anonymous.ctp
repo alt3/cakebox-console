@@ -8,7 +8,13 @@
 
 	<div class="container">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="/">Cakebox Dashboard<span class="logo-version">v<?= $version ?></span></a>
+			<?php
+				echo $this->Html->link(
+					"Cakebox Dashboard<span class='logo-version'>v$version</span>",
+					'',
+					['class' => 'navbar-brand', 'escape' => false]
+				);
+			?>
 		</div>
 	</div>
 
