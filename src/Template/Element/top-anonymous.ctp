@@ -8,7 +8,7 @@
 
 	<div class="container">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="/">Cakebox Admin<span class="logo-version">v<?= $version ?></span></a>
+			<a class="navbar-brand" href="/">Cakebox Dashboard<span class="logo-version">v<?= $version ?></span></a>
 		</div>
 	</div>
 
