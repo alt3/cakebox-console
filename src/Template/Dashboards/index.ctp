@@ -231,7 +231,7 @@ use Cake\Utility\Inflector;
 		<div class="widget-content">
 
 			<ul class="pull-requests list-unstyled">
-				<?php if (count($data['contributors']) != 0): ?>
+				<?php if (count($data['contributors']) == 0): ?>
 						<li class="pull-request api-failure">
 							<p class="text-danger"><?= __('Looks the Github API is having an off day') ?><i class="fa fa-exclamation-circle"></i></p>
 						</li>
