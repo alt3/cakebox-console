@@ -5,6 +5,7 @@ use App\Lib\CakeboxExecute;
 use App\Lib\CakeboxInfo;
 use App\Lib\CakeboxUtility;
 use Cake\Log\Log;
+use Cake\Utility\Hash;
 
 /**
  * Class library for checking against box requirements, states and conditions.
@@ -153,10 +154,12 @@ class CakeboxFrameworkInstaller
         }
 
         try {
-            # Detect framework settings for user specified application (if any)
-            if (isset($this->options['source'])) {
+            # Try detecting framework settings for user specified applications
+            $knownSources = Hash::extract($this->cbi->frameworkMeta, '{s}.source');
+            if (!in_array($this->options['source'], $knownSources)) {
                 $this->setCustomOptions();
             }
+
             $this->createSite();
             $this->createDatabases();
             $this->setPermissions();
