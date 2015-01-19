@@ -102,7 +102,7 @@
         <div class="widget-content">
             <?php
                 echo $this->Html->link(__('Read The Docs!'),
-                    '#',
+                    'https://cakebox.readthedocs.org',
                     ['class' => 'todo btn btn-primary btn-usage-docs']
                 );
                 echo $this->Html->link(__('Report Issues'),
