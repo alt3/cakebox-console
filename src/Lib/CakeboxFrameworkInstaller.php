@@ -334,8 +334,8 @@ class CakeboxFrameworkInstaller
      }
 
     /**
-     * Detect the installation method for user specified sources. Defaults to
-     * git if the source does not look like a composer package.
+     * Detect the installation method for user specified sources. Assumes
+     * composer if the source does not match a git repository.
      *
      * @param string $source Containing git repository or composer package name.
      * @throws Exception
@@ -343,10 +343,14 @@ class CakeboxFrameworkInstaller
      */
     public function detectInstallationMethod($source)
     {
-        if (count(explode('/', $source)) == 2) {
-            return 'composer';
+        if (substr( $source, 0, 8 ) === 'https://') {
+            return 'git';
         }
-        return 'git';
+
+        if (substr( $source, 0, 4 ) === 'git@') {
+            return 'git';
+        }
+        return 'composer';
      }
 
      /**
