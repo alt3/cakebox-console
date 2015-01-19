@@ -5,6 +5,7 @@ use App\Lib\CakeboxExecute;
 use App\Lib\CakeboxInfo;
 use App\Lib\CakeboxUtility;
 use Cake\Log\Log;
+use Cake\Utility\Hash;
 
 /**
  * Class library for checking against box requirements, states and conditions.
@@ -153,10 +154,12 @@ class CakeboxFrameworkInstaller
         }
 
         try {
-            # Detect framework settings for user specified application (if any)
-            if (isset($this->options['source'])) {
+            # Try detecting framework settings for user specified applications
+            $knownSources = Hash::extract($this->cbi->frameworkMeta, '{s}.source');
+            if (!in_array($this->options['source'], $knownSources)) {
                 $this->setCustomOptions();
             }
+
             $this->createSite();
             $this->createDatabases();
             $this->setPermissions();
@@ -247,7 +250,7 @@ class CakeboxFrameworkInstaller
          if (isset($this->options['source'])) {
              $this->options['framework_short'] = 'custom';
              $this->options['framework_human'] = 'user specified';
-             $this->options['installation_method'] = $this->options['installation_method'];
+             $this->options['installation_method'] = $this->detectInstallationMethod($this->options['source']);
              $this->options['source'] = $this->options['source'];
 
              # Unset irrelevant options to keep logs
@@ -284,6 +287,7 @@ class CakeboxFrameworkInstaller
                 $this->options['webroot'] = $this->options['path'] . DS . $this->cbi->frameworkMeta['laravel']['webroot'];
                 unset ($this->options['majorversion']);
                 unset ($this->options['template']);
+                break;
 
             default:
                 throw new \Exception("Unsupported framework");
@@ -308,7 +312,8 @@ class CakeboxFrameworkInstaller
       * @throws Exception
       * @return boolean True if successful
       */
-     protected function setCustomOptions() {
+     protected function setCustomOptions()
+     {
          log::Debug("Detecting framework options for custom application");
 
          # Detect framework first
@@ -326,6 +331,26 @@ class CakeboxFrameworkInstaller
          # Set webroot
          $this->options['webroot'] = $this->options['path'] . DS . $this->cbi->frameworkMeta[$framework]['webroot'];
          return true;
+     }
+
+    /**
+     * Detect the installation method for user specified sources. Assumes
+     * composer if the source does not match a git repository.
+     *
+     * @param string $source Containing git repository or composer package name.
+     * @throws Exception
+     * @return boolean True if successful
+     */
+    public function detectInstallationMethod($source)
+    {
+        if (substr( $source, 0, 8 ) === 'https://') {
+            return 'git';
+        }
+
+        if (substr( $source, 0, 4 ) === 'git@') {
+            return 'git';
+        }
+        return 'composer';
      }
 
      /**

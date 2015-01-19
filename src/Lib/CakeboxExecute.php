@@ -122,7 +122,7 @@ class CakeboxExecute
         log::debug("Self-updating cakebox-console...");
 
         Log::debug("* Updating git repository");
-        $command = 'cd /cakebox/console; git fetch; git reset --hard origin/master';
+        $command = 'cd /cakebox/console; git fetch; git reset --hard origin/`git rev-parse --abbrev-ref HEAD`';
         if (!$this->shell($command, 'vagrant')) {
             return false;
         }

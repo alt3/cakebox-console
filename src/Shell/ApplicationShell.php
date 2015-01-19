@@ -59,13 +59,6 @@ class ApplicationShell extends AppShell
                         'help' => __('Source used to provision your own application. Provide either the Github shortname to your repository (owner/repository) or the Composer package name (e.g. cakephp/app). Framework will be autodetected.'),
                         'required' => false
                     ],
-                    'installation_method' => [
-                        'short' => 'i',
-                        'help' => __('Installation method to use. Only used in combination with user specified source.'),
-                        'choices' => ['git', 'composer'],
-                        'default' => 'git',
-                        'required' => false
-                    ],
                     'ssh' => [
                         'short' => 'x',
                         'help' => __('Use SSH instead of HTTPS. Only useful in combination with out-of-the-box applications using git repositories.'),
@@ -112,12 +105,8 @@ class ApplicationShell extends AppShell
         }
 
         # Provide some feedback
-        $this->out("Please wait... " .
-            $installer->option('installation_method') .
-            " installing " .
-            $installer->option('framework_human') .
-            " application"
-        );
+        $installerMethod = $installer->detectInstallationMethod($installer->option('source'));
+        $this->out("Please wait... $installerMethod installing " . $installer->option('framework_human') . " application");
 
         # Install the application
         if (!$installer->install()) {

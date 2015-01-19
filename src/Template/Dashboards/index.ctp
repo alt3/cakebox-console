@@ -98,7 +98,7 @@ use Cake\Utility\Inflector;
 								<?php
 									echo $this->Html->link(
 										'<i class="btn-icon-only fa fa-share"></i>' . '',
-										['controller'=>'applications', 'action'=>'index'],
+										['controller' => 'Applications', 'action' => 'index'],
 										['escape' => false, 'class' => 'btn btn-xs btn-primary']
 									);
 								?>
@@ -132,35 +132,35 @@ use Cake\Utility\Inflector;
 					// Applications
 					 echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-code-fork"></i><span class="shortcut-label"></span>' . __('Applications'),
-						['controller'=>'applications', 'action'=>'index'],
+						['controller' => 'Applications', 'action' => 'index'],
 						['class' => 'shortcut', 'escape' => false, 'title' => 'Not implemented yet']
 					 );
 
 					// Databases
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-database"></i><span class="shortcut-label"></span>' . __('Databases'),
-						['controller'=>'databases', 'action'=>'index'],
+						['controller' => 'Databases', 'action' => 'index'],
 						['class' => 'shortcut', 'escape' => false, 'title' => 'Not implemented yet']
 					);
 
 					// Site files
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label"></span>' . __('Virtual Hosts'),
-						['controller'=>'sitefiles', 'action'=>'index'],
+						['controller' => 'Sitefiles', 'action' => 'index'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 
 					// Pro Tips
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-lightbulb-o"></i><span class="shortcut-label"></span>' . __('Pro Tips!'),
-						['controller'=>'dashboards', 'action'=>'usage'],
+						['controller' => 'Dashboards', 'action' => 'usage'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 
 					// Virtual Machine
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-cube"></i><span class="shortcut-label"></span>' . __('Virtual Machine'),
-						['controller'=>'dashboards', 'action'=>'vm'],
+						['controller' => 'Dashboards', 'action' => 'vm'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 
@@ -232,8 +232,8 @@ use Cake\Utility\Inflector;
 
 			<ul class="pull-requests list-unstyled">
 				<?php if (count($data['contributors']) == 0): ?>
-						<li class="commit-item api-failure">
-							<p class="text-danger"><?= __('Looks the Github API is having an off day'); ?><i class="fa fa-exclamation-circle"></i></p>
+						<li class="pull-request api-failure">
+							<p class="text-danger"><?= __('Looks the Github API is having an off day') ?><i class="fa fa-exclamation-circle"></i></p>
 						</li>
 				<?php else: ?>
 					<?php foreach($data['contributors'] as $pullRequest): ?>
@@ -303,7 +303,7 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>Support</h4>
 				<ul>
-					<li><a href="#" class="todo">Documentation</a></li>
+					<li><a href="https://cakebox.readthedocs.org" class="todo">Documentation</a></li>
 					<li><a href="#"></a></li>
 					<li><a href="#"></a></li>
 					<li><a href="#"></a></li>
@@ -314,7 +314,15 @@ use Cake\Utility\Inflector;
 			<div class="col-md-3">
 				<h4>Legal</h4>
 				<ul>
-					<li><a class="ajax-file-modal" id="license" href="dashboards/license.json">License</a></li>
+					<li>
+						<?php
+							echo $this->Html->link(
+								__('License'),
+								['controller' => 'Dashboards', 'action' => 'license.json'],
+								['class' => 'ajax-file-modal', 'id' => 'license']
+							);
+						?>
+					</li>
 					<li><a href="#"></a></li>
 					<li><a href="#"></a></li>
 					<li><a href="#"></a></li>

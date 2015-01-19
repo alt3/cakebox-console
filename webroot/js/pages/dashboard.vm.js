@@ -41,7 +41,7 @@ $(document).ready(function() {
  * 2. Ajax Load Status Tab
  * ---------------------------------------------------------------*/
 function loadTabStatus() {
-	var jqxhr = $.getJSON( '../dashboards/checks.json', function(data) {
+	var jqxhr = $.getJSON( '../dashboard/checks.json', function(data) {
 		// loop through each category
 		$.each( data, function( category, checks ) {
 			failCount = 0
@@ -78,7 +78,7 @@ function loadTabStatus() {
  * 3. Ajax Load Software Tab
  * ---------------------------------------------------------------*/
 function loadTabSoftware() {
-	var jqxhr = $.getJSON( '../dashboards/software.json', function(data) {
+	var jqxhr = $.getJSON( '../dashboard/software.json', function(data) {
 		console.dir(data)
 
 		// fill OS panel
