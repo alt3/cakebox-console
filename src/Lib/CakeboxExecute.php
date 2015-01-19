@@ -79,6 +79,50 @@ class CakeboxExecute
     }
 
     /**
+     * Execute a system command as user vagrant or provided username.
+     *
+     * @param string $command Full path to the command with options and arguments.
+     * @param string $username User used to execute the command (e.g. `vagrant`).
+     * @return boolean True if the command completed successfully
+     */
+    protected function getShellOutput($command, $username)
+    {
+        // Generate different sudo command based on user
+        if ($username == "root") {
+            $command = "sudo $command";
+        } else {
+            $command = "sudo su $username -c \"$command\"";
+        }
+        $this->_log("Shelling command `$command` as user `$username`");
+
+        // Execute the command, capture exit code, stdout and stderr
+        $ret = exec($command, $stdout, $exitCode);
+
+        // Log command output if any was produced
+        if (!empty($stdout)) {
+            $this->_log("* Shell output:");
+            foreach ($stdout as $line) {
+                if (!empty($line)) {
+                    $this->_log("  => $line");
+                }
+            }
+        }
+
+        // Command failed if exit code <> 0
+        if ($exitCode != 0) {
+            $this->_error("* Shelled command exited with non-zero exit code `$exitCode`");
+            return false;
+        }
+
+        // Still here, command succeeded
+        $this->_log('* Shelled command completed successfully. Returning output');
+        if (count($stdout) == 1) {
+            return $stdout[0];
+        }
+        return $stdout;
+    }
+
+    /**
      * Create a directory as root and change ownership to vagrant user.
      *
      * @param string $path Full path of directory to be created.
@@ -121,8 +165,16 @@ class CakeboxExecute
     {
         log::debug("Self-updating cakebox-console...");
 
+        Log::debug("* Detecting branch");
+        $command = "cd /cakebox/console; git rev-parse --abbrev-ref HEAD";
+        $branch = $this->getShellOutput($command, 'vagrant');
+        if (!$branch) {
+            return false;
+        }
+        Log::debug(" * Detected branch $branch");
+
         Log::debug("* Updating git repository");
-        $command = 'cd /cakebox/console; git fetch; git reset --hard origin/`git rev-parse --abbrev-ref HEAD`';
+        $command = "cd /cakebox/console; git fetch; git reset --hard origin/$branch";
         if (!$this->shell($command, 'vagrant')) {
             return false;
         }
