@@ -250,7 +250,7 @@ class CakeboxFrameworkInstaller
          if (isset($this->options['source'])) {
              $this->options['framework_short'] = 'custom';
              $this->options['framework_human'] = 'user specified';
-             $this->options['installation_method'] = $this->options['installation_method'];
+             $this->options['installation_method'] = $this->detectInstallationMethod($this->options['source']);
              $this->options['source'] = $this->options['source'];
 
              # Unset irrelevant options to keep logs
@@ -312,7 +312,8 @@ class CakeboxFrameworkInstaller
       * @throws Exception
       * @return boolean True if successful
       */
-     protected function setCustomOptions() {
+     protected function setCustomOptions()
+     {
          log::Debug("Detecting framework options for custom application");
 
          # Detect framework first
@@ -330,6 +331,22 @@ class CakeboxFrameworkInstaller
          # Set webroot
          $this->options['webroot'] = $this->options['path'] . DS . $this->cbi->frameworkMeta[$framework]['webroot'];
          return true;
+     }
+
+    /**
+     * Detect the installation method for user specified sources. Defaults to
+     * git if the source does not look like a composer package.
+     *
+     * @param string $source Containing git repository or composer package name.
+     * @throws Exception
+     * @return boolean True if successful
+     */
+    public function detectInstallationMethod($source)
+    {
+        if (count(explode('/', $source)) == 2) {
+            return 'composer';
+        }
+        return 'git';
      }
 
      /**
