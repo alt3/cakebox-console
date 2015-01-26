@@ -9,6 +9,7 @@
 		"cakephp/bake": "dev-master",
 		"cakephp/cakephp": "3.0.*-dev",
 		"cakephp/debug_kit": "3.0.*-dev",
+		"cakephp/plugin-installer": "*",
 		"friendsofcake/bootstrap-ui": "master",
 		"mobiledetect/mobiledetectlib": "2.*",
 		"monolog/monolog": "master"
