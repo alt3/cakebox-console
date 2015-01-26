@@ -118,6 +118,10 @@ class CakeboxInfo
         'logstash' => ['link' => 'http://logstash.net'],
         'mysql' => ['link' => 'http://www.percona.com/software/percona-server'],
         'memcached' => ['link' => 'http://memcached.org'],
+        'mongodb' => [
+            'link' => 'https://www.mongodb.org/',
+            'alias' => 'mongod'
+        ],
         'nginx' => ['link' => 'https://launchpad.net/nginx'],
         'openssl' => ['link' => 'https://www.openssl.org'],
         'php' => ['link' => 'https://launchpad.net/~ondrej/+archive/ubuntu/php5-5.6'],
