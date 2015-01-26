@@ -486,7 +486,8 @@ class CakeboxFrameworkInstaller
     protected function updateConfigs() {
         log::debug("Updating configuration files");
 
-        if (isset($this->options['source'])) {
+        $knownSources = Hash::extract($this->cbi->frameworkMeta, '{s}.source');
+        if (!in_array($this->options['source'], $knownSources)) {
             log::debug("* Skipping: automated configuration updates are not supported for user specified applications");
             return true;
         }
