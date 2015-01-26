@@ -114,6 +114,7 @@ class CakeboxInfo
         'git' => ['link' => 'https://launchpad.net/~git-core'],
         'java' => ['link' => 'http://openjdk.java.net'],
         'heroku' => ['link' => 'https://toolbelt.heroku.com'],
+        'hhvm' => ['link' => 'http://hhvm.com'],
         'kibana' => ['link' => 'https://www.elasticsearch.org/overview/kibana'],
         'logstash' => ['link' => 'http://logstash.net'],
         'mysql' => ['link' => 'http://www.percona.com/software/percona-server'],
