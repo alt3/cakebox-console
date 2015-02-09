@@ -60,7 +60,6 @@ class ApplicationShell extends AppShell
                         'required' => false
                     ],
                     'ssh' => [
-                        'short' => 'x',
                         'help' => __('Use SSH instead of HTTPS. Only useful in combination with out-of-the-box applications using git repositories.'),
                         'boolean' => true
                         ]
