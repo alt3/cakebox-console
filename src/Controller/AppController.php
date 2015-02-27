@@ -27,16 +27,14 @@ class AppController extends Controller
         'Flash',
         'RequestHandler',
         'Security',
-        'Csrf',
-        'BootstrapUI.Flash'
+        'Csrf'
     ];
 
     /**
      * @var Helpers available to all views
      */
     public $helpers = [
-        'Cakebox',
-        'BootstrapUI.Form'
+        'Cakebox'
     ];
 
     /**

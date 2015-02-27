@@ -29,7 +29,10 @@ class AppView extends View {
  *
  * @return void
  */
-	public function initialize() {
+	public function initialize()
+	{
+		$this->loadHelper('Form', ['className' => 'BootstrapUI.Form']);
+		$this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);
 	}
 
 }
