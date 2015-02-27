@@ -131,12 +131,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "80a45a2eff9170e4f86f06bebf7a3aa80224d534"
+                "reference": "f0211df164af2b68f64bd5e0857b99166406ef2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/80a45a2eff9170e4f86f06bebf7a3aa80224d534",
-                "reference": "80a45a2eff9170e4f86f06bebf7a3aa80224d534",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/f0211df164af2b68f64bd5e0857b99166406ef2b",
+                "reference": "f0211df164af2b68f64bd5e0857b99166406ef2b",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 "php": ">=5.4"
             },
             "require-dev": {
-                "cakephp/cakephp-codesniffer": "2.0.*-dev",
+                "cakephp/cakephp-codesniffer": "dev-master",
                 "phpunit/phpunit": "*"
             },
             "type": "cakephp-plugin",
@@ -169,7 +169,7 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2015-01-25 03:49:06"
+            "time": "2015-02-26 02:40:26"
         },
         {
             "name": "cakephp/cakephp",
@@ -177,12 +177,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "63e5b9e89f54002661f025f9e8ccc9dabc2880c1"
+                "reference": "dbb748b4757e9fd0a44611648d4ad5150669be40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/63e5b9e89f54002661f025f9e8ccc9dabc2880c1",
-                "reference": "63e5b9e89f54002661f025f9e8ccc9dabc2880c1",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/dbb748b4757e9fd0a44611648d4ad5150669be40",
+                "reference": "dbb748b4757e9fd0a44611648d4ad5150669be40",
                 "shasum": ""
             },
             "require": {
@@ -203,6 +203,7 @@
                 "cakephp/event": "self.version",
                 "cakephp/i18n": "self.version",
                 "cakephp/log": "self.version",
+                "cakephp/orm": "self.version",
                 "cakephp/utility": "self.version",
                 "cakephp/validation": "self.version"
             },
@@ -236,7 +237,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-01-25 19:46:00"
+            "time": "2015-02-27 06:50:15"
         },
         {
             "name": "cakephp/debug_kit",
@@ -244,12 +245,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/debug_kit.git",
-                "reference": "3bd8559a2e98d84b5ef33ea31b6653eb779bdaa2"
+                "reference": "ac1f6cdb8b659fb5044fb01e38817667149f822d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/debug_kit/zipball/3bd8559a2e98d84b5ef33ea31b6653eb779bdaa2",
-                "reference": "3bd8559a2e98d84b5ef33ea31b6653eb779bdaa2",
+                "url": "https://api.github.com/repos/cakephp/debug_kit/zipball/ac1f6cdb8b659fb5044fb01e38817667149f822d",
+                "reference": "ac1f6cdb8b659fb5044fb01e38817667149f822d",
                 "shasum": ""
             },
             "require": {
@@ -293,20 +294,20 @@
                 "debug",
                 "kit"
             ],
-            "time": "2015-01-23 06:25:02"
+            "time": "2015-02-25 02:50:12"
         },
         {
             "name": "cakephp/plugin-installer",
-            "version": "0.0.8",
+            "version": "0.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/plugin-installer.git",
-                "reference": "439f14f774c6906a739b8f7e6dcbdf1fafd17934"
+                "reference": "87cb0b70fc642f4a4ce5b6d8006392f01e8d0260"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/plugin-installer/zipball/439f14f774c6906a739b8f7e6dcbdf1fafd17934",
-                "reference": "439f14f774c6906a739b8f7e6dcbdf1fafd17934",
+                "url": "https://api.github.com/repos/cakephp/plugin-installer/zipball/87cb0b70fc642f4a4ce5b6d8006392f01e8d0260",
+                "reference": "87cb0b70fc642f4a4ce5b6d8006392f01e8d0260",
                 "shasum": ""
             },
             "require-dev": {
@@ -319,7 +320,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Cake\\Composer\\": "src/"
+                    "Cake\\Composer\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -333,7 +334,7 @@
                 }
             ],
             "description": "A composer installer for CakePHP 3.0+ plugins.",
-            "time": "2015-01-23 14:25:46"
+            "time": "2015-02-06 02:06:07"
         },
         {
             "name": "friendsofcake/bootstrap-ui",
@@ -341,12 +342,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfCake/bootstrap-ui.git",
-                "reference": "d24f114804e6de2a45cf96f36daef33b005b270a"
+                "reference": "68d3ed7e81bf09581c6c33f42ef40c7c4aff1e79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfCake/bootstrap-ui/zipball/d24f114804e6de2a45cf96f36daef33b005b270a",
-                "reference": "d24f114804e6de2a45cf96f36daef33b005b270a",
+                "url": "https://api.github.com/repos/FriendsOfCake/bootstrap-ui/zipball/68d3ed7e81bf09581c6c33f42ef40c7c4aff1e79",
+                "reference": "68d3ed7e81bf09581c6c33f42ef40c7c4aff1e79",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +384,7 @@
                 "cakephp",
                 "twitter"
             ],
-            "time": "2015-01-24 14:16:40"
+            "time": "2015-02-26 03:55:52"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -486,12 +487,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "ba31b79fa540d68da0e9e3269c0f85c1756ff10a"
+                "reference": "bba433ac380c47523fab495a1322368381df0996"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/ba31b79fa540d68da0e9e3269c0f85c1756ff10a",
-                "reference": "ba31b79fa540d68da0e9e3269c0f85c1756ff10a",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bba433ac380c47523fab495a1322368381df0996",
+                "reference": "bba433ac380c47523fab495a1322368381df0996",
                 "shasum": ""
             },
             "require": {
@@ -550,7 +551,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-01-20 10:31:44"
+            "time": "2015-02-25 16:48:53"
         },
         {
             "name": "nesbot/carbon",
