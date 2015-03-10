@@ -22,7 +22,10 @@ class UpdateShell extends AppShell
         $parser->addSubcommand('self', [
             'parser' => [
                 'description' => [
-                __("Self-updates the Cakebox Dashboard and Console commands to the most recent version")
+                    __(
+                        "Self-updates your Cakebox Dashboard and Console Commands
+                        to the most recent version."
+                    )
                 ]
             ]
         ]);
