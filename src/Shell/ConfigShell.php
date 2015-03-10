@@ -26,14 +26,6 @@ class ConfigShell extends AppShell
         $parser = parent::getOptionParser();
         $parser->description([__('Manage various configuration settings.')]);
 
-        $parser->addSubcommand('update', [
-            'parser' => [
-                'description' => [
-                    __("Update cakebox console and management website.")
-                ],
-            ]
-        ]);
-
         $parser->addSubcommand('git', [
             'parser' => [
                 'description' => [
@@ -77,20 +69,5 @@ class ConfigShell extends AppShell
             }
         }
         $this->exitBashSuccess("Git configuration updated successfully");
-    }
-
-    /**
-     * Self-update cakebox-console repository and composer packages.
-     *
-     * @return void
-     */
-     public function update()
-    {
-        $this->out("Self-updating cakebox console and website");
-        $this->out("Please wait... this can take a moment");
-        if (!$this->execute->selfUpdate()) {
-            $this->exitBashError("Error updating application.");
-        }
-        $this->exitBashSuccess("Update completed successfully");
     }
 }
