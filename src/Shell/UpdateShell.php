@@ -23,7 +23,7 @@ class UpdateShell extends AppShell
             'parser' => [
                 'description' => [
                     __(
-                        "Self-updates your Cakebox Dashboard and Console Commands
+                        "Updates your Cakebox Dashboard and Cakebox Commands
                         to the most recent version."
                     )
                 ]
@@ -33,14 +33,14 @@ class UpdateShell extends AppShell
     }
 
     /**
-     * Self-updates the Cakebox Dashboard and Console Commands by updating the
-     * Git repository and all underlying Composer libraries.
+     * Self-updates the Cakebox Dashboard and Shell commands by updating the
+     * cakebox-console Git repository and ALL underlying Composer libraries.
      *
      * @return void
      */
     public function self()
     {
-        $this->logStart("Self-updating Cakebox Dashboard and Console Commands");
+        $this->logStart("Updating Cakebox Dashboard and Cakebox Commands");
         $this->out("Please wait... this can take a moment");
 
         if (!$this->execute->selfUpdate()) {
