@@ -1011,4 +1011,13 @@ class CakeboxInfo
     {
         return file_get_contents('/cakebox/console/.git/refs/heads/master');
     }
+
+    /**
+     * Returns Cakebox.yaml as an array
+     *
+     * @return array Hash
+     */
+    public function getCakeboxYaml() {
+        return CakeboxUtility::yamlToArray('/home/vagrant/.cakebox/Cakebox.yaml.provisioned');
+    }
 }
