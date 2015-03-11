@@ -174,8 +174,6 @@ Request::addDetector('tablet', function ($request) {
 if (Configure::read('debug')) {
 //	Plugin::load('DebugKit', ['bootstrap' => true]);
 }
-Plugin::load('BootstrapUI');
-
 
 /**
 * Connect middleware/dispatcher filters.

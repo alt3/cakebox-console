@@ -44,9 +44,16 @@
 	</div> <!-- /widget -->
 </div> <!-- col-sm-10 -->
 
-<!-- Actions -->
+<!-- Stats -->
 <div class="col-sm-2 column">
-	<div class="actions">
-		<a href="#" class="todo btn btn-primary btn-block"><?= __('New Database') ?></a>
+	<div class="widget stacked widget-table action-table">
+		<div class="widget-header">
+			<i class="fa fa-star"></i>
+			<h3><?= __('Stats') ?></h3>
+		</div>
+
+		<div class="widget-content">
+			<div class="panel-body">
+		</div>
 	</div>
 </div>
