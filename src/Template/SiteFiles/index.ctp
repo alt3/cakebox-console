@@ -64,10 +64,17 @@ use App\Form\SiteFileForm;
 
 </div> <!-- col-sm-10 -->
 
-<!-- Actions -->
+<!-- Stats -->
 <div class="col-sm-2 column">
-	<div class="actions">
-		<a href="#" class="ajax-form-modal btn btn-primary btn-block" data-target="#formModalAdd"><?= __('New Virtual Host') ?></a>
+	<div class="widget stacked widget-table action-table">
+		<div class="widget-header">
+			<i class="fa fa-star"></i>
+			<h3><?= __('Stats') ?></h3>
+		</div>
+
+		<div class="widget-content">
+			<div class="panel-body">
+		</div>
 	</div>
 </div>
 
@@ -84,44 +91,6 @@ use App\Form\SiteFileForm;
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-
-<!-- Form Modal -->
-<div class="modal fade" id="formModalAdd" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title"><?= __('New Nginx website') ?></h4>
-			</div>
-			<div class="modal-body">
-				<?php
-					$form = new SiteFileForm();
-					echo $this->Form->create($form, [
-						'url' => ['controller' => 'sitefiles', 'action' => 'ajax_add.json']
-					]);
-				?>
-
-				<div class="alert alert-danger alert-dismissible collapse" role="alert">
-					<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<span>
-						ajax-loaded error message
-					</span>
-				</div>
-				<?php
-					echo $this->Form->input('url');
-					echo $this->Form->input('webroot');
-					echo $this->Form->input('force');
-					echo $this->Form->end();
-				?>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal"><?= __('Cancel') ?></button>
-				<button type="button" id="form-submit" class="btn btn-primary"><?= __('Submit') ?></button>
 			</div>
 		</div>
 	</div>

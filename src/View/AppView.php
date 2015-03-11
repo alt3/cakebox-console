@@ -24,15 +24,14 @@ class AppView extends View {
 /**
  * Initialization hook method.
  *
- * For e.g. use this method to load a helper for all views:
+ * Use this method to load a helper for all views, e.g.
  * `$this->loadHelper('Html');`
+ * `$this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);`
  *
  * @return void
  */
 	public function initialize()
 	{
-		$this->loadHelper('Form', ['className' => 'BootstrapUI.Form']);
-		$this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);
 	}
 
 }
