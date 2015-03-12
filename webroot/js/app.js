@@ -277,6 +277,9 @@ $(document).ready(function() {
  * http://alexgorbatchev.com/SyntaxHighlighter
  * ---------------------------------------------------------------*/
 $(document).ready(function() {
+	if (typeof window.SyntaxHighlighter === 'undefined') {
+		return
+	}
 	SyntaxHighlighter.defaults['toolbar'] = false; /* disables about button */
 	SyntaxHighlighter.all()
 })
