@@ -3,6 +3,12 @@
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 
+// Load SyntaxHighlighter for Cakebox.yaml into CakePHP script/stylesheet blocks
+$this->Html->css('cdn-fallback/syntax-highlighter/shCore.min.css', ['block' => true]);
+$this->Html->css('cdn-fallback/syntax-highlighter/shThemeDefault.min.css', ['block' => true]);
+$this->Html->script('cdn-fallback/syntax-highlighter/shCore.min.js', ['block' => 'scriptBottom']);
+$this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' => 'scriptBottom']);
+
 //pr($data);
 ?>
 
@@ -14,6 +20,7 @@ use Cake\Utility\Inflector;
 			<ul class="nav nav-tabs">
 				<li id="tab-summary" class="active"><a href="#panel-summary" data-toggle="tab"><?= __("Summary") ?></a></li>
 				<li id="tab-status"><a href="#panel-status" data-toggle="tab"><?= __("Box status") ?></a></li>
+				<li id="tab-provisioning"><a href="#panel-provisioning" data-toggle="tab"><?= __("Provisioning") ?></a></li>
 				<li id="tab-software"><a href="#panel-software" data-toggle="tab"><?= __("Box software") ?></a></li>
 			</ul>
 
@@ -23,11 +30,12 @@ use Cake\Utility\Inflector;
 				<!-- Summary  tab -->
 				<div role="tabpanel" id="panel-summary" class="tab-pane active">
 
+					<!-- Virtual Machine widget -->
 					<div class="widget stacked widget-table action-table">
 						<div class="widget-header">
 							<i class="fa fa-cube"></i>
 							<h3><?= __('Virtual Machine') ?></h3>
-						</div> <!-- /widget-header -->
+						</div>
 
 						<div class="widget-content">
 							<div class="panel-body">
@@ -52,6 +60,7 @@ use Cake\Utility\Inflector;
 							</div>
 						</div>
 					</div>
+
 				</div>
 
 				<!-- Status tab -->
@@ -111,6 +120,36 @@ use Cake\Utility\Inflector;
 
 				</div>
 				<!-- EOF Status tab -->
+
+
+				<!-- Provisioning tab -->
+				<div role="tabpanel" id="panel-provisioning" class="tab-pane">
+
+					<!-- Cakebox.yaml widget -->
+					<div class="widget stacked widget-table action-table">
+						<div class="widget-header">
+							<i class="fa fa-file-text-o"></i>
+							<h3><?= 'Cakebox.yaml' ?></h3>
+						</div>
+
+						<div class="widget-content">
+							<div class="panel-body">
+								<pre class='class="brush: yaml; gutter: false;'><?php echo $data['yaml']['raw']; ?></pre>
+							</div>
+						</div>
+					</div>
+					<div>
+						<?php
+							echo sprintf(__('Settings applied on %s.'), $this->Time->format($data['yaml']['timestamp'], 'YYYY-MM-dd'));
+							echo sprintf(__('More information available %s.'),
+								$this->Html->link(
+									__('here'),
+									'http://cakebox.readthedocs.org/en/latest/usage/cakebox-yaml/'
+								));
+						?>
+					</div>
+				</div>
+
 
 				<!-- Software tab -->
 				<div role="tabpanel" id="panel-software" class="tab-pane">

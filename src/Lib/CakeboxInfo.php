@@ -1013,11 +1013,31 @@ class CakeboxInfo
     }
 
     /**
+     * Returns rich information for the Cakebox.yaml file.
+     *
+     * @return array Hash with raw file data and timestamp.
+     * @throws Exception
+     */
+    public function getCakeboxYamlInfo() {
+        try {
+            $yaml = '/home/vagrant/.cakebox/Cakebox.yaml.provisioned';
+            $fileHandle = new File($yaml);
+            return [
+                'timestamp' => $fileHandle->lastChange(),
+                'raw' => $fileHandle->read()
+            ];
+        } catch (\Exception $e) {
+            throw new \Exception("Error reading $yaml: " . $e->getMessage());
+        }
+    }
+
+    /**
      * Returns Cakebox.yaml as an array
      *
      * @return array Hash
      */
-    public function getCakeboxYaml() {
+    public function getCakeboxYamlArray() {
         return CakeboxUtility::yamlToArray('/home/vagrant/.cakebox/Cakebox.yaml.provisioned');
     }
+
 }
