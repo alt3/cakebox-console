@@ -102,7 +102,7 @@
 						<?php
 							echo $this->Html->link(
 								'<i class="fa fa-github"></i><span></span>' . __('Contribute'),
-								'https://www.github.com/alt3/cakebox-console',
+								'https://cakebox.readthedocs.org/en/latest/additional/contributing/',
 								['class' => 'shortcut', 'escape' => false]
 							);
 						?>
