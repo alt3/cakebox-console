@@ -16,6 +16,7 @@
 	10. MsgGrowl: Generic Ajax Fetch Errors
 	11. Generic Ajax Delete Action
 	12. Bootbox Listener
+	13. Syntax Highlighting
 
 -------------------------------------------------------------------*/
 
@@ -249,7 +250,9 @@ $(document).ready(function() {
 })
 
 /*------------------------------------------------------------------
- * 12. Bootbox Listener (http://bootboxjs.com)
+ * 12. Bootbox Listener
+ *
+ * http://bootboxjs.com
  * ---------------------------------------------------------------*/
 $(document).ready(function() {
 	$(document).on("click", ".confirm", function(e) {
@@ -266,4 +269,14 @@ $(document).ready(function() {
 			}
 		})
 	})
+})
+
+/*------------------------------------------------------------------
+ * 12. Syntax Highlighting
+ *
+ * http://alexgorbatchev.com/SyntaxHighlighter
+ * ---------------------------------------------------------------*/
+$(document).ready(function() {
+	SyntaxHighlighter.defaults['toolbar'] = false; /* disables about button */
+	SyntaxHighlighter.all()
 })

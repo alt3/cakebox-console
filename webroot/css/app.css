@@ -13,6 +13,7 @@
 	7. msgGrowl
 	8. Key/Value Pairs
 	9. Footer
+    10. Syntax Highlighting
 
 -------------------------------------------------------------------*/
 
@@ -76,7 +77,7 @@ a.btn-primary:focus {
     /*margin-left: -30px;*/
 }
 .collapse {
-	visibility: visible !important;		/** fix to get jQuery show() working */
+	visibility: visible !important;		/* fix to get jQuery show() working */
 }
 
 /*------------------------------------------------------------------
@@ -196,4 +197,11 @@ ul.pair li span.key {
 * ---------------------------------------------------------------*/
 #back-to-top {
     background-color: #1a1a1a;
+}
+
+/*------------------------------------------------------------------
+* 10. Syntax Highlighting
+* ---------------------------------------------------------------*/
+.syntaxhighlighter {
+    overflow-y: hidden !important; /* prevent 1px vertical scrollbar on Chrome */
 }
