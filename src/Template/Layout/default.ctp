@@ -59,10 +59,7 @@ $cakeDescription = 'Cakebox Dashboard';
 			'cdn-fallback/bootstrap/bootstrap.min',
 			'cdn-fallback/string/string.min',
 			'cdn-fallback/bootbox/bootbox.min',
-			'cdn-fallback/jquery-plugins/msgGrowl/msgGrowl.min',
-			'cdn-fallback/jquery-plugins/flot/jquery.flot.min',
-			'cdn-fallback/jquery-plugins/flot/jquery.flot.pie.min',
-			'cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min'
+			'cdn-fallback/jquery-plugins/msgGrowl/msgGrowl.min'
 		], ['block' => 'scriptsGlobal']);
 
 		// global app.js appended to scriptBottom block (view added scripts first)

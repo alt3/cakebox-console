@@ -3,6 +3,11 @@
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 
+// Load Jquery flot plugin to generate the donut
+$this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.min', ['block' => 'scriptBottom']);
+$this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.pie.min', ['block' => 'scriptBottom']);
+$this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', ['block' => 'scriptBottom']);
+
 ?>
 
 <div class="col-md-6 col-xs-12">
