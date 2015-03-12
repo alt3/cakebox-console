@@ -5,6 +5,8 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Log\Log;
 use Cake\Utility\Hash;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Class library for box agnostic helper functions
@@ -383,5 +385,20 @@ class CakeboxUtility
     public function getSaltCipher($randomText)
     {
         return hash('sha256', $randomText . php_uname() . microtime(true));
+    }
+
+    /**
+     * Returns the content of a yaml file as an array.
+     *
+     * @param string Full path to the yaml file
+     * @return string Hash
+     * @throws Symfony\Component\Yaml\Exception\ParseException
+     */
+    public static function yamlToArray($yaml) {
+        try {
+            return (new Parser)->parse(file_get_contents($yaml));
+        } catch (ParseException $e) {
+            printf("Unable to parse YAML file $yaml: %s", $e->getMessage());
+        }
     }
 }

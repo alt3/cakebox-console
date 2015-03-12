@@ -26,26 +26,34 @@ $cakeDescription = 'Cakebox Dashboard';
 			$pageAsset = preg_replace('/\//', '.', $pageAsset);
 		}
 
-		// Load stylesheets in this order
-		$stylesheets = [
+		// -----------------------------------------
+		//  Metadata
+		// -----------------------------------------
+		echo $this->fetch('metadata');
+
+		// -----------------------------------------
+		//  Stylesheets
+		// -----------------------------------------
+		echo $this->Html->css([
 			'cdn-fallback/bootstrap/bootstrap.min',
 			'cdn-fallback/font-awesome/css/font-awesome.min',
 			'cdn-fallback/jquery-plugins/msgGrowl/msgGrowl',
 			'theme/base-admin-3',
-			'theme/base-admin-3-responsive',
-			'app',
-		];
+			'theme/base-admin-3-responsive'
+		]);
+		echo $this->fetch('css'); // stylesheet block filled by views
+		echo $this->Html->css('app'); // global application-wide stylesheet
 
+		// load page specific stylesheet if there is one
 		if (file_exists(WWW_ROOT . 'css' . DS . 'pages' . DS . $pageAsset . '.css')) {
-			$stylesheets[] = "pages/$pageAsset";
+			echo $this->Html->css("pages/$pageAsset");
 		}
 
-		foreach ($stylesheets as $stylesheet) {
-			echo $this->Html->css($stylesheet);
-		}
-
-		// Load Javascripts in this order
-		$scripts = [
+		// -----------------------------------------
+		//  Scripts will be inserted bottom of page
+		// -----------------------------------------
+		// $scripts = [
+		echo $this->Html->script([
 			'cdn-fallback/jquery/jquery.min',
 			'cdn-fallback/jquery-ui/jquery-ui.min',
 			'cdn-fallback/bootstrap/bootstrap.min',
@@ -54,16 +62,15 @@ $cakeDescription = 'Cakebox Dashboard';
 			'cdn-fallback/jquery-plugins/msgGrowl/msgGrowl.min',
 			'cdn-fallback/jquery-plugins/flot/jquery.flot.min',
 			'cdn-fallback/jquery-plugins/flot/jquery.flot.pie.min',
-			'cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min',
-			'app'
-		];
+			'cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min'
+		], ['block' => 'scriptsGlobal']);
 
+		// global app.js appended to scriptBottom block (view added scripts first)
+		echo $this->Html->script('app', ['block' => 'scriptBottom']);
+
+		// append page specific script to scriptBottom if the page has one
 		if (file_exists(WWW_ROOT . 'js' . DS . 'pages' . DS . $pageAsset . '.js')) {
-			$scripts[] = "pages/$pageAsset";
-		}
-
-		foreach ($scripts as $script) {
-			echo $this->Html->script($script);
+			$this->Html->script("pages/$pageAsset", ['block' => 'scriptBottom']);
 		}
 	?>
 
@@ -74,13 +81,6 @@ $cakeDescription = 'Cakebox Dashboard';
 	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-	<?php
-		// Loads extra meta, css and scripts but only if they are defined in
-		// the used View as blocks
-		echo $this->fetch('meta');
-		echo $this->fetch('css');
-		echo $this->fetch('script');
-	?>
 </head>
 <body>
 	<?php
@@ -101,7 +101,11 @@ $cakeDescription = 'Cakebox Dashboard';
 		</div>
 	</div>
 
-	<?= $this->element('beta') ?>
+	<?php
+		echo $this->element('beta');
+		echo $this->fetch('scriptsGlobal');
+		echo $this->fetch('scriptBottom');
+	?>
 
 </body>
 </html>

@@ -11,7 +11,8 @@
 		"cakephp/debug_kit": "3.0.*-dev",
 		"cakephp/plugin-installer": "*",
 		"mobiledetect/mobiledetectlib": "2.*",
-		"monolog/monolog": "master"
+		"monolog/monolog": "master",
+		"symfony/yaml": "dev-master"
 	},
 	"require-dev": {
 	},
