@@ -681,7 +681,6 @@ class CakeboxExecute
         if ($this->shell("mv $tempFolder $targetFolder", 'root') == false) {
             return false;
         }
-
         return true;
     }
 
