@@ -195,7 +195,7 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
 
 					// Credits
 					echo $this->Html->link(
-						'<i class="shortcut-icon fa fa-thumbs-up"></i><span class="shortcut-label"></span>' . __('Credits'),
+						'<i class="shortcut-icon fa fa-graduation-cap"></i><span class="shortcut-label"></span>' . __('Wall of Fame'),
 						'#',
 						['class' => 'shortcut todo', 'escape' => false]
 					);
@@ -218,7 +218,7 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
 		</div> <!-- /widget-header -->
 
 		<div class="widget-content">
-			<p>Theme use granted by Rod Howard from <?= $this->Html->link('Jumpstart Themes', 'http://jumpstartthemes.com') ?></p>
+			<p>Theme sponsored by the kind folks at <?= $this->Html->link('Your Name Here', 'http://google.com') ?></p>
 			<p>Box image CDN provided by <?= $this->Html->link('Your Name Here', 'http://google.com') ?></p>
 		</div> <!-- /widget-content -->
 
@@ -229,7 +229,7 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
 	<div class="widget widget-nopad stacked">
 
 		<div class="widget-header">
-			<i class="fa fa-user"></i>
+			<i class="fa fa-heart"></i>
 			<h3><?= __('Recent Contributions') ?></h3>
 		</div> <!-- /widget-header -->
 
