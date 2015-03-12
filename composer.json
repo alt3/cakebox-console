@@ -1,6 +1,6 @@
 {
 	"name": "alt3/cakebox-console",
-	"description": "The CakePHP 3.x sources powering the Cakebox project",
+	"description": "The CakePHP 3.x sources powering the Cakebox development environment",
 	"homepage": "https://github.com/alt3/cakebox-console",
 	"type": "project",
 	"license": "MIT",
