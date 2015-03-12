@@ -151,7 +151,7 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
 					// Site files
 					echo $this->Html->link(
 						'<i class="shortcut-icon fa fa-file-text-o"></i><span class="shortcut-label"></span>' . __('Virtual Hosts'),
-						['controller' => 'Sitefiles', 'action' => 'index'],
+						['controller' => 'SiteFiles', 'action' => 'index'],
 						['class' => 'shortcut', 'escape' => false]
 					);
 

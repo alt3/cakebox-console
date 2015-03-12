@@ -2,8 +2,10 @@
 namespace App\Lib;
 
 use Cake\Cache\Cache;
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
+use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Utility\String;
 
@@ -637,6 +639,48 @@ class CakeboxExecute
         $fh = new File($bootstrapFile);
         $fh->append('CakePlugin::loadAll();');
 
+        return true;
+    }
+
+    /**
+     * Creates a Percona XtraBackup (hot) backup of the MySQL server in
+     * /tmp before moving it to the Vagrant Synced folder /cakebox/backups
+     * (to prevent speed issues on systems with slow synced folders).
+     *
+     * @return boolean Success if the backup completes succesfully
+     * @throws Cake\Core\Exception\Exception
+     */
+
+    public function backupDatabases()
+    {
+        // determine paths
+        $this->_log("Determining backup folders");
+
+        $timestamp = (new Time)->now()->i18nFormat('YYYY-MM-dd-HH-mm-ss');
+        $tempFolder = "/tmp/$timestamp";
+        $this->_log("* Temporary folder => $tempFolder");
+
+        $targetFolder = '/cakebox/backups/mysql/';
+        if (!file_exists($targetFolder)) {
+            $this->_log("* Creating database backup root folder $targetFolder");
+            if (!mkdir($targetFolder)) {
+                return false;
+            };
+        }
+        $targetFolder .= (new Time)->now()->i18nFormat('YYYY-MM-dd-HH-mm-ss');
+        $this->_log("* Destination folder => $targetFolder");
+
+        // shell Percona XtraBackup job as root
+        $this->_log("Starting hot backup");
+        if ($this->shell("xtrabackup --backup --target-dir=$tempFolder", 'root') == false) {
+            return false;
+        }
+
+        // move backup from /tmp to synced folder
+        $this->_log("Moving backup to Synced Folder");
+        if ($this->shell("mv $tempFolder $targetFolder", 'root') == false) {
+            return false;
+        }
         return true;
     }
 

@@ -25,14 +25,15 @@
                                 inside your virtual machine to create databases, virtual hosts and applications.
                             </p>
                             <ul>
-                                <li><i class="fa fa-arrow-right"></i><em>cakebox application --help</em></li>
+                                <li><i class="fa fa-arrow-right"></i><em>cakebox --help</em></li>
                                 <li><i class="fa fa-arrow-right"></i><em>cakebox site --help</em></li>
                                 <li><i class="fa fa-arrow-right"></i><em>cakebox database --help</em></li>
+                                <li><i class="fa fa-arrow-right"></i><em>cakebox application --help</em></li>
                             </ul>
                         </div>
                     </li>
 
-                    <!-- Self-Update -->
+                    <!-- Updates -->
                     <li id="faq-2">
                         <div class="faq-icon">
                             <div class="faq-number">2</div>
@@ -40,7 +41,7 @@
                         <div class="faq-text">
                             <h4><?= __("Updates") ?></h4>
                             <p>
-                                Update your Cakebox Dashboard and Commands by running
+                                Self-update your Cakebox Dashboard and Cakebox Commands by running
                                 <?php
                                     echo $this->Html->link('cakebox update self', 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/')
                                 ?>
@@ -49,19 +50,36 @@
                         </div>
                     </li>
 
-                    <!-- YAML re-provisioning -->
+                    <!-- Backups -->
                     <li id="faq-3">
                         <div class="faq-icon">
                             <div class="faq-number">3</div>
                         </div>
                         <div class="faq-text">
+                            <h4><?= __("Backups") ?></h4>
+                            <p>
+                                Create hot backups of your database server by running
+                                <?php
+                                    echo $this->Html->link('cakebox backup database', 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/')
+                                ?>
+                                inside your box.
+                            </p>
+                        </div>
+                    </li>
+
+                    <!-- Provisioning -->
+                    <li id="faq-4">
+                        <div class="faq-icon">
+                            <div class="faq-number">4</div>
+                        </div>
+                        <div class="faq-text">
                             <h4><?= __("Provisioning") ?></h4>
                             <p>
-                                Use the
+                                Your
                                 <?php
                                     echo $this->Html->link('Cakebox.yaml', 'http://cakebox.readthedocs.org/en/latest/usage/cakebox-yaml/')
                                 ?>
-                                file so you will be able to (re)create exact copies of your box without losing your:
+                                file enables you to (re)create exact copies of your box without losing your:
                             </p>
                             <ul>
                                 <li><li><i class="fa fa-arrow-right"></i>virtual machine settings (hostname, IP address, CPUs, memory)</li>
@@ -77,15 +95,15 @@
                         </div>
                     </li>
 
-                    <!-- Vagrant Commands -->
-                    <li id="faq-4">
+                    <!-- Vagrant CLI -->
+                    <li id="faq-5">
                         <div class="faq-icon">
-                            <div class="faq-number">4</div>
+                            <div class="faq-number">5</div>
                         </div>
                         <div class="faq-text">
                             <h4><?= __("Vagrant Commands") ?></h4>
                             <p>
-                                Your box lives inside a Vagrant virtual machine so get to know the
+                                Your box lives is a Vagrant virtual machine so get familiar with the
                                 <?php
                                     echo $this->Html->link('Vagrant CLI', 'https://docs.vagrantup.com/v2/cli/index.html')
                                 ?>

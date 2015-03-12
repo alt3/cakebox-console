@@ -10,13 +10,6 @@ class ConfigShell extends AppShell
 {
 
     /**
-     * @var array Shell Tasks used by this shell.
-     */
-#    public $tasks = [
-#        'Exec'
-#    ];
-
-    /**
      * Define available subcommands, arguments and options.
      *
      * @return parser
