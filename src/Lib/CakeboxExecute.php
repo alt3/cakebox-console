@@ -704,7 +704,6 @@ class CakeboxExecute
 
         $default = "/etc/nginx/sites-available/default";
         $template = APP . 'Template' . DS . 'Bake' . DS . "nginx-cakebox-$protocol";
-        //$template = "/cakebox/bash/nginx-default-site-$protocol";
 
         $this->_log("Replacing vhost $default with $template");
         if ($this->shell("cp $template $default", 'root') == false) {
