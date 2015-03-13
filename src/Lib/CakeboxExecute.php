@@ -685,6 +685,41 @@ class CakeboxExecute
     }
 
     /**
+     * Changes the protocol used by the Cakebox Dashboard by replacing the
+     * default catch-all virtual host configuration file with the http or
+     * https template found in the Bake directory. Then restarts Nginx to
+     * effectuate the new template.
+     *
+     * @param string $protocol Either `http` or `https`.
+     * @return boolean True if protocol was changed successfully
+     * @throws
+     */
+    public function setDashboardProtocol($protocol)
+    {
+        $this->_log("Changing Cakebox Dashboard protocol to $protocol");
+        if ($protocol !== 'http' && $protocol !== 'https') {
+            $this->_error("* Unsupported protocol");
+            return false;
+        }
+
+        $default = "/etc/nginx/sites-available/default";
+        $template = APP . 'Template' . DS . 'Bake' . DS . "nginx-cakebox-$protocol";
+        //$template = "/cakebox/bash/nginx-default-site-$protocol";
+
+        $this->_log("Replacing vhost $default with $template");
+        if ($this->shell("cp $template $default", 'root') == false) {
+            return false;
+        }
+
+        // Reload nginx service to effectuate changes
+        if ($this->reloadNginx() == false) {
+            return false;
+        }
+        $this->_log("* Dashboard protocol changed successfully");
+        return true;
+    }
+
+    /**
      * Flush log and error buffers.
      *
      * @return void
