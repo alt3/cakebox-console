@@ -1040,4 +1040,19 @@ class CakeboxInfo
         return CakeboxUtility::yamlToArray('/home/vagrant/.cakebox/Cakebox.yaml.provisioned');
     }
 
+    /**
+     * Checks if the Cakebox Dashboard is using HTTPS by parsing the default
+     * Nginx catch-all website.
+     *
+     * @return array boolean True when HTTPS is being used.
+     */
+    public function dashboardUsesHttps() {
+        $vhost = file_get_contents($this->webserverMeta['nginx']['sites-available'] . DS . 'default');
+        preg_match('/HTTPS/', $vhost, $matches);
+        if (!empty($matches)) {
+            return true;
+        }
+        return false;
+    }
+
 }
