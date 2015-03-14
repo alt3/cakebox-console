@@ -169,10 +169,9 @@ Request::addDetector('tablet', function ($request) {
 *
 */
 
-// Only try to load DebugKit in development mode
-// Debug Kit should not be installed on a production system
+// Will only load DebugKit in development/debug mode.
 if (Configure::read('debug')) {
-//	Plugin::load('DebugKit', ['bootstrap' => true]);
+	Plugin::load('DebugKit', ['bootstrap' => true]);
 }
 
 /**

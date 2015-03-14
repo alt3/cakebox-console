@@ -1,6 +1,7 @@
 <?php
 namespace App\Shell;
 
+use App\Lib\CakeboxUtility;
 use Cake\Console\Shell;
 
 /**
@@ -43,6 +44,17 @@ class ConfigShell extends AppShell
                         'help' => __('Set protocol even if it is already being used.'),
                         'boolean' => true
                     ]
+                ]
+            ]
+        ]);
+
+        $parser->addSubcommand('debug', [
+            'parser' => [
+                'description' => [
+                __("Enable CakePHP debug mode for Cakebox Commands and Dashboard.")
+                ],
+                'arguments' => [
+                    'mode' => ['required' => true, 'choices' => ['on', 'off']]
                 ]
             ]
         ]);
@@ -119,5 +131,31 @@ class ConfigShell extends AppShell
             $this->exitBashError("Error changing protocol.");
         }
         $this->exitBashSuccess("Command completed successfully.");
+    }
+
+    /**
+     * Turn cakebox-console debug mode on/off by replacing value in app.php.
+     *
+     * @return void
+     */
+    public function debug($mode)
+    {
+        $appConfig = '/cakebox/console/config/app.php';
+
+        // enable debug mode
+        if ($mode === 'on') {
+            if (! CakeboxUtility::updateConfigFile($appConfig, ["'debug' => false" => "'debug' => true"])) {
+                $this->exitBashError("Error enabling Cakebox debug mode.");
+            }
+            $this->exitBashSuccess("Cakebox debug mode enabled succesfully.");
+            return true;
+        }
+
+        // disable debug mode
+        if (! CakeboxUtility::updateConfigFile($appConfig, ["'debug' => true" => "'debug' => false"])) {
+            $this->exitBashError("Error disabling Cakebox debug mode.");
+        }
+        $this->exitBashSuccess("Cakebox debug mode disabled succesfully.");
+        return true;
     }
 }
