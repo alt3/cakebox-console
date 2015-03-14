@@ -86,17 +86,6 @@
 						?>
 					</li>
 
-					<!-- Help -->
-					<li>
-						<?php
-							echo $this->Html->link(
-								'<i class="fa fa-question-circle"></i><span></span>' . __('Help'),
-								'https://cakebox.readthedocs.org',
-								['class' => 'shortcut todo', 'escape' => false]
-							);
-						?>
-					</li>
-
 					<!-- Contribute -->
 					<li>
 						<?php
@@ -104,6 +93,17 @@
 								'<i class="fa fa-github"></i><span></span>' . __('Contribute'),
 								'https://cakebox.readthedocs.org/en/latest/additional/contributing/',
 								['class' => 'shortcut', 'escape' => false]
+							);
+						?>
+					</li>
+
+					<!-- Help -->
+					<li>
+						<?php
+							echo $this->Html->link(
+								'<i class="fa fa-book"></i><span></span>' . __('Docs'),
+								'https://cakebox.readthedocs.org',
+								['class' => 'shortcut todo', 'escape' => false]
 							);
 						?>
 					</li>
