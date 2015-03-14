@@ -25,10 +25,17 @@ class CakeboxInfo
     protected $conn;
 
     /**
+     * Most recently provisioned Cakebox.yaml converted to an array.
+     *
+     * @var Array Hash
+     */
+    protected $_yaml;
+
+    /**
      * @var array Hash with webserver specific information.
      */
     public $cakeboxMeta = [
-        'yaml' => '/home/vagrant/.cakebox/Cakebox.yaml.provisioned'
+        'yamlFile' => '/home/vagrant/.cakebox/Cakebox.yaml.provisioned'
     ];
 
     /**
@@ -157,6 +164,7 @@ class CakeboxInfo
     public function __construct()
     {
         $this->_conn = ConnectionManager::get('default');
+        $this->_yaml = CakeboxUtility::yamlToArray($this->cakeboxMeta['yamlFile']);
     }
 
     /**
@@ -203,7 +211,7 @@ class CakeboxInfo
     {
         return ([
             'hostname' => $this->getHostname(),
-            'ip_address' => $this->getPrimaryIpAddress(),
+            'ip_address' => $this->getVmIpAddress(),
             'cpus' => $this->getCpuCount(),
             'memory' => $this->getMemory(),
             'uptime' => $this->getUptime()
@@ -225,9 +233,9 @@ class CakeboxInfo
      *
      * @return string Hostname
      */
-    public function getPrimaryIpAddress()
+    public function getVmIpAddress()
     {
-        return (getenv('SERVER_ADDR'));
+        return $this->_yaml['vm']['ip'];
     }
 
     /**
@@ -475,7 +483,7 @@ class CakeboxInfo
     {
         try {
             $http = new Client();
-            $response = $http->get('http://' . $this->getPrimaryIpAddress() . ':9200');
+            $response = $http->get('http://' . $this->getVmIpAddress() . ':9200');
             $result = json_decode($response->body(), true);
             return $result['version']['number'];
         } catch (\Exception $e) {
@@ -1006,8 +1014,7 @@ class CakeboxInfo
      * @return string Name of the provisioned Git branch.
      */
      public function getCakeboxBranch() {
-         $yaml = CakeboxUtility::yamlToArray($this->cakeboxMeta['yaml']);
-         $composerVersion = $yaml['cakebox']['version'];
+         $composerVersion = $this->_yaml['cakebox']['version'];
          $parts = explode('-', $composerVersion);
          return $parts[1];
      }
@@ -1041,13 +1048,13 @@ class CakeboxInfo
      */
     public function getCakeboxYamlInfo() {
         try {
-            $fileHandle = new File($this->cakeboxMeta['yaml']);
+            $fileHandle = new File($this->cakeboxMeta['yamlFile']);
             return [
                 'timestamp' => $fileHandle->lastChange(),
                 'raw' => $fileHandle->read()
             ];
         } catch (\Exception $e) {
-            throw new \Exception("Error reading $yaml: " . $e->getMessage());
+            throw new \Exception("Error reading " . $this->cakeboxMeta['yamlFile'] . ": " . $e->getMessage());
         }
     }
 

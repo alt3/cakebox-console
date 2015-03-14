@@ -130,7 +130,8 @@ class ApplicationShell extends AppShell
             $this->out("  => Configuration files are not automatically updated for user specified applications.");
             $this->out("  => Make sure to manually update your database credentials, plugins, etc.");
         }
-        $this->out("<info>Remember to update your hosts file</info> before connecting to <info>http://$url</info>");
+
+        $this->out("\nAdd the following line to your hosts file: <info>" . $this->cbi->getVmIpAddress() . " http://$url</info>\n");
         $this->out("Installation completed successfully");
         return true;
     }
