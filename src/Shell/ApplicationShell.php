@@ -119,7 +119,7 @@ class ApplicationShell extends AppShell
         }
 
         # Provision success message
-        $this->out("Installation completed successfully using:");
+        $this->out("Finished installation using:");
         $options = $installer->options();
         ksort($options);
         foreach ($options as $key => $value) {
@@ -130,7 +130,8 @@ class ApplicationShell extends AppShell
             $this->out("  => Configuration files are not automatically updated for user specified applications.");
             $this->out("  => Make sure to manually update your database credentials, plugins, etc.");
         }
-        $this->out("<info>Your application is waiting at http://$url</info>");
+        $this->out("<info>Remember to update your hosts file</info> before connecting to <info>http://$url</info>");
+        $this->out("Installation completed successfully");
         return true;
     }
 
