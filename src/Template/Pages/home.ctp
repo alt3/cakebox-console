@@ -4,6 +4,8 @@
  *
  * @todo move once hooked into Auth
  */
+
+$this->assign('title', 'Login');
 ?>
 
 <div class="account-container stacked">
