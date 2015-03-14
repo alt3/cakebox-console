@@ -27,6 +27,13 @@ class CakeboxInfo
     /**
      * @var array Hash with webserver specific information.
      */
+    public $cakeboxMeta = [
+        'yaml' => '/home/vagrant/.cakebox/Cakebox.yaml.provisioned'
+    ];
+
+    /**
+     * @var array Hash with webserver specific information.
+     */
     public $webserverMeta = [
         'nginx' => [
             'sites-available' => '/etc/nginx/sites-available',
@@ -992,6 +999,20 @@ class CakeboxInfo
     }
 
     /**
+     * Gets the branch name of the provisioned cakebox-console Git repository by
+     * parsing the Composer packagist version in the most recently provisioned
+     * Cakebox.yaml.
+     *
+     * @return string Name of the provisioned Git branch.
+     */
+     public function getCakeboxBranch() {
+         $yaml = CakeboxUtility::yamlToArray($this->cakeboxMeta['yaml']);
+         $composerVersion = $yaml['cakebox']['version'];
+         $parts = explode('-', $composerVersion);
+         return $parts[1];
+     }
+
+    /**
      * Get latest commit header from Github api.
      *
      * @return string String containing git sha
@@ -1009,7 +1030,7 @@ class CakeboxInfo
      */
     public function getLatestCommitLocal()
     {
-        return file_get_contents('/cakebox/console/.git/refs/heads/master');
+        return file_get_contents('/cakebox/console/.git/refs/heads/' . $this->getCakeboxBranch());
     }
 
     /**
@@ -1020,8 +1041,7 @@ class CakeboxInfo
      */
     public function getCakeboxYamlInfo() {
         try {
-            $yaml = '/home/vagrant/.cakebox/Cakebox.yaml.provisioned';
-            $fileHandle = new File($yaml);
+            $fileHandle = new File($this->cakeboxMeta['yaml']);
             return [
                 'timestamp' => $fileHandle->lastChange(),
                 'raw' => $fileHandle->read()
@@ -1029,15 +1049,6 @@ class CakeboxInfo
         } catch (\Exception $e) {
             throw new \Exception("Error reading $yaml: " . $e->getMessage());
         }
-    }
-
-    /**
-     * Returns Cakebox.yaml as an array
-     *
-     * @return array Hash
-     */
-    public function getCakeboxYamlArray() {
-        return CakeboxUtility::yamlToArray('/home/vagrant/.cakebox/Cakebox.yaml.provisioned');
     }
 
     /**
