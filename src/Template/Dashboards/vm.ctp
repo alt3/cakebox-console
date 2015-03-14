@@ -61,6 +61,26 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 						</div>
 					</div>
 
+					<!-- Performance -->
+					<div class="widget stacked widget-table action-table">
+						<div class="widget-header">
+							<i class="fa fa-bar-chart"></i>
+							<h3><?= __('Performance') ?></h3>
+						</div>
+
+						<div class="widget-content">
+							<div class="panel-body">
+								<ul>
+								<li>
+									Increase vm memory to 2048 MB for optimal performance
+								</li>
+								<li>
+									Never allocate more than 25% of physical host memory
+								</li>
+							</div>
+						</div>
+					</div>
+
 				</div>
 
 				<!-- Status tab -->
