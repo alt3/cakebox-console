@@ -90,7 +90,7 @@ class ConfigShell extends AppShell
                 $this->exitBashError("Error updating git config.");
             }
         }
-        $this->exitBashSuccess("Git configuration updated successfully");
+        $this->exitBashSuccess("Command completed successfully");
     }
 
     /**
