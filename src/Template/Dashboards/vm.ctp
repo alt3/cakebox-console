@@ -3,6 +3,8 @@
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 
+$this->assign('title', 'Virtual Machine');
+
 // Load SyntaxHighlighter for Cakebox.yaml into CakePHP script/stylesheet blocks
 $this->Html->css('cdn-fallback/syntax-highlighter/shCore.min.css', ['block' => true]);
 $this->Html->css('cdn-fallback/syntax-highlighter/shThemeDefault.min.css', ['block' => true]);

@@ -1,5 +1,7 @@
 <?php
 use App\Form\SiteFileForm;
+
+$this->assign('title', 'Virtual Hosts');
 ?>
 
 <div class="index-main col-sm-10 column">

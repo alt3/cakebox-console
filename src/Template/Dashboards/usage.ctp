@@ -2,6 +2,7 @@
 /**
 * Cakebox usage
 */
+$this->assign('title', 'Pro Tips!');
 ?>
 
 <div class="index-main col-sm-8 column">
