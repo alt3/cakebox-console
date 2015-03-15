@@ -36,7 +36,7 @@ class CakeboxInfo
      * @var array Hash with webserver specific information.
      */
     public $cakeboxMeta = [
-        'yamlFile' => '/home/vagrant/.cakebox/Cakebox.yaml.provisioned'
+        'yamlFile' => '/home/vagrant/.cakebox/last-known-cakebox-yaml'
     ];
 
     /**
