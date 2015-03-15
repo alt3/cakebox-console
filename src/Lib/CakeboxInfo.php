@@ -3,6 +3,7 @@ namespace App\Lib;
 
 use Cake\Cache\Cache;
 use Cake\Core\App;
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
@@ -229,13 +230,20 @@ class CakeboxInfo
     }
 
     /**
-     * Returns the primary (external) IP address used by the vm.
+     * Returns the IP address assigned by Vagrant for external communication
+     * by parsing the Vagrant added section in /etc/network/interfaces.
      *
-     * @return string Hostname
+     * @return string IP-address of the vm
+     * @throws Cake\Core\Exception\Exception
      */
     public function getVmIpAddress()
     {
-        return $this->_yaml['vm']['ip'];
+        $file = file_get_contents('/etc/network/interfaces');
+        preg_match('/address ([0-9]{2,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})/', $file, $matches);
+        if (empty($matches[1])) {
+            throw new Exception('Error determining vm IP address');
+        }
+        return $matches[1];
     }
 
     /**
