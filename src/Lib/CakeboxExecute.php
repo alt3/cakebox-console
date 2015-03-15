@@ -182,7 +182,7 @@ class CakeboxExecute
         }
 
         Log::debug("* Updating composer packages");
-        $command = 'cd /cakebox/console; composer update --prefer-dist --no-dev';
+        $command = 'cd /cakebox/console; composer install --prefer-dist --no-dev';
         if (!$this->shell($command, 'vagrant')) {
             return false;
         }
