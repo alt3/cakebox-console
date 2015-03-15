@@ -90,7 +90,8 @@ class SiteShell extends AppShell
         if ($this->execute->addSite($url, $webroot, true) == false) {
             $this->exitBashError("Error creating site file");
         }
-        $this->exitBashSuccess("Website created successfully.\n<info>Don't forget to update your hosts file</info>");
+        $this->out("\nAdd the following line to your hosts file: <info>" . $this->cbi->getVmIpAddress() . " http://$url</info>\n");
+        $this->out("Installation completed successfully");
     }
 
     /**
