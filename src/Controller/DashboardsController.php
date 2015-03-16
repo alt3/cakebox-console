@@ -42,7 +42,7 @@ class DashboardsController extends AppController
     public function vm() {
         $data = [
             'vm' => $this->cbi->getVmInfo(),
-            'yaml' => $this->cbi->getCakeboxYamlInfo()
+            'yaml' => $this->cbi->getRichCakeboxYaml()
         ];
         $this->set('data', $data);
     }

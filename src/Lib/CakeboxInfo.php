@@ -36,7 +36,11 @@ class CakeboxInfo
      * @var array Hash with webserver specific information.
      */
     public $cakeboxMeta = [
-        'yamlFile' => '/home/vagrant/.cakebox/last-known-cakebox-yaml'
+        'host' => [
+            'yaml' => '/home/vagrant/.cakebox/last-known-cakebox-yaml',
+            'commit' => '/home/vagrant/.cakebox/last-known-cakebox-commit',
+            'box_version' => '/home/vagrant/.cakebox/last-known-box-version'
+        ]
     ];
 
     /**
@@ -165,7 +169,7 @@ class CakeboxInfo
     public function __construct()
     {
         $this->_conn = ConnectionManager::get('default');
-        $this->_yaml = CakeboxUtility::yamlToArray($this->cakeboxMeta['yamlFile']);
+        $this->_yaml = CakeboxUtility::yamlToArray($this->cakeboxMeta['host']['yaml']);
     }
 
     /**
@@ -1054,9 +1058,9 @@ class CakeboxInfo
      * @return array Hash with raw file data and timestamp.
      * @throws Exception
      */
-    public function getCakeboxYamlInfo() {
+    public function getRichCakeboxYaml() {
         try {
-            $fileHandle = new File($this->cakeboxMeta['yamlFile']);
+            $fileHandle = new File($this->cakeboxMeta['host']['yaml']);
             return [
                 'timestamp' => $fileHandle->lastChange(),
                 'raw' => $fileHandle->read()
