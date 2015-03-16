@@ -87,7 +87,7 @@ class CakeboxUtility
      * @param string $file Name of the site file.
      * @return string html-escaped file contents
      */
-    public function getFileContent($file)
+    public static function getFileContent($file)
     {
         if (!file_exists($file)) {
             return false;
@@ -103,7 +103,7 @@ class CakeboxUtility
      * @param int $numColumns Number of parts to chop the data into.
      * @return array Array
      */
-    public function columnizeArray($data, $numColumns)
+    public static function columnizeArray($data, $numColumns)
     {
         $n = count($data);
         $perColumn = floor($n / $numColumns);
