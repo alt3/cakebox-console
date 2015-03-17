@@ -94,7 +94,7 @@ class ApplicationShell extends AppShell
         # (non-existent or empty). Note: exits with success here to allow
         # vagrant re-provisioning.
         if (!CakeboxUtility::dirAvailable($installer->option('path'))) {
-            $this->exitBashWarning("* Skipping: target directory did not pass readiness tests.\n<info>See cakebox log for details.</info>");
+            $this->exitBashWarning("* Skipping: target directory did not pass readiness tests.\n<info>See /var/log/cakephp/cakebox.cli.log for details.</info>");
         }
 
         # Prepare the installation
