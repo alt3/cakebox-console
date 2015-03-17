@@ -94,7 +94,7 @@ class ApplicationShell extends AppShell
         # (non-existent or empty). Note: exits with success here to allow
         # vagrant re-provisioning.
         if (!CakeboxUtility::dirAvailable($installer->option('path'))) {
-            $this->exitBashWarning("* Skipping: target directory did not pass readiness tests.\n<info>See cakebox log for details.</info>");
+            $this->exitBashWarning("* Skipping: target directory did not pass readiness tests.\n<info>See /var/log/cakephp/cakebox.cli.log for details.</info>");
         }
 
         # Prepare the installation
@@ -119,7 +119,7 @@ class ApplicationShell extends AppShell
         }
 
         # Provision success message
-        $this->out("Installation completed successfully using:");
+        $this->out("Finished installation using:");
         $options = $installer->options();
         ksort($options);
         foreach ($options as $key => $value) {
@@ -130,7 +130,9 @@ class ApplicationShell extends AppShell
             $this->out("  => Configuration files are not automatically updated for user specified applications.");
             $this->out("  => Make sure to manually update your database credentials, plugins, etc.");
         }
-        $this->out("<info>Your application is waiting at http://$url</info>");
+
+        $this->out("\nAdd the following line to your hosts file: <info>" . $this->cbi->getVmIpAddress() . " http://$url</info>\n");
+        $this->out("Installation completed successfully");
         return true;
     }
 

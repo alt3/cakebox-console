@@ -40,7 +40,7 @@ class UpdateShell extends AppShell
      */
     public function self()
     {
-        $this->logStart("Updating Cakebox Dashboard and Cakebox Commands");
+        $this->logStart("Updating Cakebox Commands and Dashboard");
         $this->out("Please wait... this can take a moment");
 
         if (!$this->execute->selfUpdate()) {

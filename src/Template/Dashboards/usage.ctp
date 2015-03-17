@@ -2,6 +2,7 @@
 /**
 * Cakebox usage
 */
+$this->assign('title', 'Pro Tips!');
 ?>
 
 <div class="index-main col-sm-8 column">
@@ -75,11 +76,13 @@
                         <div class="faq-text">
                             <h4><?= __("Provisioning") ?></h4>
                             <p>
-                                Your
+                                You are strongly advised to use your
                                 <?php
                                     echo $this->Html->link('Cakebox.yaml', 'http://cakebox.readthedocs.org/en/latest/usage/cakebox-yaml/')
                                 ?>
-                                file enables you to (re)create exact copies of your box without losing your:
+                                file to provision your box. This way you will
+                                always be able to (re)create exact copies of
+                                your box without losing your:
                             </p>
                             <ul>
                                 <li><li><i class="fa fa-arrow-right"></i>virtual machine settings (hostname, IP address, CPUs, memory)</li>

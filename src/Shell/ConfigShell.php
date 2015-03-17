@@ -90,7 +90,7 @@ class ConfigShell extends AppShell
                 $this->exitBashError("Error updating git config.");
             }
         }
-        $this->exitBashSuccess("Git configuration updated successfully");
+        $this->exitBashSuccess("Command completed successfully");
     }
 
     /**
@@ -130,7 +130,7 @@ class ConfigShell extends AppShell
         if (!$this->execute->setDashboardProtocol($protocol)) {
             $this->exitBashError("Error changing protocol.");
         }
-        $this->exitBashSuccess("Command completed successfully.");
+        $this->exitBashSuccess("Command completed successfully");
     }
 
     /**
@@ -144,18 +144,20 @@ class ConfigShell extends AppShell
 
         // enable debug mode
         if ($mode === 'on') {
+            $this->out("Enabling Cakebox debug mode");
             if (! CakeboxUtility::updateConfigFile($appConfig, ["'debug' => false" => "'debug' => true"])) {
                 $this->exitBashError("Error enabling Cakebox debug mode.");
             }
-            $this->exitBashSuccess("Cakebox debug mode enabled succesfully.");
+            $this->exitBashSuccess("Command completed successfully");
             return true;
         }
 
         // disable debug mode
+        $this->out("Disabling Cakebox debug mode");
         if (! CakeboxUtility::updateConfigFile($appConfig, ["'debug' => true" => "'debug' => false"])) {
             $this->exitBashError("Error disabling Cakebox debug mode.");
         }
-        $this->exitBashSuccess("Cakebox debug mode disabled succesfully.");
+        $this->exitBashSuccess("Command completed successfully");
         return true;
     }
 }

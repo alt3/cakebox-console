@@ -3,6 +3,7 @@ namespace App\Lib;
 
 use Cake\Cache\Cache;
 use Cake\Core\App;
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
@@ -25,10 +26,21 @@ class CakeboxInfo
     protected $conn;
 
     /**
+     * Most recently provisioned Cakebox.yaml converted to an array.
+     *
+     * @var Array Hash
+     */
+    protected $_yaml;
+
+    /**
      * @var array Hash with webserver specific information.
      */
     public $cakeboxMeta = [
-        'yaml' => '/home/vagrant/.cakebox/Cakebox.yaml.provisioned'
+        'host' => [
+            'yaml' => '/home/vagrant/.cakebox/last-known-cakebox-yaml',
+            'commit' => '/home/vagrant/.cakebox/last-known-cakebox-commit',
+            'box_version' => '/home/vagrant/.cakebox/last-known-box-version'
+        ]
     ];
 
     /**
@@ -157,6 +169,7 @@ class CakeboxInfo
     public function __construct()
     {
         $this->_conn = ConnectionManager::get('default');
+        $this->_yaml = CakeboxUtility::yamlToArray($this->cakeboxMeta['host']['yaml']);
     }
 
     /**
@@ -203,7 +216,7 @@ class CakeboxInfo
     {
         return ([
             'hostname' => $this->getHostname(),
-            'ip_address' => $this->getPrimaryIpAddress(),
+            'ip_address' => $this->getVmIpAddress(),
             'cpus' => $this->getCpuCount(),
             'memory' => $this->getMemory(),
             'uptime' => $this->getUptime()
@@ -221,13 +234,20 @@ class CakeboxInfo
     }
 
     /**
-     * Returns the primary (external) IP address used by the vm.
+     * Returns the IP address assigned by Vagrant for external communication
+     * by parsing the Vagrant added section in /etc/network/interfaces.
      *
-     * @return string Hostname
+     * @return string IP-address of the vm
+     * @throws Cake\Core\Exception\Exception
      */
-    public function getPrimaryIpAddress()
+    public function getVmIpAddress()
     {
-        return (getenv('SERVER_ADDR'));
+        $file = file_get_contents('/etc/network/interfaces');
+        preg_match('/address ([0-9]{2,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})/', $file, $matches);
+        if (empty($matches[1])) {
+            throw new Exception('Error determining vm IP address');
+        }
+        return $matches[1];
     }
 
     /**
@@ -475,7 +495,7 @@ class CakeboxInfo
     {
         try {
             $http = new Client();
-            $response = $http->get('http://' . $this->getPrimaryIpAddress() . ':9200');
+            $response = $http->get('http://' . $this->getVmIpAddress() . ':9200');
             $result = json_decode($response->body(), true);
             return $result['version']['number'];
         } catch (\Exception $e) {
@@ -1006,8 +1026,7 @@ class CakeboxInfo
      * @return string Name of the provisioned Git branch.
      */
      public function getCakeboxBranch() {
-         $yaml = CakeboxUtility::yamlToArray($this->cakeboxMeta['yaml']);
-         $composerVersion = $yaml['cakebox']['version'];
+         $composerVersion = $this->_yaml['cakebox']['version'];
          $parts = explode('-', $composerVersion);
          return $parts[1];
      }
@@ -1039,15 +1058,15 @@ class CakeboxInfo
      * @return array Hash with raw file data and timestamp.
      * @throws Exception
      */
-    public function getCakeboxYamlInfo() {
+    public function getRichCakeboxYaml() {
         try {
-            $fileHandle = new File($this->cakeboxMeta['yaml']);
+            $fileHandle = new File($this->cakeboxMeta['host']['yaml']);
             return [
                 'timestamp' => $fileHandle->lastChange(),
                 'raw' => $fileHandle->read()
             ];
         } catch (\Exception $e) {
-            throw new \Exception("Error reading $yaml: " . $e->getMessage());
+            throw new \Exception("Error reading " . $this->cakeboxMeta['yamlFile'] . ": " . $e->getMessage());
         }
     }
 

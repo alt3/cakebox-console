@@ -3,6 +3,8 @@
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 
+$this->assign('title', 'Virtual Machine');
+
 // Load SyntaxHighlighter for Cakebox.yaml into CakePHP script/stylesheet blocks
 $this->Html->css('cdn-fallback/syntax-highlighter/shCore.min.css', ['block' => true]);
 $this->Html->css('cdn-fallback/syntax-highlighter/shThemeDefault.min.css', ['block' => true]);
@@ -57,6 +59,26 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 										<span class="value"><?= $data['vm']['memory'] ?>MB</span>
 									</li>
 								</ul>
+							</div>
+						</div>
+					</div>
+
+					<!-- Performance -->
+					<div class="widget stacked widget-table action-table">
+						<div class="widget-header">
+							<i class="fa fa-bar-chart"></i>
+							<h3><?= __('Performance') ?></h3>
+						</div>
+
+						<div class="widget-content">
+							<div class="panel-body">
+								<ul>
+								<li>
+									Increase vm memory to 2048 MB for optimal performance
+								</li>
+								<li>
+									Never allocate more than 25% of physical host memory
+								</li>
 							</div>
 						</div>
 					</div>
