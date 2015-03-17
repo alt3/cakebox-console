@@ -111,7 +111,7 @@ class ConfigShell extends AppShell
             $this->exitBashSuccess("The Cakebox Dashboard is using HTTP");
         }
         $protocol = $this->params['protocol'];
-        $this->logStart("Changing Cakebox Dashboard protocol to " . $protocol);
+        $this->logStart("Setting Cakebox Dashboard protocol to " . $protocol);
 
         // do not change if the protocol is already being used unless the
         // --force parameter is given.
