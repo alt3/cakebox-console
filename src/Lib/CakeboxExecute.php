@@ -176,7 +176,7 @@ class CakeboxExecute
         Log::debug(" * Detected branch $branch");
 
         Log::debug("* Updating git repository");
-        $command = "cd /cakebox/console; git fetch; git reset --hard origin/$branch";
+        $command = "cd /cakebox/console; git pull origin $branch";
         if (!$this->shell($command, 'vagrant')) {
             return false;
         }
