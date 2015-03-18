@@ -277,11 +277,10 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 						<i class="fa fa-spinner fa-spin"></i>
 					</div>
 
-					<!-- System checks -->
-					<div id="status-system" class="widget stacked widget-table">
+					<div class="widget stacked widget-table">
 						<div class="widget-header">
-							<i class="fa fa-desktop"></i>
-							<h3><?= __('System') ?></h3>
+							<i class="fa fa-file-text-o"></i>
+							<h3><?= __('Log') ?></h3>
 						</div>
 
 						<div class="widget-content">
