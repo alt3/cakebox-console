@@ -39,8 +39,9 @@ class CakeboxInfo
         'host' => [
             'yaml' => '/home/vagrant/.cakebox/last-known-cakebox-yaml',
             'commit' => '/home/vagrant/.cakebox/last-known-cakebox-commit',
-            'box_version' => '/home/vagrant/.cakebox/last-known-box-version'
-        ]
+            'box_version' => '/home/vagrant/.cakebox/last-known-box-version',
+        ],
+        'cli_log' => '/var/log/cakephp/cakebox.cli.log'
     ];
 
     /**
@@ -1025,11 +1026,51 @@ class CakeboxInfo
      *
      * @return string Name of the provisioned Git branch.
      */
-     public function getCakeboxBranch() {
+    public function getCakeboxBranch()
+    {
          $composerVersion = $this->_yaml['cakebox']['version'];
          $parts = explode('-', $composerVersion);
          return $parts[1];
-     }
+    }
+
+    /**
+     * Returns hash with lines found in /var/log/cakephp/cakebox.cli.log
+     *
+     * @return string Array Containing all log entries
+     */
+    public function getCakeboxCliLog()
+    {
+        $lines = file($this->cakeboxMeta['cli_log']);
+        $result = [];
+
+        // extract required fields from  logstash format
+        foreach ($lines as $line) {
+            preg_match('/\"@timestamp\":\"(.+)\",\"@source.+\"level\":(\d{3}).+\"@message\":\"(.+)\",\"@tags".+/', $line, $matches);
+
+            // translate logstash levels to user readable Cake levels
+            switch ($matches[2]) {
+                case 100:
+                    $level = 'info';
+                    break;
+                case 250:
+                    $level = 'notice';
+                    break;
+                case 300:
+                    $level = 'warning';
+                    break;
+                default:
+                    $level = $matches[2];
+                    break;
+            }
+
+            $result[] = [
+              'timestamp' => $matches[1],
+              'level' => $level,
+              'message' => $matches[3]
+            ];
+        }
+        return $result;
+    }
 
     /**
      * Get latest commit header from Github api.
