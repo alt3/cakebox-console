@@ -2,6 +2,7 @@
 namespace App\Lib;
 
 use Cake\Cache\Cache;
+use Cake\Collection\Collection;
 use Cake\Core\App;
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
@@ -964,9 +965,10 @@ class CakeboxInfo
      * - Merged PRs found by extracting elements with non-empty "merged_at" subkey
      *
      * @param string $repository Github repository shortname (owner/repo).
+     * @param string $branch Github branch
      * @return array Array
      */
-    public function getRepositoryContributors($repository)
+    public function getRepositoryContributors($repository, $branch)
     {
         $cached = Cache::read('contributors', 'short');
         if ($cached) {
@@ -974,11 +976,15 @@ class CakeboxInfo
         }
 
         $http = new Client();
-        $response = $http->get("https://api.github.com/repos/$repository/pulls?base=dev&state=closed&page=1&per_page=10");
-        $result = Hash::extract(json_decode($response->body(), true), "{n}[merged_at]");
-        if (count($result > 5)) {
-            $result = array_slice($result, 0, 5);
-        }
+        $response = $http->get("https://api.github.com/repos/$repository/pulls?base=$branch&state=closed&page=1&per_page=10");
+        $result = collection(json_decode($response->body(), true))
+            ->reject(function($record){
+                return $record['merged_at'] === null;
+            })
+            ->sortBy('merged_at', SORT_DESC, SORT_STRING)
+            ->take(5)
+            ->toArray();
+
         Cache::write('contributors', $result, 'short');
         return $result;
     }

@@ -24,7 +24,7 @@ class DashboardsController extends AppController
                 'sites' => $this->cbi->getNginxFileCount()
             ],
             'commits' => $this->cbi->getRepositoryCommits('alt3/cakebox-console', 5),
-			'contributors' => $this->cbi->getRepositoryContributors('alt3/cakebox-console')
+			'contributors' => $this->cbi->getRepositoryContributors('alt3/cakebox-console', 'dev')
         ];
 
         if ($this->cbi->getLatestCommitLocal() != $this->cbi->getLatestCommitRemote()) {
@@ -98,7 +98,7 @@ class DashboardsController extends AppController
      */
     public function contributors()
     {
-        $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console');
+        $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console', 'dev');
         $this->set([
         'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
         '_serialize' => ['contributors']
