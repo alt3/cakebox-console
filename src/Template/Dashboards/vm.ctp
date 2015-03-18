@@ -277,7 +277,7 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 						<i class="fa fa-spinner fa-spin"></i>
 					</div>
 
-					<div class="widget stacked widget-table">
+					<div class="widget stacked widget-table hidden">
 						<div class="widget-header">
 							<i class="fa fa-file-text-o"></i>
 							<h3><?= __('Log') ?></h3>
@@ -286,7 +286,7 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 						<div class="widget-content">
 							<div class="panel-body clilog">
 								<table class="table collection">
-									<caption><?= __('As found in /var/log/cakephp/cakebox.cli.log') ?></caption>
+									<caption><?= sprintf(__('As found in %s'), '/var/log/cakephp/cakebox.cli.log') ?></caption>
 									<thead>
 										<tr>
 											<th><?= __('Date'); ?></th>
