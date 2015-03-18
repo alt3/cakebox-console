@@ -94,11 +94,11 @@ class DashboardsController extends AppController
     /**
      * Serve cakebox.cli.log as enriched json hash
      */
-     public function cli_log()
+     public function clilog()
      {
          $this->set([
-             'cli_log' => $this->cbi->getCakeboxCliLog(),
-             '_serialize' => ['cli_log']
+             'log' => $this->cbi->getCakeboxCliLog(),
+             '_serialize' => ['log']
          ]);
      }
 
