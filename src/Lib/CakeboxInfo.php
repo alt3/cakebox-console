@@ -7,6 +7,7 @@ use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
+use Cake\I18n\Time;
 use Cake\Network\Http\Client;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -1047,24 +1048,28 @@ class CakeboxInfo
         foreach ($lines as $line) {
             preg_match('/\"@timestamp\":\"(.+)\",\"@source.+\"level\":(\d{3}).+\"@message\":\"(.+)\",\"@tags".+/', $line, $matches);
 
-            // translate logstash levels to user readable Cake levels
-            switch ($matches[2]) {
-                case 100:
-                    $level = 'info';
-                    break;
-                case 250:
-                    $level = 'notice';
-                    break;
-                case 300:
-                    $level = 'warning';
-                    break;
-                default:
-                    $level = $matches[2];
-                    break;
+            // convert logstash levels to user readable Cake levels
+            $level = $matches[2];
+            if ($level >= 100 && $level < 200) {
+                $level = 'info';
+            }
+            elseif ($level >= 200 && $level < 300) {
+                $level = 'warning';
+            }
+            elseif ($level >= 300 && $level  <= 400) {
+                $level = 'error';
+            }
+            else {
+                $level = $matches[2] ;
             }
 
+            // parse timestamp so we can split into human readable date and time
+            $time = Time::parse($matches[1]);
+
+            // store as rich formatted hash entry
             $result[] = [
-              'timestamp' => $matches[1],
+              'date' => $time->i18nFormat('YYYY-MM-dd'),
+              'time' => $time->i18nFormat('HH:mm:ss'),
               'level' => $level,
               'message' => $matches[3]
             ];
