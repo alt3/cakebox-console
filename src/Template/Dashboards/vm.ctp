@@ -24,6 +24,7 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 				<li id="tab-status"><a href="#panel-status" data-toggle="tab"><?= __("Box status") ?></a></li>
 				<li id="tab-provisioning"><a href="#panel-provisioning" data-toggle="tab"><?= __("Provisioning") ?></a></li>
 				<li id="tab-software"><a href="#panel-software" data-toggle="tab"><?= __("Box software") ?></a></li>
+				<li id="tab-clilog"><a href="#panel-clilog" data-toggle="tab"><?= __("Log") ?></a></li>
 			</ul>
 
 			<!-- Tab content -->
@@ -141,7 +142,6 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 					</div>
 
 				</div>
-				<!-- EOF Status tab -->
 
 
 				<!-- Provisioning tab -->
@@ -267,7 +267,44 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 						</div>
 					</div>
 
-				</div><!-- EOF software tab -->
+				</div>
+
+
+				<!-- CLI log tab -->
+				<div role="tabpanel" id="panel-clilog" class="tab-pane">
+
+					<div class="ajax-loader text-center">
+						<i class="fa fa-spinner fa-spin"></i>
+					</div>
+
+					<div class="widget stacked widget-table hidden">
+						<div class="widget-header">
+							<i class="fa fa-file-text-o"></i>
+							<h3><?= __('Log') ?></h3>
+						</div>
+
+						<div class="widget-content">
+							<div class="panel-body clilog">
+								<table class="table collection">
+									<caption><?= sprintf(__('As found in %s'), '/var/log/cakephp/cakebox.cli.log') ?></caption>
+									<thead>
+										<tr>
+											<th><?= __('Date'); ?></th>
+											<th><?= __('Time'); ?></th>
+											<th><?= __("Severity") ?></th>
+											<th><?= __("Message") ?></th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- ajax loaded table rows here -->
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
 
 			</div>
 		</div>

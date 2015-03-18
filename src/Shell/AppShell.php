@@ -61,8 +61,8 @@ class AppShell extends Shell
     */
     public function logStart($message) {
         log::debug(str_repeat("=", 80));
-        $this->out($message, 1, Shell::QUIET);
-        log::info($message);
+        $this->out($message, 2, Shell::QUIET);
+        log::debug($message);
     }
 
     /**
@@ -112,7 +112,7 @@ class AppShell extends Shell
     */
     public function logError($message) {
         log::warning($message);
-        $this->out("<error>$message</error> <info>See cakebox log for details.</info>", 1, Shell::QUIET);
+        $this->out("<error>$message</error> <info>See /var/log/cakephp/cakebox.cli.log for details.</info>", 1, Shell::QUIET);
     }
 
     /**

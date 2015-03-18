@@ -21,3 +21,25 @@ div.packages i.fa-times {
 	margin-top: -4px;
 	color: red;
 }
+
+
+/*------------------------------------------------------------------
+ * 1. CLI log tab
+ * ---------------------------------------------------------------*/
+.clilog table tbody tr td {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	font-size: 13px;
+}
+
+.clilog > table tbody td, clilog table th {
+	border: none !important;
+}
+
+.log-warning {
+	color: #ff9900;
+}
+
+.log-error {
+	color: red;
+}

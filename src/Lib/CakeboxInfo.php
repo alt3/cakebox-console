@@ -7,6 +7,7 @@ use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
+use Cake\I18n\Time;
 use Cake\Network\Http\Client;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -39,8 +40,9 @@ class CakeboxInfo
         'host' => [
             'yaml' => '/home/vagrant/.cakebox/last-known-cakebox-yaml',
             'commit' => '/home/vagrant/.cakebox/last-known-cakebox-commit',
-            'box_version' => '/home/vagrant/.cakebox/last-known-box-version'
-        ]
+            'box_version' => '/home/vagrant/.cakebox/last-known-box-version',
+        ],
+        'cli_log' => '/var/log/cakephp/cakebox.cli.log'
     ];
 
     /**
@@ -1025,11 +1027,55 @@ class CakeboxInfo
      *
      * @return string Name of the provisioned Git branch.
      */
-     public function getCakeboxBranch() {
+    public function getCakeboxBranch()
+    {
          $composerVersion = $this->_yaml['cakebox']['version'];
          $parts = explode('-', $composerVersion);
          return $parts[1];
-     }
+    }
+
+    /**
+     * Returns hash with lines found in /var/log/cakephp/cakebox.cli.log
+     *
+     * @return string Array Containing all log entries
+     */
+    public function getCakeboxCliLog()
+    {
+        $lines = file($this->cakeboxMeta['cli_log']);
+        $result = [];
+
+        // extract required fields from  logstash format
+        foreach ($lines as $line) {
+            preg_match('/\"@timestamp\":\"(.+)\",\"@source.+\"level\":(\d{3}).+\"@message\":\"(.+)\",\"@tags".+/', $line, $matches);
+
+            // convert logstash levels to user readable Cake levels
+            $level = $matches[2];
+            if ($level >= 100 && $level < 200) {
+                $level = 'info';
+            }
+            elseif ($level >= 200 && $level < 300) {
+                $level = 'warning';
+            }
+            elseif ($level >= 300 && $level  <= 400) {
+                $level = 'error';
+            }
+            else {
+                $level = $matches[2] ;
+            }
+
+            // parse timestamp so we can split into human readable date and time
+            $time = Time::parse($matches[1]);
+
+            // store as rich formatted hash entry
+            $result[] = [
+              'date' => $time->i18nFormat('YYYY-MM-dd'),
+              'time' => $time->i18nFormat('HH:mm:ss'),
+              'level' => $level,
+              'message' => $matches[3]
+            ];
+        }
+        return $result;
+    }
 
     /**
      * Get latest commit header from Github api.

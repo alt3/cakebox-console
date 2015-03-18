@@ -92,6 +92,17 @@ class DashboardsController extends AppController
     }
 
     /**
+     * Serve cakebox.cli.log as enriched json hash
+     */
+     public function clilog()
+     {
+         $this->set([
+             'log' => $this->cbi->getCakeboxCliLog(),
+             '_serialize' => ['log']
+         ]);
+     }
+
+    /**
      * Serve contributors as json
      *
      * @return void

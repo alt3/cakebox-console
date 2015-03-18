@@ -140,6 +140,12 @@ td.actions div button i {
 div.actions a {
     margin-bottom: 10px;
 }
+td.nowrap {
+    white-space: nowrap;
+}
+td.center {
+    text-align: center;
+}
 
 /*------------------------------------------------------------------
  * 5. Modals

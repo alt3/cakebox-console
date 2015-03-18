@@ -9,6 +9,7 @@
 	1. Tab Click Listeners
 	2. Ajax Load Status Tab
 	3. Ajax Load Software Tab
+	4. Ajax Load CLI Log Tab
 
 ===================================================================*/
 
@@ -33,6 +34,14 @@ $(document).ready(function() {
 		currentPanel = $(this).attr('href')
 		if ($(currentPanel).has('.ajax-loader').length != 0 ) {
 			loadTabSoftware()
+		}
+	})
+
+	// Ajax load CLI log tab
+	$('#tab-clilog a').click(function (e) {
+		currentPanel = $(this).attr('href')
+		if ($(currentPanel).has('.ajax-loader').length != 0 ) {
+			loadTabCliLog()
 		}
 	})
 })
@@ -143,5 +152,26 @@ function loadTabSoftware() {
 	})
 	.fail(function() {
 		alert( 'So sorry, something went wrong fetching software' )
+	})
+}
+
+/*------------------------------------------------------------------
+ * 4. Ajax Load CLI Log Tab
+ * ---------------------------------------------------------------*/
+function loadTabCliLog() {
+	var jqxhr = $.getJSON( '../dashboard/clilog.json', function(data) {
+		console.dir(data)
+
+		var tbody = $('.panel-body.clilog > table > tbody')
+		$.each( data.log, function( key, entry ) {
+		 	tbody.append('<tr><td class="nowrap">' + entry.date + '</td><td class="nowrap">' + entry.time + '</td><td class="center log-' + entry.level + '">' + entry.level + '</td><td>' + entry.message + '</td></tr>' + "\n")
+		});
+	})
+	.done(function() {
+		$('#panel-clilog .ajax-loader').html('').remove()
+		$('#panel-clilog .widget').removeClass('hidden')
+	})
+	.fail(function() {
+		alert( 'So sorry, something went wrong fetching CLI log' )
 	})
 }
