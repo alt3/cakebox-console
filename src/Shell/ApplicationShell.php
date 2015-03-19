@@ -181,10 +181,6 @@ class ApplicationShell extends AppShell
             $this->out('* Skipping: configuration file already exists');
         }
 
-        pr($installer->options());
-        pr($installer->option('webroot'));
-
-
         if (!$vhostAvailable) {
             if (!$this->execute->addSite($url, $installer->option('webroot'), true)) {
                 $this->exitBashError('Error creating virtual host');
