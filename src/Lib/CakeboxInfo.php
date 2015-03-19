@@ -90,7 +90,7 @@ class CakeboxInfo
             'installation_method' => 'composer',
             'source' => 'laravel/laravel',
             'webroot' => 'public',
-            'writable_dirs' => ['app/storage']
+            'writable_dirs' => ['storage']  // app/storage for Laravel 4
         ]
     ];
 
@@ -1050,33 +1050,51 @@ class CakeboxInfo
         $lines = file($this->cakeboxMeta['cli_log']);
         $result = [];
 
-        // extract required fields from  logstash format
+        // extract timestamp, level and message from Monolog logstash format
         foreach ($lines as $line) {
             preg_match('/\"@timestamp\":\"(.+)\",\"@source.+\"level\":(\d{3}).+\"@message\":\"(.+)\",\"@tags".+/', $line, $matches);
 
-            // convert logstash levels to user readable Cake levels
-            $level = $matches[2];
-            if ($level >= 100 && $level < 200) {
-                $level = 'info';
-            }
-            elseif ($level >= 200 && $level < 300) {
-                $level = 'warning';
-            }
-            elseif ($level >= 300 && $level  <= 400) {
-                $level = 'error';
-            }
-            else {
-                $level = $matches[2] ;
-            }
-
             // parse timestamp so we can split into human readable date and time
             $time = Time::parse($matches[1]);
+
+            // add Monolog/RFC 5424 level names
+            // @todo: move into testable logic or... use Monolog lib.
+            $level = $matches[2];
+            switch ($level){
+                case 100:
+                    $levelName = 'debug';
+                    break;
+                case 200:
+                    $levelName = 'info';
+                    break;
+                case 250:
+                    $levelName = 'notice';
+                    break;
+                case 300:
+                    $levelName = 'warning';
+                    break;
+                case 400:
+                    $levelName = 'error';
+                    break;
+                case 500:
+                    $levelName = 'critical';
+                    break;
+                case 550:
+                    $levelName = 'alert';
+                    break;
+                case 600:
+                    $levelName = 'emergency';
+                    break;
+                default:
+                    $levelName = $level;
+            }
 
             // store as rich formatted hash entry
             $result[] = [
               'date' => $time->i18nFormat('YYYY-MM-dd'),
               'time' => $time->i18nFormat('HH:mm:ss'),
               'level' => $level,
+              'level_name' => $levelName,
               'message' => $matches[3]
             ];
         }

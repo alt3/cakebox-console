@@ -4,6 +4,7 @@ namespace App\Lib;
 use App\Lib\CakeboxExecute;
 use App\Lib\CakeboxInfo;
 use App\Lib\CakeboxUtility;
+use Cake\Core\Exception\Exception;
 use Cake\Log\Log;
 use Cake\Utility\Hash;
 
@@ -26,7 +27,7 @@ class CakeboxFrameworkInstaller
 
     /**
      * Safety flags to make sure certain "installation phases" are not executed
-     * before required preceeding phases have completed successfully.
+     * before required preceding phases have completed successfully.
      *
      * @var array $flags
      */
@@ -69,6 +70,7 @@ class CakeboxFrameworkInstaller
      *
      * @param array $options Installer options
      * @return boolean True when successful
+     * @throws Cake\Core\Exception\Exception
      */
     public function setup(Array $options)
     {
@@ -76,25 +78,26 @@ class CakeboxFrameworkInstaller
         try {
             $this->mergeOptions($options);
             $this->setPath();
+            $this->setDatabase();
             $this->setFrameworkOptions();
             $this->logOptions();
             $this->flags['configured'] = true;
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             log::error("Setup failed: " . $e->getMessage());
             return false;
         }
-        //call_user_func($functionName)
     }
 
     /**
      * Run framework agnostic preparations (e.g. creating the target directory).
      *
      * @return boolean True when successful
+     * @throws Cake\Core\Exception\Exception
      */
-    public function prepare()
+    public function createDirectory()
     {
-        log::debug("Preparing for installation...");
+        log::debug("Creating installation directory...");
         if (!$this->flags['configured']) {
             log::error("Setup method has not been run");
             return false;
@@ -104,7 +107,7 @@ class CakeboxFrameworkInstaller
             $this->prepareDirectory();
             $this->flags['prepared'] = true;
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             log::error("Preparation failed: " . $e->getMessage());
             return false;
         }
@@ -114,62 +117,21 @@ class CakeboxFrameworkInstaller
     * Run framework specific installation using either composer or git clone.
     *
     * @return boolean True when successful
+    * @throws Cake\Core\Exception\Exception
     */
-    public function install()
+    public function installSources()
     {
         log::debug("Installing application...");
-        if (!$this->flags['prepared']) {
-            log::error("Prepare method has not been run");
-            return false;
-        }
 
         try {
             if ($this->options['installation_method'] == 'composer') {
                 $this->composerInstall();
             } else {
                 $this->gitInstall();
-                $this->runComposer();
             }
-
-            $this->flags['installed'] = true;
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             log::error("Installation failed: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Round up installation. Creates website and databases, sets permissions
-     * and updates configuration files if needed.
-     *
-     * @return boolean True when successful
-     */
-    public function roundup()
-    {
-        log::debug("Rounding up installation...");
-        if (!$this->flags['installed']) {
-            log::error("Install method has not been run");
-            return false;
-        }
-
-        try {
-            # Try detecting framework settings for user specified applications
-            $knownSources = Hash::extract($this->cbi->frameworkMeta, '{s}.source');
-            if (!in_array($this->options['source'], $knownSources)) {
-                $this->setCustomOptions();
-            }
-
-            $this->createSite();
-            $this->createDatabases();
-            $this->setPermissions();
-            $this->updateConfigs();
-
-            # All done
-            log::debug("Installation completed successfully!");
-            return true;
-        } catch (\Exception $e) {
-            log::error("Roundup failed: " . $e->getMessage());
             return false;
         }
     }
@@ -177,13 +139,13 @@ class CakeboxFrameworkInstaller
     /**
      * Merges default settings with passed options while removing empty keys.
      *
-     * @throws Exception
      * @return void
+     * @throws Cake\Core\Exception\Exception
      */
     protected function mergeOptions($options) {
         $options = array_merge($this->options, $options);
         if (empty($options['url'])) {
-            throw new \Exception("Required option `url` is missing.");
+            throw new Exception("Required option `url` is missing.");
         }
         $this->options = array_filter($options);
     }
@@ -238,14 +200,23 @@ class CakeboxFrameworkInstaller
     }
 
     /**
+     * Set database name to be used for the application
+     *
+     * @return void
+     */
+    protected function setDatabase()
+    {
+        $this->options['database'] = CakeboxUtility::normalizeDatabaseName($this->options['url']);
+    }
+
+    /**
      * Set framework specific information.
      *
      * @return boolean True if a valid method could be determined.
+     * @throws Cake\Core\Exception\Exception
      */
      protected function setFrameworkOptions()
      {
-         $this->options['database'] = CakeboxUtility::normalizeDatabaseName($this->options['url']);
-
          # User specified source
          if (isset($this->options['source'])) {
              $this->options['framework_short'] = 'custom';
@@ -281,7 +252,7 @@ class CakeboxFrameworkInstaller
 
             case 'laravel':
                 $this->options['framework_short'] = 'laravel';
-                $this->options['framework_human'] = 'Laravel 4.x';
+                $this->options['framework_human'] = 'Laravel 5';
                 $this->options['installation_method'] = $this->cbi->frameworkMeta['laravel']['installation_method'];
                 $this->options['source'] = $this->cbi->frameworkMeta['laravel']['source'];
                 $this->options['webroot'] = $this->options['path'] . DS . $this->cbi->frameworkMeta['laravel']['webroot'];
@@ -290,7 +261,7 @@ class CakeboxFrameworkInstaller
                 break;
 
             default:
-                throw new \Exception("Unsupported framework");
+                throw new Exception("Unsupported framework");
         }
 
         # Attempt changing the source if --ssh option was used.
@@ -309,7 +280,6 @@ class CakeboxFrameworkInstaller
      /**
       * Try to detect framework specific settings for user specified applications.
       *
-      * @throws Exception
       * @return boolean True if successful
       */
      protected function setCustomOptions()
@@ -338,7 +308,6 @@ class CakeboxFrameworkInstaller
      * composer if the source does not match a git repository.
      *
      * @param string $source Containing git repository or composer package name.
-     * @throws Exception
      * @return boolean True if successful
      */
     public function detectInstallationMethod($source)
@@ -356,18 +325,18 @@ class CakeboxFrameworkInstaller
      /**
       * Prepare a directory for installation by the `vagrant` user.
       *
-      * @throws Exception
       * @return boolean True if successful
+      * @throws Cake\Core\Exception\Exception
       */
      protected function prepareDirectory() {
          if (!CakeboxUtility::dirAvailable($this->options['path'])) {
-             throw new \Exception("Target directory did not pass readiness tests.");
+             throw new Exception("Target directory did not pass readiness tests.");
          }
 
          if (!is_dir($this->options['path'])) {
              log::debug("Creating target directory " . $this->options['path']);
              if (!$this->execute->mkVagrantDir($this->options['path'])) {
-                 throw new \Exception("Error creating target directory " . $this->options['path']);
+                 throw new Exception("Error creating target directory " . $this->options['path']);
              }
          }
          return true;
@@ -376,13 +345,13 @@ class CakeboxFrameworkInstaller
      /**
       * Install application using Composer create-project.
       *
-      * @throws Exception
       * @return boolean True if successful
+      * @throws Cake\Core\Exception\Exception
       */
      protected function composerInstall() {
          log::Debug("Composer installing " . $this->options['framework_human']);
          if (!$this->execute->composerCreateProject($this->options['source'], $this->options['path'])) {
-             throw new \Exception("Error composer installing.");
+             throw new Exception("Error composer installing.");
          }
          return true;
      }
@@ -390,69 +359,24 @@ class CakeboxFrameworkInstaller
      /**
       * Install public/private repository using Git clone.
       *
-      * @throws Exception
       * @return boolean True if successful
+      * @throws Cake\Core\Exception\Exception
       */
      protected function gitInstall() {
          log::Debug("Git installing " . $this->options['framework_human']);
          if (!$this->execute->gitClone($this->options['source'], $this->options['path'])) {
-             throw new \Exception("Error git cloning.");
+             throw new Exception("Error git cloning.");
          }
          return true;
     }
 
     /**
-     * Run composer install when detecting composer.json file in the directory.
-     *
-     * @throws Exception
-     * @return boolean True if successful
-     */
-    protected function runComposer() {
-        if (!file_exists($this->options['path'] . DS . 'composer.json')) {
-            log::debug("Git cloned repository does not have a composer.json");
-            return true;
-        }
-
-        log::debug("Detected a composer.json... run composer install");
-        if (!$this->execute->composerInstall($this->options['path'])) {
-            throw new \Exception("Error composer installing.");
-        }
-        return true;
-    }
-
-    /**
-     * Create and enable an Nginx site file.
-     *
-     * @throws Exception
-     * @return boolean True if successful
-     */
-    protected function createSite() {
-        if (!$this->execute->addSite($this->options['url'], $this->options['webroot'], true)) {
-            throw new \Exception("Error creating site.");
-        }
-        return true;
-    }
-
-    /**
-     * Create databases.
-     *
-     * @throws Exception
-     * @return boolean True if successful
-     */
-    protected function createDatabases() {
-        if (!$this->execute->addDatabase($this->options['database'], 'cakebox', 'secret', true)) {
-            throw new \Exception("Error creating databases.");
-        }
-        return true;
-    }
-
-    /**
      * Set permissions on writebale directories for known frameworks.
      *
-     * @throws Exception
      * @return boolean True if permissions were skipped OR set succesfully
+     * @throws Cake\Core\Exception\Exception
      */
-    protected function setPermissions() {
+    public function setPermissions() {
         log::debug("Updating directory permissions");
 
         # Skip if no framework was detected
@@ -471,7 +395,7 @@ class CakeboxFrameworkInstaller
         log::debug("* Applying " . $this->options['framework_short'] . " folder permissions");
         foreach ($this->cbi->frameworkMeta[$this->options['framework_short']]['writable_dirs'] as $directory) {
             if (!CakeboxUtility::setFolderPermissions($this->options['path'] . DS . $directory)) {
-                throw new \Exception("Error setting permissions.");
+                throw new Exception("Error setting permissions.");
             }
         }
         return true;
@@ -480,10 +404,10 @@ class CakeboxFrameworkInstaller
     /**
      * Update framework specific configuration files if possible.
      *
-     * @throws Exception
      * @return boolean True if successful
+     * @throws Cake\Core\Exception\Exception
      */
-    protected function updateConfigs() {
+    public function updateConfigs() {
         log::debug("Updating configuration files");
 
         $knownSources = Hash::extract($this->cbi->frameworkMeta, '{s}.source');
@@ -496,13 +420,13 @@ class CakeboxFrameworkInstaller
 
         if ($this->options['framework_short'] == 'cakephp3') {
             if (!$this->execute->updateCake3Configuration($this->options['path'], $this->options['url'])) {
-                throw new \Exception("Error updating config file.");
+                throw new Exception("Error updating config file.");
             }
         }
 
         if ($this->options['framework_short'] == 'cakephp2') {
             if (!$this->execute->updateCake2Configuration($this->options['path'], $this->options['url'])) {
-                throw new \Exception("Error updating config file.");
+                throw new Exception("Error updating config file.");
             }
         }
         return true;

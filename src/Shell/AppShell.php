@@ -112,7 +112,8 @@ class AppShell extends Shell
     */
     public function logError($message) {
         log::warning($message);
-        $this->out("<error>$message</error> <info>See /var/log/cakephp/cakebox.cli.log for details.</info>", 1, Shell::QUIET);
+        $this->out("<error>$message</error>", 1, Shell::QUIET);
+        $this->out("<info>See /var/log/cakephp/cakebox.cli.log for details.</info>");
     }
 
     /**
