@@ -164,7 +164,7 @@ function loadTabCliLog() {
 
 		var tbody = $('.panel-body.clilog > table > tbody')
 		$.each( data.log, function( key, entry ) {
-		 	tbody.append('<tr><td class="nowrap">' + entry.date + '</td><td class="nowrap">' + entry.time + '</td><td class="center log-' + entry.level + '">' + entry.level + '</td><td>' + entry.message + '</td></tr>' + "\n")
+		 	tbody.append('<tr><td class="nowrap">' + entry.date + '</td><td class="nowrap">' + entry.time + '</td><td class="center log-' + entry.level_name + '">' + entry.level_name + '</td><td>' + entry.message + '</td></tr>' + "\n")
 		});
 	})
 	.done(function() {
