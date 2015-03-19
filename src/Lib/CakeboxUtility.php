@@ -1,6 +1,7 @@
 <?php
 namespace App\Lib;
 
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Log\Log;
@@ -13,6 +14,35 @@ use Symfony\Component\Yaml\Exception\ParseException;
  */
 class CakeboxUtility
 {
+
+    /**
+     * Checks if a virtual host file exists in /etc/nginx/sites-available.
+     *
+     * @param string $url Virtuals host's FQDN
+     * @return boolean True if a vhost is found for the given URL
+     */
+    public static function vhostAvailable($url)
+    {
+        if (file_exists('/etc/nginx/sites-available/' . $url)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a virtual host is enabled by checking for symbolic link in
+     * /etc/nginx/sites-enabled.
+     *
+     * @param string $url Virtuals host's FQDN
+     * @return boolean True if a symlink is found for the given URL
+     */
+    public static function vhostEnabled($url)
+    {
+        if (is_link('/etc/nginx/sites-enabled/' . $url)) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Retrieve a specific setting from an Ngninx site configuration file.
@@ -154,8 +184,6 @@ class CakeboxUtility
         } catch (\Exception $e) {
             log::error("Error showing databases: " . $e->getMessage());
             return false;
-            //$this->out("Error: " . $e->getMessage());
-            //$this->Exec->exitBashError();
         }
     }
 
@@ -187,33 +215,50 @@ class CakeboxUtility
         return true;
     }
 
+
+
     /**
-     * Create a main database and accompanying 'test_' prefixed test database.
+     * Creates a MySQL database with specified database user GRANT.
      *
-     * @param string $database Name used for the new databases.
+     * @param string $database Name used for the new database.
      * @param string $username User granted local access to (only) this database.
      * @param string $password Password for above user.
      * @return boolean True if created successfully
+     * @throws Cake\Core\Exception\Exception
      */
     public static function createDatabase($database, $username, $password)
     {
         $database = self::normalizeDatabaseName($database);
-        $databases = [ $database, 'test_' . $database ];
+        if (self::databaseExists($database)) {
+            log::warning("* Skipping: database $database already exists");
+            continue;
+        }
+        try {
+            $connection = ConnectionManager::get('default');
+            $connection->execute("CREATE DATABASE `$database`");
+            log::debug("* Database `$database` created successfully");
+            self::grantDatabaseRights($database, $username, $password);
+        } catch (Exception $e) {
+            log::error("Error creating database: " . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
 
+    /**
+     * Creates a MySQL database pair with a main database and and a test database.
+     *
+     * @param string $database Name used for the new databases.
+     * @param string $username User granted local access to (only) this database.
+     * @param string $password Password for above user.
+     * @return boolean True if both databases are created successfully
+     */
+    public static function createDatabasePair($database, $username, $password)
+    {
+        $database = self::normalizeDatabaseName($database);
+        $databases = [ $database, 'test_' . $database ];
         foreach ($databases as $database) {
-            if (self::databaseExists($database)) {
-                log::warn("* Skipping: database $database already exists");
-                continue;
-            }
-            try {
-                $connection = ConnectionManager::get('default');
-                $connection->execute("CREATE DATABASE `$database`");
-                log::debug("* Database `$database` created successfully");
-                self::grantDatabaseRights($database, $username, $password);
-            } catch (\Exception $e) {
-                log::error("Error creating database: " . $e->getMessage());
-                return false;
-            }
+            self::createDatabase($database, $username, $password);
         }
         return true;
     }
@@ -363,7 +408,7 @@ class CakeboxUtility
         log::debug("* Checking if existing directory is empty");
         $files = scandir($directory);
         if (count($files) > 2) {
-            log::error("* Fail: directory exists but is NOT empty");
+            log::warning("* Fail: directory exists but is NOT empty");
             return false;
         }
 
