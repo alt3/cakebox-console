@@ -236,16 +236,20 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
 		<div class="widget-content">
 
 			<ul class="pull-requests list-unstyled">
-				<?php if (count($data['contributors']) == 0): ?>
+				<?php if (empty($data['contributions'])): ?>
 						<li class="pull-request api-failure">
 							<p class="text-danger"><?= __('Looks the Github API is having an off day') ?><i class="fa fa-exclamation-circle"></i></p>
 						</li>
 				<?php else: ?>
-					<?php foreach($data['contributors'] as $pullRequest): ?>
+					<?php foreach($data['contributions'] as $pullRequest): ?>
 						<li class="pull-request">
 							<div class="row row-list">
 								<div class="col-xs-1 avatar">
-									<?= $this->Html->image($pullRequest['user']['avatar_url'] . '&amp;size=40', ['alt' => $pullRequest['user']['login']]) ?>
+                                    <?php if (empty($pullRequest['user']['avatar_data'])) : ?>
+                                        <?= $this->Html->image($pullRequest['user']['avatar_url'] . '&amp;size=40', ['alt' => $pullRequest['user']['login']]) ?>
+                                    <?php else : ?>
+                                        <img src="data:image/jpeg;base64,<?= $pullRequest['user']['avatar_data'];?>" alt="<?= $pullRequest['user']['login'];?>">
+                                    <?php endif; ?>
 								</div>
 								<div class="col-xs-9 details">
 									<?= $this->Html->link($pullRequest['user']['login'], $pullRequest['user']['html_url']) ?>

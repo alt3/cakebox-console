@@ -117,7 +117,17 @@ $config = [
 			'duration' => '+5 minutes',
 			'path' => CACHE,
 			'prefix' => 'cakebox_short_'
-		]
+		],
+
+        /**
+         * Medium configuration for for e.g. cached avatar image data
+         */
+        'medium' => [
+            'className' => 'Redis',
+            'duration' => '+1 day',
+            'path' => CACHE,
+            'prefix' => 'cakebox_medium_'
+        ]
 
 	],
 

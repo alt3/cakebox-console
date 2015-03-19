@@ -954,14 +954,13 @@ class CakeboxInfo
     public function getFrameworkCommonName($appdir)
     {
         $framework = $this->getFrameworkName($appdir);
-        $frameworkVersion = $this->getFrameworkVersion($appdir);
         $majorVersion = CakeboxUtility::getMajorVersion($this->getFrameworkVersion($appdir));
         return $framework . $majorVersion;
     }
 
     /**
-     * Return Github API statistics the 5 most recent contributors by extracting
-     * merged Pull Requests in the dev branch of any given repository.
+     * Return Github API statistics the 5 most recent contributions by extracting
+     * merged Pull Requests in the provided branch of given repository.
      *
      * - Limit fetch query 10 results assuming no more than 50% is rejected
      * - Merged PRs found by extracting elements with non-empty "merged_at" subkey
@@ -970,24 +969,63 @@ class CakeboxInfo
      * @param string $branch Github branch
      * @return array Array
      */
-    public function getRepositoryContributors($repository, $branch)
+    public function getRepositoryContributions($repository, $branch)
     {
-        $cached = Cache::read('contributors', 'short');
+        $cached = Cache::read('contributions', 'short');
         if ($cached) {
             return $cached;
         }
 
         $http = new Client();
-        $response = $http->get("https://api.github.com/repos/$repository/pulls?base=$branch&state=closed&page=1&per_page=10");
+        try {
+            $response = $http->get("https://api.github.com/repos/$repository/pulls?base=$branch&state=closed&page=1&per_page=10");
+            if (!$response->isOk()) {
+                return [];
+            }
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        $avatars = (array)Cache::read('avatars', 'medium');
+
         $result = collection(json_decode($response->body(), true))
             ->reject(function($record){
                 return $record['merged_at'] === null;
             })
             ->sortBy('merged_at', SORT_DESC, SORT_STRING)
             ->take(5)
+            ->map(function($record) use ($avatars, $http) {
+                if (!empty($record['user']['avatar_data'])) {
+                    return $record;
+                }
+
+                $url = $record['user']['avatar_url'];
+                if (array_key_exists($url, $avatars)) {
+                    $record['user']['avatar_data'] = $avatars[$url];
+                    return $record;
+                }
+
+                try {
+                    $response = $http->get($record['user']['avatar_url'] . "&amp;size=40");
+                    if (!$response->isOk()) {
+                        $record['user']['avatar_data'] = false;
+                        return $record;
+                    }
+                } catch (\Exception $e) {
+                    $record['user']['avatar_data'] = null;
+                    return $record;
+                }
+
+                $avatar = $response->body();
+                $avatars[$url] = base64_encode($avatar);
+                Cache::write('avatars', $avatars, 'medium');
+
+                $record['user']['avatar_data'] = $avatars[$url];
+                return $record;
+            })
             ->toArray();
 
-        Cache::write('contributors', $result, 'short');
+        Cache::write('contributions', $result, 'short');
         return $result;
     }
 

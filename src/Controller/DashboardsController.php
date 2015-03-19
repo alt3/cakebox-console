@@ -24,7 +24,7 @@ class DashboardsController extends AppController
                 'sites' => $this->cbi->getNginxFileCount()
             ],
             'commits' => $this->cbi->getRepositoryCommits('alt3/cakebox-console', 5),
-			'contributors' => $this->cbi->getRepositoryContributors('alt3/cakebox-console', 'dev')
+			'contributions' => $this->cbi->getRepositoryContributions('alt3/cakebox-console', 'dev')
         ];
 
         if ($this->cbi->getLatestCommitLocal() != $this->cbi->getLatestCommitRemote()) {
