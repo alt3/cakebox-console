@@ -1,8 +1,8 @@
 <?php
 namespace App\Shell;
 
-use App\Lib\CakeboxUtility;
 use App\Lib\CakeboxFrameworkInstaller;
+use App\Lib\CakeboxUtility;
 use Cake\Console\Shell;
 use Cake\Utility\Inflector;
 
@@ -98,7 +98,7 @@ class ApplicationShell extends AppShell
         # Feed the installer with all required information
         $installer = new CakeboxFrameworkInstaller();
         $this->out('Configuring installer');
-        if (!$installer->setup(array_merge( ['url' => $url], $this->params ))) {
+        if (!$installer->setup(array_merge(['url' => $url], $this->params))) {
             $this->exitBashError('Error setting up installer.');
         }
 
@@ -115,7 +115,7 @@ class ApplicationShell extends AppShell
         # Check: stop provisioning if the target directory is not
         # available/empty AND and we are not in --repair mode
         if (!$targetDirAvailable && (!$this->params['repair'])) {
-            $this->exitBashError('Error: target directory ' .  $installer->option('path') . ' contains data');
+            $this->exitBashError('Error: target directory ' . $installer->option('path') . ' contains data');
         }
 
         # ------------------------------------------------------------
@@ -279,9 +279,6 @@ class ApplicationShell extends AppShell
         }
 
         $this->out("\nRemember to update your hosts file with: <info>" . $this->cbi->getVmIpAddress() . " http://$url</info>\n");
-        $this->out('Installation completed successfully');
-        return true;
+        $this->exitBashSuccess('Installation completed successfully');
     }
-
-
 }
