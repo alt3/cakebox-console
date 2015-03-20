@@ -129,7 +129,7 @@ class CakeboxInfo
      *
      * @var array Hash
      */
-    protected $packages = [
+    public $packages = [
         'composer' => ['link' => 'https://getcomposer.org'],
         'curl' => ['link' => 'http://curl.haxx.se'],
         'elasticsearch' => ['link' => 'https://www.elasticsearch.org'],
