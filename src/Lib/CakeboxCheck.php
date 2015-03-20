@@ -161,7 +161,9 @@ class CakeboxCheck
     /**
      * Check if an application's caching is properly configured and working.
      *
-     * @todo make the check work for any app (now uses cakebox-console context)
+     * Note: this check now uses cakebox-console context but should ideally be
+     * update so it can be used for any app (thus enriching the dashboard)
+     *
      * @return array Named array containing "messsage" string and "pass" boolean
      */
     public function getApplicationCacheCheck()
@@ -205,8 +207,11 @@ class CakeboxCheck
     /**
      * Test if a connection can be made to a database.
      *
-     * @todo make framework/version agnostic (now uses cakebox-console context).
-     * @todo fix errorMsg not displaying for failed connections
+     * Note: this function now uses cakebox-console context but should ideally
+     * be made framework/version agnostic so that it could perform the check
+     * for any app (and then be used to enrich dashboard application info).
+     *
+     * Note: errorMsg is currently not displaying for failed connections.
      *
      * @return bool Success when a connection was made successfully
      */

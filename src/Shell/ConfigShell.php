@@ -97,8 +97,6 @@ class ConfigShell extends AppShell
      * Displays the protocol currently used by the Dashboard website. Changes
      * the protocol to HTTP/HTTPS when using the --protocol option.
      *
-     * @todo show new url after completion (should use yaml for host and ip)
-     *
      * @return void
      */
     public function dashboard()
@@ -136,7 +134,8 @@ class ConfigShell extends AppShell
     /**
      * Turn cakebox-console debug mode on/off by replacing value in app.php.
      *
-     * @return void
+     * @param string $mode String containing either 'on' or 'off'
+     * @return boolean True on success
      */
     public function debug($mode)
     {

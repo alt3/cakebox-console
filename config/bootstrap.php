@@ -1,22 +1,22 @@
 <?php
 /**
-* CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
-* Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
-*
-* Licensed under The MIT License
-* For full copyright and license information, please see the LICENSE.txt
-* Redistributions of files must retain the above copyright notice.
-*
-* @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
-* @link          http://cakephp.org CakePHP(tm) Project
-* @since         0.10.8
-* @license       http://www.opensource.org/licenses/mit-license.php MIT License
-*/
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @since         0.10.8
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
-* Configure paths required to find CakePHP + general filepath
-* constants
-*/
+ * Configure paths required to find CakePHP + general filepath
+ * constants
+ */
 require __DIR__ . '/paths.php';
 
 // Use composer to load the autoloader.
@@ -48,8 +48,8 @@ use Cake\Routing\DispatcherFactory;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
 use Monolog\Formatter\LogstashFormatter;
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 /**
 * Read configuration file and inject configuration into various
@@ -60,10 +60,10 @@ use Monolog\Handler\StreamHandler;
 * that changes from configuration that does not. This makes deployment simpler.
 */
 try {
-	Configure::config('default', new PhpConfig());
-	Configure::load('app', 'default', false);
+    Configure::config('default', new PhpConfig());
+    Configure::load('app', 'default', false);
 } catch (\Exception $e) {
-	die($e->getMessage() . "\n");
+    die($e->getMessage() . "\n");
 }
 
 // Load an environment local configuration file.
@@ -75,8 +75,8 @@ try {
 // for a very very long time, as we don't want
 // to refresh the cache while users are doing requests.
 if (!Configure::read('debug')) {
-	Configure::write('Cache._cake_model_.duration', '+99 years');
-	Configure::write('Cache._cake_core_.duration', '+99 years');
+    Configure::write('Cache._cake_model_.duration', '+99 years');
+    Configure::write('Cache._cake_core_.duration', '+99 years');
 }
 
 /**
@@ -101,14 +101,14 @@ ini_set('intl.default_locale', 'en_US');
 */
 $isCli = php_sapi_name() === 'cli';
 if ($isCli) {
-	(new ConsoleErrorHandler(Configure::consume('Error')))->register();
+    (new ConsoleErrorHandler(Configure::consume('Error')))->register();
 } else {
-	(new ErrorHandler(Configure::consume('Error')))->register();
+    (new ErrorHandler(Configure::consume('Error')))->register();
 }
 
 // Include the CLI bootstrap overrides.
 if ($isCli) {
-	require __DIR__ . '/bootstrap_cli.php';
+    require __DIR__ . '/bootstrap_cli.php';
 }
 
 /**
@@ -118,16 +118,16 @@ if ($isCli) {
 * If you define fullBaseUrl in your config file you can remove this.
 */
 if (!Configure::read('App.fullBaseUrl')) {
-	$s = null;
-	if (env('HTTPS')) {
-		$s = 's';
-	}
+    $s = null;
+    if (env('HTTPS')) {
+        $s = 's';
+    }
 
-	$httpHost = env('HTTP_HOST');
-	if (isset($httpHost)) {
-		Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
-	}
-	unset($httpHost, $s);
+    $httpHost = env('HTTP_HOST');
+    if (isset($httpHost)) {
+        Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
+    }
+    unset($httpHost, $s);
 }
 
 Cache::config(Configure::consume('Cache'));
@@ -141,12 +141,12 @@ Security::salt(Configure::consume('Security.salt'));
 * Setup detectors for mobile and tablet.
 */
 Request::addDetector('mobile', function ($request) {
-	$detector = new \Detection\MobileDetect();
-	return $detector->isMobile();
+    $detector = new \Detection\MobileDetect();
+    return $detector->isMobile();
 });
 Request::addDetector('tablet', function ($request) {
-	$detector = new \Detection\MobileDetect();
-	return $detector->isTablet();
+    $detector = new \Detection\MobileDetect();
+    return $detector->isTablet();
 });
 
 /**
@@ -171,7 +171,7 @@ Request::addDetector('tablet', function ($request) {
 
 // Will only load DebugKit in development/debug mode.
 if (Configure::read('debug')) {
-	Plugin::load('DebugKit', ['bootstrap' => true]);
+    Plugin::load('DebugKit', ['bootstrap' => true]);
 }
 
 /**
@@ -192,20 +192,20 @@ DispatcherFactory::add('ControllerFactory');
  * - Logger second argument is used as Monolog "channel"
  */
 if (!$isCli) {
-	Log::config('default', function () {
-		if (is_writable('/var/log/cakephp')) {
-			$handler = new StreamHandler('/var/log/cakephp/cakebox.log');
-		} else {
-			$handler = new StreamHandler( LOGS . DS . 'cakebox.log');
-		}
+    Log::config('default', function () {
+        if (is_writable('/var/log/cakephp')) {
+            $handler = new StreamHandler('/var/log/cakephp/cakebox.log');
+        } else {
+            $handler = new StreamHandler(LOGS . DS . 'cakebox.log');
+        }
 
-		$formatter = new LogstashFormatter('cakephp');
-		$handler->setFormatter($formatter);
-		$log = new Logger('app.cakebox', array($handler));
-		return $log;
-	});
+        $formatter = new LogstashFormatter('cakephp');
+        $handler->setFormatter($formatter);
+        $log = new Logger('app.cakebox', array($handler));
+        return $log;
+    });
 
-	// Stop using the now redundant default CakePHP file loggers
-	Log::drop('debug');
-	Log::drop('error');
+    // Stop using the now redundant default CakePHP file loggers
+    Log::drop('debug');
+    Log::drop('error');
 }

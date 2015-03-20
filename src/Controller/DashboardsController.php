@@ -3,8 +3,8 @@ namespace App\Controller;
 
 use App\Lib\CakeboxCheck;
 use App\Lib\CakeboxUtility;
-use Cake\Log\Log;
 use Cake\Filesystem\File;
+use Cake\Log\Log;
 
 class DashboardsController extends AppController
 {
@@ -24,7 +24,7 @@ class DashboardsController extends AppController
                 'sites' => $this->cbi->getNginxFileCount()
             ],
             'commits' => $this->cbi->getRepositoryCommits('alt3/cakebox-console', 5),
-			'contributions' => $this->cbi->getRepositoryContributions('alt3/cakebox-console', 'dev')
+            'contributions' => $this->cbi->getRepositoryContributions('alt3/cakebox-console', 'dev')
         ];
 
         if ($this->cbi->getLatestCommitLocal() != $this->cbi->getLatestCommitRemote()) {
@@ -39,7 +39,8 @@ class DashboardsController extends AppController
      *
      * @return void
      */
-    public function vm() {
+    public function vm()
+    {
         $data = [
             'vm' => $this->cbi->getVmInfo(),
             'yaml' => $this->cbi->getRichCakeboxYaml()
@@ -52,8 +53,8 @@ class DashboardsController extends AppController
      *
      * @return void
      */
-    public function usage() {
-
+    public function usage()
+    {
     }
 
     /**
@@ -93,39 +94,41 @@ class DashboardsController extends AppController
 
     /**
      * Serve cakebox.cli.log as enriched json hash
+     *
+     * @return void
      */
-     public function clilog()
-     {
+    public function clilog()
+    {
          $this->set([
              'log' => $this->cbi->getCakeboxCliLog(),
              '_serialize' => ['log']
          ]);
-     }
+    }
 
     /**
      * Serve contributors as json
      *
      * @return void
      */
-    public function contributors()
-    {
-        $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console', 'dev');
-        $this->set([
-        'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
-        '_serialize' => ['contributors']
-        ]);
-    }
+        public function contributors()
+        {
+            $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console', 'dev');
+            $this->set([
+            'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
+            '_serialize' => ['contributors']
+            ]);
+        }
 
     /**
-    * Return LICENSE.TXT as json
-    *
-    * @return void
-    */
-    public function license() {
-        $this->set([
+     * Return LICENSE.TXT as json
+     *
+     * @return void
+     */
+        public function license()
+        {
+            $this->set([
             'fileContent' => CakeboxUtility::getFileContent('/cakebox/console/LICENSE.txt'),
             '_serialize' => ['fileContent']
-        ]);
-    }
-
+            ]);
+        }
 }

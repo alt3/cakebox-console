@@ -16,7 +16,8 @@ class CakeboxInfoTest extends TestCase
      *
      * @return void
      */
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
     }
 
@@ -25,7 +26,8 @@ class CakeboxInfoTest extends TestCase
      *
      * @return void
      */
-    public function testMetaData() {
+    public function testMetaData()
+    {
         $object = new CakeboxInfo();
 
         // test cakebox metadata
@@ -82,7 +84,7 @@ class CakeboxInfoTest extends TestCase
                 'installation_method' => 'composer',
                 'source' => 'laravel/laravel',
                 'webroot' => 'public',
-                'writable_dirs' => ['storage']  // app/storage for Laravel 4
+                'writable_dirs' => ['storage'] // app/storage for Laravel 4
             ]
         ];
         $res = $object->frameworkMeta;

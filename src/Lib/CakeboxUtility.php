@@ -6,8 +6,8 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Log\Log;
 use Cake\Utility\Hash;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Class library for box agnostic helper functions
@@ -271,7 +271,7 @@ class CakeboxUtility
      * @param string $password Password for given user.
      * @return boolean True on success
      */
-    protected static function grantDatabaseRights($database, $username, $password)
+    public static function grantDatabaseRights($database, $username, $password)
     {
         $database = self::normalizeDatabaseName($database);
         try {
@@ -331,14 +331,15 @@ class CakeboxUtility
      */
     public static function setFolderPermissions($dir)
     {
-        log::debug("Setting permissions on $dir");
+        log::info("Setting permissions on $dir to world writable");
 
         // Change the permissions on a path and output the results.
         $changePerms = function ($path, $perms) {
             // Get current permissions in decimal format so we can bitmask it.
             $currentPerms = octdec(substr(sprintf('%o', fileperms($path)), -4));
             if (($currentPerms & $perms) == $perms) {
-                return;
+                log::debug('* Skipping: desired permissions already set for ' . $path);
+                return true;
             }
 
             $res = chmod($path, $currentPerms | $perms);
@@ -346,7 +347,7 @@ class CakeboxUtility
                 log::error('Failed to set permissions on ' . $path);
                 return false;
             }
-            log::debug('Permissions set on ' . $path);
+            log::debug('* Successfully updated permissions for ' . $path);
         };
 
         $walker = function ($dir, $perms) use (&$walker, $changePerms) {
@@ -362,7 +363,6 @@ class CakeboxUtility
                 $walker($path, $perms);
             }
         };
-
         $worldWritable = bindec('0000000111');
         $changePerms($dir, $worldWritable);
         $walker($dir, $worldWritable);
@@ -435,11 +435,12 @@ class CakeboxUtility
     /**
      * Returns the content of a yaml file as an array.
      *
-     * @param string Full path to the yaml file
+     * @param string $yaml Full path to the yaml file
      * @return string Hash
      * @throws Symfony\Component\Yaml\Exception\ParseException
      */
-    public static function yamlToArray($yaml) {
+    public static function yamlToArray($yaml)
+    {
         try {
             return (new Parser)->parse(file_get_contents($yaml));
         } catch (ParseException $e) {

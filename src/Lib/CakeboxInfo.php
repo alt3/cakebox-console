@@ -90,7 +90,7 @@ class CakeboxInfo
             'installation_method' => 'composer',
             'source' => 'laravel/laravel',
             'webroot' => 'public',
-            'writable_dirs' => ['storage']  // app/storage for Laravel 4
+            'writable_dirs' => ['storage'] // app/storage for Laravel 4
         ]
     ];
 
@@ -494,7 +494,7 @@ class CakeboxInfo
      *
      * @return string Installed Elasticsearch version
      */
-    public function _getPackageVersionElasticsearch()
+    protected function _getPackageVersionElasticsearch()
     {
         try {
             $http = new Client();
@@ -989,12 +989,12 @@ class CakeboxInfo
         $avatars = (array)Cache::read('avatars', 'medium');
 
         $result = collection(json_decode($response->body(), true))
-            ->reject(function($record){
+            ->reject(function ($record) {
                 return $record['merged_at'] === null;
             })
             ->sortBy('merged_at', SORT_DESC, SORT_STRING)
             ->take(5)
-            ->map(function($record) use ($avatars, $http) {
+            ->map(function ($record) use ($avatars, $http) {
                 if (!empty($record['user']['avatar_data'])) {
                     return $record;
                 }
@@ -1096,7 +1096,8 @@ class CakeboxInfo
             $time = Time::parse($matches[1]);
 
             // add Monolog/RFC 5424 level names
-            // @todo: move into testable logic or... use Monolog lib.
+            //
+            // Should ideally be moved into testable logic or... ask Monolog lib.
             $level = $matches[2];
             switch ($level){
                 case 100:
@@ -1166,7 +1167,8 @@ class CakeboxInfo
      * @return array Hash with raw file data and timestamp.
      * @throws Exception
      */
-    public function getRichCakeboxYaml() {
+    public function getRichCakeboxYaml()
+    {
         try {
             $fileHandle = new File($this->cakeboxMeta['host']['yaml']);
             return [
@@ -1184,7 +1186,8 @@ class CakeboxInfo
      *
      * @return array boolean True when HTTPS is being used.
      */
-    public function dashboardUsesHttps() {
+    public function dashboardUsesHttps()
+    {
         $vhost = file_get_contents($this->webserverMeta['nginx']['sites-available'] . DS . 'default');
         preg_match('/HTTPS/', $vhost, $matches);
         if (!empty($matches)) {
@@ -1192,5 +1195,4 @@ class CakeboxInfo
         }
         return false;
     }
-
 }

@@ -19,19 +19,19 @@ use Cake\View\View;
  * App View class
  *
  */
-class AppView extends View {
+class AppView extends View
+{
 
-/**
- * Initialization hook method.
- *
- * Use this method to load a helper for all views, e.g.
- * `$this->loadHelper('Html');`
- * `$this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);`
- *
- * @return void
- */
-	public function initialize()
-	{
-	}
-
+    /**
+     * Initialization hook method.
+     *
+     * Use this method to load a helper for all views, e.g.
+     * `$this->loadHelper('Html');`
+     * `$this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);`
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+    }
 }
