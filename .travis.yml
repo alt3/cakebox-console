@@ -9,6 +9,8 @@ php:
   - hhvm
 
 before_script:
+  - composer self-update
+  - composer install --prefer-dist --no-interaction
   - sh -c "composer require 'cakephp/cakephp-codesniffer:~2.0'"
   - phpenv rehash
 
