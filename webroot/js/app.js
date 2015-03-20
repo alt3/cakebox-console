@@ -39,7 +39,7 @@ $(document).ready(function () {
  * them from DOM completely (as done by Bootstrap) to allow re-use.
  * ---------------------------------------------------------------*/
 $(document).ready(function () {
-    $('.alert .close').on('click',function() {
+    $('.alert .close').on('click',function () {
         $(this).parent().hide();
     })
 })
@@ -61,18 +61,18 @@ $(document).ready(function () {
  * 4. Generic Ajax File Modal Listener
  * ---------------------------------------------------------------*/
 $(document).ready(function () {
-    $('.ajax-file-modal').on('click', function( event ) {
+    $('.ajax-file-modal').on('click', function (event) {
         event.preventDefault();
         var modal = $('#ajaxModal')
         var title = S($(this).attr('id')).humanize().s
         var link = $(this).attr('href')
         $('.modal-title').html(title)
 
-        var jqxhr = $.getJSON(link, function(data) {
+        var jqxhr = $.getJSON(link, function (data) {
             modal.find('.modal-body').html('<pre>' + data.fileContent + '</pre>')
             modal.modal('show')
         })
-        .fail(function() {
+        .fail(function () {
             ajaxFetchError()
         })
     })
@@ -94,7 +94,7 @@ $(document).ready(function () {
  * 6. Generic Ajax Form Poster (including CSRF token)
  * ---------------------------------------------------------------*/
 $(document).ready(function () {
-    $('#form-submit').click(function() {
+    $('#form-submit').click(function () {
         var form = $(this).closest('.modal-content').find('form')
         var url = form.attr('action')
         var data = form.serialize();
@@ -109,7 +109,7 @@ $(document).ready(function () {
             // },
             data: data
         })
-        .fail(function(msg) {
+        .fail(function (msg) {
             var response = msg.responseJSON
             var validationErrors = response.validation_errors
             clearFormFeedback(form)
@@ -157,7 +157,7 @@ $(document).ready(function () {
  * ---------------------------------------------------------------*/
 function clearFormFeedback(form)
 {
-    form.find(".form-group.has-feedback :input").each(function(index, input) {
+    form.find(".form-group.has-feedback :input").each(function (index, input) {
         var formGroup = $('input[name="' + input.name + '"]').closest('.form-group')
         formGroup.removeClass('has-error has-success')
         formGroup.find('.form-control-feedback').remove()
@@ -182,7 +182,7 @@ function setFormToValidated(form)
  * 9. Allow Form Submit Using Enter Key
  * ---------------------------------------------------------------*/
 $(document).ready(function () {
-    $('form').keypress(function(e) {
+    $('form').keypress(function (e) {
         if (e.keyCode == 13) {
             $(this).closest('.modal-content').find('#form-submit').trigger('click')
         }
@@ -259,12 +259,12 @@ $(document).ready(function () {
  * http://bootboxjs.com
  * ---------------------------------------------------------------*/
 $(document).ready(function () {
-    $(document).on("click", ".confirm", function(e) {
+    $(document).on("click", ".confirm", function (e) {
         var trigger = $(this)
         bootbox.confirm({
             title: 'Are you sure?',
             message: 'Please confirm.',
-            callback: function(result) {
+            callback: function (result) {
                 if (result) {
                     if (trigger.hasClass('delete')) {
                         ajaxDelete(trigger)
