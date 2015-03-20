@@ -26,7 +26,7 @@
 /*------------------------------------------------------------------
 * 1. Make Bootstrap Modals Draggable (using jQuery-UI)
 * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     $(".modal-dialog").draggable({
         handle: ".modal-header"
     })
@@ -38,7 +38,7 @@ $(document).ready(function() {
  * Use jQuery for hiding the alerts on close instead of removing
  * them from DOM completely (as done by Bootstrap) to allow re-use.
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     $('.alert .close').on('click',function() {
         $(this).parent().hide();
     })
@@ -47,7 +47,7 @@ $(document).ready(function() {
 /*------------------------------------------------------------------
  * 3. MsgGrowl: Not Implemented Yet
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     $('.todo').on('click', function () {
         $.msgGrowl({
             type: 'error',
@@ -60,7 +60,7 @@ $(document).ready(function() {
 /*------------------------------------------------------------------
  * 4. Generic Ajax File Modal Listener
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     $('.ajax-file-modal').on('click', function( event ) {
         event.preventDefault();
         var modal = $('#ajaxModal')
@@ -81,7 +81,7 @@ $(document).ready(function() {
 /*------------------------------------------------------------------
  * 5. Generic Ajax Form Modal Listener
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     $('.ajax-form-modal').on('click', function () {
         var modal = $($(this).attr('data-target'))
         var title = $(this).text()
@@ -93,7 +93,7 @@ $(document).ready(function() {
 /*------------------------------------------------------------------
  * 6. Generic Ajax Form Poster (including CSRF token)
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     $('#form-submit').click(function() {
         var form = $(this).closest('.modal-content').find('form')
         var url = form.attr('action')
@@ -109,7 +109,7 @@ $(document).ready(function() {
             // },
             data: data
         })
-        .fail(function( msg ) {
+        .fail(function(msg) {
             var response = msg.responseJSON
             var validationErrors = response.validation_errors
             clearFormFeedback(form)
@@ -145,7 +145,7 @@ $(document).ready(function() {
 
             })
         })
-        .success(function( msg ) {
+        .success(function ( msg ) {
             window.location.href = window.location.href + "?success";
             location.reload();
         })
@@ -171,7 +171,7 @@ function clearFormFeedback(form)
  * ---------------------------------------------------------------*/
 function setFormToValidated(form)
 {
-    form.find(".form-group.has-feedback :input").each(function(index, input) {
+    form.find(".form-group.has-feedback :input").each(function (index, input) {
         var formGroup = $('input[name="' + input.name + '"]').closest('.form-group .has-feedback')
         formGroup.addClass('has-success')
         formGroup.append('<span class="fa fa-check form-control-feedback" aria-hidden="true"></span>')
@@ -181,7 +181,7 @@ function setFormToValidated(form)
 /*------------------------------------------------------------------
  * 9. Allow Form Submit Using Enter Key
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     $('form').keypress(function(e) {
         if (e.keyCode == 13) {
             $(this).closest('.modal-content').find('#form-submit').trigger('click')
@@ -217,14 +217,14 @@ function ajaxDelete(trigger)
         type: "POST",
         data: {'id': id}
     })
-    .fail(function( msg ) {
+    .fail(function (msg) {
         var response = msg.responseJSON
         alertDiv.removeClass('alert-success')
         alertDiv.addClass('alert-danger')
         alertDiv.find('span.message').html(response.message)
         alertDiv.show()
     })
-    .success(function( msg ) {
+    .success(function (msg) {
         row.remove()
 
         $.each($('tbody tr .index'), function (index, td) {
@@ -245,7 +245,7 @@ function ajaxDelete(trigger)
  * pages after a successful /add action. Looks for query parameter `success`
  * in the URL and displays a generic success message when it is found.
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     if (/[?&]success/.test(location.href)) {
         var target = $('.index-main .alert span.message')
         target.html("Action completed successfully");
@@ -258,7 +258,7 @@ $(document).ready(function() {
  *
  * http://bootboxjs.com
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     $(document).on("click", ".confirm", function(e) {
         var trigger = $(this)
         bootbox.confirm({
@@ -280,7 +280,7 @@ $(document).ready(function() {
  *
  * http://alexgorbatchev.com/SyntaxHighlighter
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     if (typeof window.SyntaxHighlighter === 'undefined') {
         return
     }

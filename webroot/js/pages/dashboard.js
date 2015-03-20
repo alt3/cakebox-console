@@ -20,7 +20,7 @@
  * Generate the flor donut using "donutData" inline Javascript variable
  * set in the Dashboards index view (http://www.flotcharts.org)
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
     //console.dir(donutData)
 
     $.plot(
@@ -45,8 +45,8 @@ $(document).ready(function() {
 /*------------------------------------------------------------------
  * 2. Sponsors Widget Close Listener
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
-    $("#close-sponsors").click(function() {
+$(document).ready(function () {
+    $("#close-sponsors").click(function () {
         $(".widget.sponsors").slideUp()
     })
 })

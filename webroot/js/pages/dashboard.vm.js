@@ -19,7 +19,7 @@
 /*------------------------------------------------------------------
  * 1. Tab Click Listeners
  * ---------------------------------------------------------------*/
-$(document).ready(function() {
+$(document).ready(function () {
 
     // Ajax load status tab
     $('#tab-status a').click(function (e) {
@@ -51,13 +51,13 @@ $(document).ready(function() {
  * ---------------------------------------------------------------*/
 function loadTabStatus()
 {
-    var jqxhr = $.getJSON('../dashboard/checks.json', function(data) {
+    var jqxhr = $.getJSON('../dashboard/checks.json', function (data) {
         // loop through each category
-        $.each(data, function( category, checks ) {
+        $.each(data, function (category, checks) {
             failCount = 0
 
             // generate <li> items for each check in the current category
-            $.each(data[category], function( index, check ) {
+            $.each(data[category], function (index, check) {
                 if (check.pass == true ) {
                     icon = '<i class="fa fa-check"></i>'
                     $('#status-' + category + ' ul').append('<li class="check">' + icon + check.message + '</li>')
@@ -75,11 +75,11 @@ function loadTabStatus()
             }
         });
     })
-    .done(function() {
+    .done(function () {
         $('#panel-status .ajax-loader').html('').remove()
         $('#panel-status .widget').removeClass('hidden')
     })
-    .fail(function() {
+    .fail(function () {
         alert('So sorry, something went wrong fetching checks')
     })
 }
@@ -89,8 +89,8 @@ function loadTabStatus()
  * ---------------------------------------------------------------*/
 function loadTabSoftware()
 {
-    var jqxhr = $.getJSON('../dashboard/software.json', function(data) {
-        console.dir(data)
+    var jqxhr = $.getJSON('../dashboard/software.json', function (data) {
+        //console.dir(data)
 
         // fill OS panel
         $('.os-description').append('<a href="https://wiki.ubuntu.com/LTS">' + data['operating_system']['DISTRIB_DESCRIPTION'] + '</a>')
@@ -98,13 +98,13 @@ function loadTabSoftware()
         $('.os-architecture').append(data['operating_system']['architecture'])
 
         // fill Software panel
-        $.each(data['packages'], function( index, column ) {
+        $.each(data['packages'], function (index, column) {
             var target = $('.panel-body.packages > .row')
             var col = $('<div class="col-sm-3" id="packages-column-' + index + '" />').appendTo(target)
             var list = $('<ul class="list-unstyled" />').appendTo('#packages-column-' + index)
 
             // one LI per package
-            $.each(column, function(index, package) {
+            $.each(column, function (index, package) {
                 li = '<li class="package">'
                 if (package.version) {
                     li += '<a href="' + package.link + '">' + package.name + '&nbsp;' + package.version + '</a>'
@@ -117,13 +117,13 @@ function loadTabSoftware()
         })
 
         // fill PHP Modules panel
-        $.each(data['php_modules'], function( index, column ) {
+        $.each(data['php_modules'], function (index, column) {
             var target = $('.panel-body.php-modules > .row')
             var col = $('<div class="col-sm-3" id="php-modules-column-' + index + '" />').appendTo(target)
             var list = $('<ul class="list-unstyled" />').appendTo('#php-modules-column-' + index)
 
             // one LI per package
-            $.each(column, function(index, phpmodule) {
+            $.each(column, function (index, phpmodule) {
                 li = '<li class="php-module">'
                 if (phpmodule['link']) {
                     li += '<a href="' + phpmodule.link + '">' + phpmodule.name + '</a>'
@@ -136,23 +136,23 @@ function loadTabSoftware()
         })
 
         // fill nginx core-modules column
-        $.each(data['nginx_modules']['core'], function( index, module ) {
+        $.each(data['nginx_modules']['core'], function (index, module) {
             var list = $('#nginx-core-modules > ul')
             list.append('<li><a href="' + module.link + '">' + module.short_name + '</a>')
         })
 
         // fill nginx 3rd-party-modules column
-        $.each(data['nginx_modules']['3rdparty'], function( index, module ) {
+        $.each(data['nginx_modules']['3rdparty'], function (index, module) {
             var list = $('#nginx-3rdparty-modules > ul')
             list.append('<li><a href="' + module.link + '">' + module.short_name + '</a>')
         })
 
     })
-    .done(function() {
+    .done(function () {
         $('#panel-software .ajax-loader').html('').remove()
         $('#panel-software .widget').removeClass('hidden')
     })
-    .fail(function() {
+    .fail(function () {
         alert('So sorry, something went wrong fetching software')
     })
 }
@@ -162,19 +162,19 @@ function loadTabSoftware()
  * ---------------------------------------------------------------*/
 function loadTabCliLog()
 {
-    var jqxhr = $.getJSON('../dashboard/clilog.json', function(data) {
+    var jqxhr = $.getJSON('../dashboard/clilog.json', function (data) {
         console.dir(data)
 
         var tbody = $('.panel-body.clilog > table > tbody')
-        $.each(data.log, function( key, entry ) {
+        $.each(data.log, function (key, entry) {
             tbody.append('<tr><td class="nowrap">' + entry.date + '</td><td class="nowrap">' + entry.time + '</td><td class="center log-' + entry.level_name + '">' + entry.level_name + '</td><td>' + entry.message + '</td></tr>' + "\n")
         });
     })
-    .done(function() {
+    .done(function () {
         $('#panel-clilog .ajax-loader').html('').remove()
         $('#panel-clilog .widget').removeClass('hidden')
     })
-    .fail(function() {
+    .fail(function () {
         alert('So sorry, something went wrong fetching CLI log')
     })
 }
