@@ -2,10 +2,9 @@
 namespace App\Controller;
 
 use App\Error\Exception\RestException;
-use App\Error\Exception\RestValidationException;
 use App\Form\SiteFileForm;
-use App\Lib\CakeboxUtility;
 use App\Lib\CakeboxExecute;
+use App\Lib\CakeboxUtility;
 use Cake\Event\Event;
 use Cake\Filesystem\Folder;
 use Cake\Network\Exception\NotFoundException;
@@ -14,14 +13,18 @@ class SiteFilesController extends AppController
 {
 
     /**
+     * BeforeFilter
      *
+     * @param \Cake\Event\Event $event Event instance.
+     * @return void
+     * @throws Cake\Network\Exception\NotFoundException
      */
-     public function beforeFilter(Event $event)
-     {
+    public function beforeFilter(Event $event)
+    {
         parent::beforeFilter($event);
-        $this->Security->config('unlockedActions', ['ajax_add', 'ajax_delete']);
+        $this->Security->config('unlockedActions', ['ajaxDelete']);
 
-        if ($this->request->action == 'ajax_delete') {
+        if ($this->request->action == 'ajaxDelete') {
             $this->eventManager()->detach($this->Csrf);
         }
     }
@@ -34,11 +37,11 @@ class SiteFilesController extends AppController
     public function index()
     {
         $this->set('data', [
-            'directories' => [
-                'sites-available' => '/etc/nginx/sites-available',
-                'sites-enabled' => '/etc/nginx/sites-enabled'
-            ],
-            'sitefiles' => $this->cbi->getRichNginxFiles(),
+        'directories' => [
+            'sites-available' => '/etc/nginx/sites-available',
+            'sites-enabled' => '/etc/nginx/sites-enabled'
+        ],
+        'sitefiles' => $this->cbi->getRichNginxFiles(),
         ]);
     }
 
@@ -55,48 +58,17 @@ class SiteFilesController extends AppController
             throw new NotFoundException();
         }
         $this->set([
-            'content' => $content,
-            '_serialize' => ['content']
+        'content' => $content,
+        '_serialize' => ['content']
         ]);
     }
 
     /**
-     * Add nginx file using ajax
+     * Delete an Nginx virtual host configuration file using ajax
+     * @return void
+     * @throws App\Error\Exception\RestException
      */
-    public function ajax_add()
-    {
-        if (!$this->request->is('post')) {
-            throw new NotFoundException();
-        }
-
-        $form = new SiteFileForm();
-        if (!$form->validate($this->request->data)) {
-            throw new RestValidationException($form->errors());
-        }
-
-		if (!$this->request->data['force']) {
-			if (file_exists('/etc/nginx/sites-available/' . $this->request->data['url'])) {
-				throw new RestException('Website already exists. Use force to overwrite.');
-			}
-		}
-
-        $execute = new CakeboxExecute();
-        if ($execute->addSite($this->request->data['url'], $this->request->data['webroot'], true) == false) {
-            throw new RestException('Error creating website. See cakebox.log for details.', null , 401);
-        }
-
-        $this->set([
-           'message' => 'Website created successfully',
-           'url' => $this->request->data['url'],
-           'webroot' => $this->request->data['webroot'],
-           '_serialize' => ['message', 'url', 'webroot']
-        ]);
-    }
-
-    /**
-     * Add nginx file using ajax
-     */
-    public function ajax_delete()
+    public function ajaxDelete()
     {
         if (!$this->request->is('post')) {
             throw new NotFoundException();
@@ -113,8 +85,8 @@ class SiteFilesController extends AppController
         }
 
         $this->set([
-            'message' => "Website $id deleted successfully.",
-            '_serialize' => ['message']
+        'message' => "Website $id deleted successfully.",
+        '_serialize' => ['message']
         ]);
     }
 }

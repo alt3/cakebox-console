@@ -20,5 +20,4 @@ class ApplicationsController extends AppController
         ];
         $this->set('data', $data);
     }
-
 }

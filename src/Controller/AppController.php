@@ -21,8 +21,8 @@ class AppController extends Controller
     public $uses = false;
 
     /**
-    * @var Components available to all views
-    */
+     * @var Components available to all views
+     */
     public $components = [
         'Flash',
         'RequestHandler',
@@ -57,12 +57,14 @@ class AppController extends Controller
     /**
      * BeforeFilter
      *
-     * @param \Cake\Event\Event $event
+     * @param \Cake\Event\Event $event Event instance.
+     * @return void
+     * @throws Cake\Network\Exception\NotFoundException
      */
     public function beforeFilter(Event $event)
     {
-		// set cakebox version
-		$this->set(['version' => $this->cbi->cakeboxVersion()]);
+        // set cakebox version
+        $this->set(['version' => $this->cbi->cakeboxVersion()]);
 
 
         // Throw 404's for non-ajax connections to ajax_ prefixed actions
@@ -72,5 +74,4 @@ class AppController extends Controller
             }
         }
     }
-
 }
