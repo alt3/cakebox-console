@@ -6,8 +6,8 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Log\Log;
 use Cake\Utility\Hash;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Class library for box agnostic helper functions
@@ -271,7 +271,7 @@ class CakeboxUtility
      * @param string $password Password for given user.
      * @return boolean True on success
      */
-    protected static function grantDatabaseRights($database, $username, $password)
+    public static function grantDatabaseRights($database, $username, $password)
     {
         $database = self::normalizeDatabaseName($database);
         try {
@@ -435,11 +435,12 @@ class CakeboxUtility
     /**
      * Returns the content of a yaml file as an array.
      *
-     * @param string Full path to the yaml file
+     * @param string $yaml Full path to the yaml file
      * @return string Hash
      * @throws Symfony\Component\Yaml\Exception\ParseException
      */
-    public static function yamlToArray($yaml) {
+    public static function yamlToArray($yaml)
+    {
         try {
             return (new Parser)->parse(file_get_contents($yaml));
         } catch (ParseException $e) {
