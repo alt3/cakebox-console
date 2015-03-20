@@ -7,19 +7,19 @@
 -------------------------------------------------------------------*/
 
 li.check i {
-	margin-right: 10px;
+    margin-right: 10px;
 }
 li.check .fa-check {
-	color: green;
+    color: green;
 }
 li.check .fa-danger {
-	color: red;
+    color: red;
 }
 
 div.packages i.fa-times {
-	margin-left: 2px;
-	margin-top: -4px;
-	color: red;
+    margin-left: 2px;
+    margin-top: -4px;
+    color: red;
 }
 
 
@@ -27,19 +27,19 @@ div.packages i.fa-times {
  * 1. CLI log tab
  * ---------------------------------------------------------------*/
 .clilog table tbody tr td {
-	padding-top: 2px;
-	padding-bottom: 2px;
-	font-size: 13px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: 13px;
 }
 
 .clilog > table tbody td, clilog table th {
-	border: none !important;
+    border: none !important;
 }
 
 .log-warning {
-	color: #ff9900;
+    color: #ff9900;
 }
 
 .log-error {
-	color: red;
+    color: red;
 }
