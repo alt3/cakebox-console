@@ -4,17 +4,17 @@ use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\Log\Log;
 use Monolog\Formatter\LogstashFormatter;
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 /**
 * Additional bootstrapping and configuration for CLI environments should
 * be put here.
 */
 try {
-	Plugin::load('Bake');
+    Plugin::load('Bake');
 } catch (MissingPluginException $e) {
-	// Do not halt if the plugin is missing
+    // Do not halt if the plugin is missing
 }
 
 /**
@@ -23,16 +23,16 @@ try {
  * bootstrap.php in that is uses the 'cli' prefix tag instead of 'app'.
 */
 Log::config('default', function () {
-	if (is_writable('/var/log/cakephp')) {
-		$handler = new StreamHandler('/var/log/cakephp/cakebox.cli.log');
-	} else {
-		$handler = new StreamHandler( LOGS . DS . 'cakebox.cli.log');
-	}
+    if (is_writable('/var/log/cakephp')) {
+        $handler = new StreamHandler('/var/log/cakephp/cakebox.cli.log');
+    } else {
+        $handler = new StreamHandler(LOGS . DS . 'cakebox.cli.log');
+    }
 
-	$formatter = new LogstashFormatter('cakephp');
-	$handler->setFormatter($formatter);
-	$log = new Logger('cli.cakebox', array($handler));
-	return $log;
+    $formatter = new LogstashFormatter('cakephp');
+    $handler->setFormatter($formatter);
+    $log = new Logger('cli.cakebox', array($handler));
+    return $log;
 });
 
 /**
