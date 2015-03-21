@@ -8,7 +8,7 @@
 		"php": ">=5.4.16",
 		"cakephp/bake": "dev-master",
 		"cakephp/cakephp": "3.0.*-dev",
-		"cakephp/debug_kit": "3.0.*-dev",
+		"cakephp/debug_kit": "dev-master",
 		"cakephp/plugin-installer": "*",
 		"mobiledetect/mobiledetectlib": "2.*",
 		"monolog/monolog": "master",
