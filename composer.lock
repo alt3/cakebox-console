@@ -246,12 +246,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/debug_kit.git",
-                "reference": "9affc30002899aa5d58d7fc03eed8e6f05bc9108"
+                "reference": "67979b075852d7d701ba402b2883c20240b99487"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/debug_kit/zipball/9affc30002899aa5d58d7fc03eed8e6f05bc9108",
-                "reference": "9affc30002899aa5d58d7fc03eed8e6f05bc9108",
+                "url": "https://api.github.com/repos/cakephp/debug_kit/zipball/67979b075852d7d701ba402b2883c20240b99487",
+                "reference": "67979b075852d7d701ba402b2883c20240b99487",
                 "shasum": ""
             },
             "require": {
@@ -298,7 +298,7 @@
                 "debug",
                 "kit"
             ],
-            "time": "2015-03-21 17:35:12"
+            "time": "2015-03-21 17:57:58"
         },
         {
             "name": "cakephp/plugin-installer",
