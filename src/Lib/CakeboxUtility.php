@@ -182,7 +182,7 @@ class CakeboxUtility
             };
             return false;
         } catch (\Exception $e) {
-            log::error("Error showing databases: " . $e->getMessage());
+            Log::error("Error showing databases: " . $e->getMessage());
             return false;
         }
     }
@@ -200,15 +200,15 @@ class CakeboxUtility
 
         foreach ($databases as $database) {
             if (self::databaseExists($database) == false) {
-                log::warning("* Skipping: database $database does not exist");
+                Log::warning("* Skipping: database $database does not exist");
                 continue;
             }
             try {
                 $connection = ConnectionManager::get('default');
                 $connection->execute("DROP DATABASE `$database`");
-                log::debug("* Database `$database` dropped successfully");
+                Log::debug("* Database `$database` dropped successfully");
             } catch (\Exception $e) {
-                log::error("Error dropping database `$database`: " . $e->getMessage());
+                Log::error("Error dropping database `$database`: " . $e->getMessage());
                 return false;
             }
         }
@@ -230,16 +230,17 @@ class CakeboxUtility
     {
         $database = self::normalizeDatabaseName($database);
         if (self::databaseExists($database)) {
-            log::warning("* Skipping: database $database already exists");
-            continue;
+            Log::warning("* Skipping: database $database already exists");
+            return;
         }
+
         try {
             $connection = ConnectionManager::get('default');
             $connection->execute("CREATE DATABASE `$database`");
-            log::debug("* Database `$database` created successfully");
+            Log::debug("* Database `$database` created successfully");
             self::grantDatabaseRights($database, $username, $password);
         } catch (Exception $e) {
-            log::error("Error creating database: " . $e->getMessage());
+            Log::error("Error creating database: " . $e->getMessage());
             return false;
         }
         return true;
@@ -277,9 +278,9 @@ class CakeboxUtility
         try {
             $connection = ConnectionManager::get('default');
             $connection->execute("GRANT ALL ON `$database`.* to  '$username'@'localhost' identified by '$password'");
-            log::debug("* Granted user `$username` localhost access on database `$database`");
+            Log::debug("* Granted user `$username` localhost access on database `$database`");
         } catch (\Exception $e) {
-            log::error("Error granting user `$username` localhost access on database `$database`");
+            Log::error("Error granting user `$username` localhost access on database `$database`");
             return false;
         }
         return true;
@@ -294,9 +295,9 @@ class CakeboxUtility
      */
     public static function updateConfigFile($file, $valuePairs)
     {
-        log::debug("* Updating config file $file");
+        Log::debug("* Updating config file $file");
         if (!file_exists($file)) {
-            log::error("* Cannot replace values in non-existent file $file");
+            Log::error("* Cannot replace values in non-existent file $file");
             return false;
         }
         $content = file_get_contents($file);
@@ -305,7 +306,7 @@ class CakeboxUtility
         foreach ($valuePairs as $old => $new) {
             $content = str_replace($old, $new, $content, $count);
             if ($count == 0) {
-                log::warning("* Nothing to replace, `$old` could not be found");
+                Log::warning("* Nothing to replace, `$old` could not be found");
             } else {
                 Log::debug("* Replaced $count occurences of `$old`");
             }
@@ -314,10 +315,10 @@ class CakeboxUtility
         # Update file
         $result = file_put_contents($file, $content);
         if (!$result) {
-            log::error("* Error writing to config file: " . error_get_last());
+            Log::error("* Error writing to config file: " . error_get_last());
             return false;
         }
-        log::info("* Successfully updated config file");
+        Log::info("* Successfully updated config file");
         return true;
     }
 
@@ -331,23 +332,23 @@ class CakeboxUtility
      */
     public static function setFolderPermissions($dir)
     {
-        log::info("Setting permissions on $dir to world writable");
+        Log::info("Setting permissions on $dir to world writable");
 
         // Change the permissions on a path and output the results.
         $changePerms = function ($path, $perms) {
             // Get current permissions in decimal format so we can bitmask it.
             $currentPerms = octdec(substr(sprintf('%o', fileperms($path)), -4));
             if (($currentPerms & $perms) == $perms) {
-                log::debug('* Skipping: desired permissions already set for ' . $path);
+                Log::debug('* Skipping: desired permissions already set for ' . $path);
                 return true;
             }
 
             $res = chmod($path, $currentPerms | $perms);
             if (!$res) {
-                log::error('Failed to set permissions on ' . $path);
+                Log::error('Failed to set permissions on ' . $path);
                 return false;
             }
-            log::debug('* Successfully updated permissions for ' . $path);
+            Log::debug('* Successfully updated permissions for ' . $path);
         };
 
         $walker = function ($dir, $perms) use (&$walker, $changePerms) {
@@ -395,20 +396,20 @@ class CakeboxUtility
      */
     public function dirAvailable($directory)
     {
-        log::debug("Checking installation directory readiness");
+        Log::debug("Checking installation directory readiness");
 
         # Directory does not exist
-        log::debug("* Checking if installation directory exists");
+        Log::debug("* Checking if installation directory exists");
         if (!file_exists($directory)) {
-            log::debug("* Pass: directory does not exist");
+            Log::debug("* Pass: directory does not exist");
             return true;
         }
 
         # Directory exists but is not empty
-        log::debug("* Checking if existing directory is empty");
+        Log::debug("* Checking if existing directory is empty");
         $files = scandir($directory);
         if (count($files) > 2) {
-            log::warning("* Fail: directory exists but is NOT empty");
+            Log::warning("* Fail: directory exists but is NOT empty");
             return false;
         }
 

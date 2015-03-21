@@ -679,27 +679,33 @@ class CakeboxInfo
         $result = [];
         foreach ($this->getNginxFiles() as $sitefile) {
             $appname = $this->getAppName($sitefile);
-            $appdir = $this->getAppBase($sitefile);
-
-            if ($appdir) {
-                $framework = $this->getFrameworkName($appdir);
-                $frameworkVersion = $this->getFrameworkVersion($appdir);
-                $frameworkHuman = Inflector::humanize($framework);
-                if ($frameworkHuman == 'Cakephp') {
-                    $frameworkHuman = 'CakePHP';
-                }
-
-                $result[] = [
-                    'name' => $appname,
-                    'framework' => $framework,
-                    'framework_human' => $frameworkHuman,
-                    'framework_major_version' => CakeboxUtility::getMajorVersion($frameworkVersion),
-                    'framework_version' => $frameworkVersion,
-                    'appdir' => $appdir,
-                    'webroot' => $this->getWebrootFromSite($sitefile)
-                ];
+            if (!$appname) {
+                continue;
             }
+
+            $appdir = $this->getAppBase($sitefile);
+            if (!$appdir) {
+                continue;
+            }
+
+            $framework = $this->getFrameworkName($appdir);
+            $frameworkVersion = $this->getFrameworkVersion($appdir);
+            $frameworkHuman = Inflector::humanize($framework);
+            if ($frameworkHuman == 'Cakephp') {
+                $frameworkHuman = 'CakePHP';
+            }
+
+            $result[] = [
+                'name' => $appname,
+                'framework' => $framework,
+                'framework_human' => $frameworkHuman,
+                'framework_major_version' => CakeboxUtility::getMajorVersion($frameworkVersion),
+                'framework_version' => $frameworkVersion,
+                'appdir' => $appdir,
+                'webroot' => $this->getWebrootFromSite($sitefile)
+            ];
         }
+
         return $result;
     }
 
@@ -707,13 +713,13 @@ class CakeboxInfo
      * Get the application name by retrieving it's Nginx "server_name" directive.
      *
      * @param string $sitefile Full path to application's Nginx site configuration file.
-     * @return mixed Containing application name
+     * @return string|bool Containing application name, or false
      */
     public function getAppName($sitefile)
     {
         $name = CakeboxUtility::getNginxFileSetting($sitefile, 'server_name');
-        if ($name == '_') {
-            return "cakebox";
+        if ($name === '_' || $name === false) {
+            return false;
         }
         return $name;
     }
