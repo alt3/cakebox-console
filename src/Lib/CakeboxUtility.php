@@ -231,7 +231,7 @@ class CakeboxUtility
         $database = self::normalizeDatabaseName($database);
         if (self::databaseExists($database)) {
             Log::warning("* Skipping: database $database already exists");
-            return;
+            return false;
         }
 
         try {
