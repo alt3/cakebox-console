@@ -68,8 +68,8 @@ class CakeboxInfoTest extends TestCase
         $expected = [
             'cakephp2' => [
                 'installation_method' => 'git',
-                'source' => 'https://github.com/cakephp/cakephp.git',
-                'source_ssh' => 'git@github.com:cakephp/cakephp.git',
+                'source' => 'https://github.com/cakephp/cakephp.git -b 2.7',
+                'source_ssh' => 'git@github.com:cakephp/cakephp.git -b 2.7',
                 'webroot' => 'app/webroot',
                 'writable_dirs' => ['app/tmp'],
                 'salt' => 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi',
