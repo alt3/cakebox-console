@@ -162,13 +162,15 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 					</div>
 					<div>
 						<?php
-							echo sprintf(__('Settings applied on %s.'), $this->Time->format($data['yaml']['timestamp'], 'YYYY-MM-dd'));
-							echo sprintf(__('More information available %s.'),
-								$this->Html->link(
-									__('here'),
-									'http://cakebox.readthedocs.org/en/latest/usage/cakebox-yaml/'
-								));
-						?>
+                            echo sprintf(__('Settings applied on %s.'), $this->Time->format($data['yaml']['timestamp'], 'YYYY-MM-dd'));
+                            echo sprintf(
+                                __('More information available %s.'),
+                                $this->Html->link(
+                                    __('here'),
+                                    'http://cakebox.readthedocs.org/en/latest/usage/cakebox-yaml/'
+                                )
+                            );
+                        ?>
 					</div>
 				</div>
 

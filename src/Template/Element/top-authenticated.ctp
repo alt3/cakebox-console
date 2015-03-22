@@ -1,7 +1,7 @@
 <?php
 /**
-* Bootstrap 3 top navigation
-*/
+ * Bootstrap 3 top navigation
+ */
 ?>
 
 <nav class="navbar navbar-inverse" role="navigation">
@@ -14,12 +14,12 @@
 				<i class="fa fa-cog"></i>
 			</button>
 			<?php
-				echo $this->Html->link(
-					"Cakebox Dashboard<span class='logo-version'>v$version</span>",
-					['controller' => 'Dashboards', 'action' => 'index'],
-					['class' => 'navbar-brand', 'escape' => false]
-				);
-			?>
+                echo $this->Html->link(
+                    "Cakebox Dashboard<span class='logo-version'>v$version</span>",
+                    ['controller' => 'Dashboards', 'action' => 'index'],
+                    ['class' => 'navbar-brand', 'escape' => false]
+                );
+            ?>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -56,56 +56,56 @@
 					<!-- Home -->
 					<li class="active">
 						<?php
-							echo $this->Html->link(
-								'<i class="fa fa-home"></i><span></span>' . __('Dashboard'),
-								['controller' => 'Dashboards', 'action' => 'index'],
-								['class' => 'shortcut', 'escape' => false]
-							);
-						?>
+                            echo $this->Html->link(
+                                '<i class="fa fa-home"></i><span></span>' . __('Dashboard'),
+                                ['controller' => 'Dashboards', 'action' => 'index'],
+                                ['class' => 'shortcut', 'escape' => false]
+                            );
+                        ?>
 					</li>
 
 					<!-- Backups -->
 					<li>
 						<?php
-							echo $this->Html->link(
-								'<i class="fa fa-cloud-download"></i><span></span>' . __('Backups'),
-								'#',
-								['class' => 'shortcut todo', 'escape' => false]
-							);
-						?>
+                            echo $this->Html->link(
+                                '<i class="fa fa-cloud-download"></i><span></span>' . __('Backups'),
+                                '#',
+                                ['class' => 'shortcut todo', 'escape' => false]
+                            );
+                        ?>
 					</li>
 
 					<!-- Settings -->
 					<li>
 						<?php
-							echo $this->Html->link(
-								'<i class="fa fa-cog"></i><span></span>' . __('Settings'),
-								'#',
-								['class' => 'shortcut todo', 'escape' => false]
-							);
-						?>
+                            echo $this->Html->link(
+                                '<i class="fa fa-cog"></i><span></span>' . __('Settings'),
+                                '#',
+                                ['class' => 'shortcut todo', 'escape' => false]
+                            );
+                        ?>
 					</li>
 
 					<!-- Contribute -->
 					<li>
 						<?php
-							echo $this->Html->link(
-								'<i class="fa fa-github"></i><span></span>' . __('Contribute'),
-								'https://cakebox.readthedocs.org/en/latest/additional/contributing/',
-								['class' => 'shortcut', 'escape' => false]
-							);
-						?>
+                            echo $this->Html->link(
+                                '<i class="fa fa-github"></i><span></span>' . __('Contribute'),
+                                'https://cakebox.readthedocs.org/en/latest/additional/contributing/',
+                                ['class' => 'shortcut', 'escape' => false]
+                            );
+                        ?>
 					</li>
 
 					<!-- Help -->
 					<li>
 						<?php
-							echo $this->Html->link(
-								'<i class="fa fa-book"></i><span></span>' . __('Docs'),
-								'https://cakebox.readthedocs.org',
-								['class' => 'shortcut todo', 'escape' => false]
-							);
-						?>
+                            echo $this->Html->link(
+                                '<i class="fa fa-book"></i><span></span>' . __('Docs'),
+                                'https://cakebox.readthedocs.org',
+                                ['class' => 'shortcut todo', 'escape' => false]
+                            );
+                        ?>
 					</li>
 
 				</ul>

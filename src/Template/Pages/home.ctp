@@ -1,8 +1,7 @@
 <?php
 /**
- * Placeholder login view.
+ * Placeholder login view until (Tiny) Auth is simplemented.
  *
- * @todo move once hooked into Auth
  */
 
 $this->assign('title', 'Login');
@@ -33,12 +32,12 @@ $this->assign('title', 'Login');
 					<label class="choice" for="Field"><?= __('Keep me signed in') ?></label>
 				</span>
 				<?php
-					echo $this->Html->link(
-						__('Sign in'),
-						['controller' => 'Dashboards', 'action' => 'index'],
-						['class' => 'login-action btn btn-primary']
-					);
-				?>
+                    echo $this->Html->link(
+                        __('Sign in'),
+                        ['controller' => 'Dashboards', 'action' => 'index'],
+                        ['class' => 'login-action btn btn-primary']
+                    );
+                ?>
 			</div>
 
 		</form>
