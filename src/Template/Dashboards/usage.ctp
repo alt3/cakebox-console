@@ -1,7 +1,7 @@
 <?php
 /**
-* Cakebox usage
-*/
+ * Cakebox usage
+ */
 $this->assign('title', 'Pro Tips!');
 ?>
 
@@ -134,11 +134,13 @@ $this->assign('title', 'Pro Tips!');
     <div class="widget widget-plain">
         <div class="widget-content">
             <?php
-                echo $this->Html->link(__('Read The Docs!'),
+                echo $this->Html->link(
+                    __('Read The Docs!'),
                     'https://cakebox.readthedocs.org',
                     ['class' => 'todo btn btn-primary btn-usage-docs']
                 );
-                echo $this->Html->link(__('Report Issues'),
+                echo $this->Html->link(
+                    __('Report Issues'),
                     'https://github.com/alt3/cakebox-console/issues',
                     ['class' => 'btn btn-default btn-usage-issues']
                 );

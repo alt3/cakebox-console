@@ -1,7 +1,7 @@
 <?php
 /**
-* Fork me on Github ribbon
-*/
+ * Fork me on Github ribbon
+ */
 ?>
 <!-- Usage: Cakebox console -->
 <div class="row">
