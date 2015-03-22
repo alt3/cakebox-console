@@ -28,7 +28,7 @@ before_script:
 
 script:
   - sh -c "if [ '$PHPCS' != '1' ]; then phpunit; fi"
-  - sh -c "if [ '$PHPCS' = '1' ]; then vendor/bin/phpcs -p --extensions=php,css,js --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot --ignore=./webroot/css/base.css,./webroot/css/cdn-fallback,./webroot/js/cdn-fallback; fi"
+  - sh -c "if [ '$PHPCS' = '1' ]; then vendor/bin/phpcs -p --extensions=php,ctp,css,js --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot --ignore=./webroot/css/base.css,./webroot/css/cdn-fallback,./webroot/js/cdn-fallback; fi"
 
 notifications:
   email: false
