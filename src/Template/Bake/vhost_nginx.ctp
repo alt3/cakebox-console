@@ -16,7 +16,7 @@ server {
     root :webroot;
     index index.php;
 
-    access_log /var/log/nginx/:url.access.log logstash;
+    access_log /var/log/nginx/:url.access.log;
     error_log /var/log/nginx/:url.error.log;
 
     location / {
