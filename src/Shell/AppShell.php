@@ -123,8 +123,11 @@ class AppShell extends Shell
      * @param string $message  Message to be logged.
      * @return void
      */
-    public function logError($message)
+    public function logError($message = null)
     {
+        if (empty($message)) {
+            $message = 'Error';
+        }
         log::warning($message);
         $this->out("<error>$message</error>", 1, Shell::QUIET);
         $this->out("<info>See /var/log/cakephp/cakebox.cli.log for details.</info>");
@@ -173,8 +176,12 @@ class AppShell extends Shell
      * @param string $message  Message to be logged.
      * @return void
      */
-    public function exitBashError($message)
+    public function exitBashError($message = null)
     {
+        if (empty($message)) {
+            $message = 'Error';
+        }
+
         if (count($this->execute->debug()) != 0) {
             foreach ($this->execute->debug() as $entry) {
                 $this->out($entry, 1, Shell::QUIET);
