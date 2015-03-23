@@ -13,6 +13,6 @@ class DatabasesController extends AppController
      */
     public function index()
     {
-        $this->set('databases', $this->cbi->getAppDatabases());
+        $this->set('databases', $this->Info->getAppDatabases());
     }
 }

@@ -9,7 +9,7 @@ use Cake\Event\Event;
 use Cake\Filesystem\Folder;
 use Cake\Network\Exception\NotFoundException;
 
-class SiteFilesController extends AppController
+class VhostsController extends AppController
 {
 
     /**
@@ -41,7 +41,7 @@ class SiteFilesController extends AppController
             'sites-available' => '/etc/nginx/sites-available',
             'sites-enabled' => '/etc/nginx/sites-enabled'
         ],
-        'sitefiles' => $this->cbi->getRichNginxFiles(),
+        'sitefiles' => $this->Info->getRichVhosts(),
         ]);
     }
 

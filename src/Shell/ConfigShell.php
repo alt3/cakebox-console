@@ -78,7 +78,7 @@ class ConfigShell extends AppShell
         if (isset($this->params['username'])) {
             $username = $this->params['username'];
             $this->logInfo("* Setting git user.name to $username");
-            if (!$this->execute->gitConfig("user.name", $username)) {
+            if (!$this->Execute->gitConfig("user.name", $username)) {
                 $this->exitBashError("Error updating git config.");
             }
         }
@@ -86,7 +86,7 @@ class ConfigShell extends AppShell
         if (isset($this->params['email'])) {
             $email = $this->params['email'];
             $this->logInfo("* Setting git user.email to $email");
-            if (!$this->execute->gitConfig("user.email", $email)) {
+            if (!$this->Execute->gitConfig("user.email", $email)) {
                 $this->exitBashError("Error updating git config.");
             }
         }
@@ -103,7 +103,7 @@ class ConfigShell extends AppShell
     {
         // no --protocol parameter given, display current protocol
         if (!isset($this->params['protocol'])) {
-            if ($this->cbi->dashboardUsesHttps()) {
+            if ($this->Info->dashboardUsesHttps()) {
                 $this->exitBashSuccess("The Cakebox Dashboard is using HTTPS");
             }
             $this->exitBashSuccess("The Cakebox Dashboard is using HTTP");
@@ -114,18 +114,18 @@ class ConfigShell extends AppShell
         // do not change if the protocol is already being used unless the
         // --force parameter is given.
         if (!isset($this->params['force'])) {
-            if ($protocol === 'https' & $this->cbi->dashboardUsesHttps()) {
+            if ($protocol === 'https' & $this->Info->dashboardUsesHttps()) {
                 $this->logInfo("* Skipping: website already uses HTTPS");
                 $this->exitBashSuccess("Command completed successfully");
             }
-            if ($protocol === 'http' & !$this->cbi->dashboardUsesHttps()) {
+            if ($protocol === 'http' & !$this->Info->dashboardUsesHttps()) {
                 $this->logInfo("* Skipping: website already uses HTTP");
                 $this->exitBashSuccess("Command completed successfully");
             }
         }
 
         // enable new protocol by replacing Ngixnx vhost configuration file
-        if (!$this->execute->setDashboardProtocol($protocol)) {
+        if (!$this->Execute->setDashboardProtocol($protocol)) {
             $this->exitBashError("Error changing protocol.");
         }
         $this->exitBashSuccess("Command completed successfully");

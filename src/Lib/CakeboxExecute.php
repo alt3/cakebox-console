@@ -1,6 +1,7 @@
 <?php
 namespace App\Lib;
 
+use App\Lib\CakeboxInfo;
 use Cake\Cache\Cache;
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
@@ -18,9 +19,9 @@ class CakeboxExecute
     /**
      * Instance of \App\Lib\CakeboxInfo
      *
-     * @var Array
+     * @var \App\Lib\CakeboxInfo
      */
-    protected $cbi = [];
+    protected $Info;
 
     /**
      * List with debug information for the most recently executed command.
@@ -36,7 +37,7 @@ class CakeboxExecute
      */
     public function __construct()
     {
-        $this->cbi = new CakeboxInfo();
+        $this->Info = new CakeboxInfo();
     }
 
     /**
@@ -276,10 +277,10 @@ class CakeboxExecute
      * @param bool $force Optional, true to overwrite existing file.
      * @return boolean True on success
      */
-    public function addSite($url, $webroot, $force = false)
+    public function addVhost($url, $webroot, $force = false)
     {
         $this->_flushLogs();
-        $this->_logStart("Creating website $url");
+        $this->_logStart("Creating virtual host for $url");
 
         // Prevent overwriting default Cakebox site
         if ($url == 'default') {
@@ -288,11 +289,10 @@ class CakeboxExecute
         }
 
         // Check for existing site file
-        $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
-        $this->_log("Creating virtual host file for $url");
-        if (file_exists($siteFile)) {
+        $vhostFile = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $url;
+        if (file_exists($vhostFile)) {
             if (!$force) {
-                $this->_error("* Site file $siteFile already exists. Use --force to drop.");
+                $this->_error("* Virtual host file $vhostFile already exists. Use --force to drop.");
                 return false;
             }
             $this->_log("* Overwriting existing file");
@@ -306,14 +306,14 @@ class CakeboxExecute
         ]);
 
         // Write generated vhost configuration to file
-        if (!$this->_writeSystemFile($siteFile, $config)) {
-            $this->_error("Error writing virtual hosts file $siteFile");
+        if (!$this->_writeSystemFile($vhostFile, $config)) {
+            $this->_error("Error writing virtual hosts file $vhostFile");
             return false;
         }
-        $this->_log("* Successfully created $siteFile");
+        $this->_log("* Successfully created $vhostFile");
 
         // Create symbolic link in sites-enabled
-        if (!$this->createSiteSymlink($url)) {
+        if (!$this->enableVhost($url)) {
             $this->_error("Error creating symbolic link");
             return false;
         }
@@ -326,35 +326,63 @@ class CakeboxExecute
     }
 
     /**
-     * Create a new Nginx website by generating a virtual host file, creating a
-     * symoblic link and reloading the webserver.
+     * Enables an Nginx virtual host by creating a symbolic link in
+     * /etc/nginx/sites-enabled as root.
+     *
+     * @param string $vhostFile Name of the nginx virtual host file without path.
+     * @return boolean True if created successfully
+     */
+    public function enableVhost($vhostFile)
+    {
+        $this->_log("Creating symbolic link");
+        $link = $this->Info->webserverMeta['nginx']['sites-enabled'] . DS . $vhostFile;
+        $target = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $vhostFile;
+
+        // Do nothing if the symbolic link already exists
+        if (is_link($link)) {
+            $this->_warn("* Skipping: symbolic link $vhostFile already exists");
+            return true;
+        }
+
+        // shell `ln` command as root
+        if (!$this->shell("ln -s $target $link", 'root')) {
+            $this->_error("Error creating symbolic link");
+            return false;
+        }
+        $this->_log("* Successfully created symbolic link $link");
+        return true;
+    }
+
+    /**
+     * Completely removes an Nginx website by removing virtual host
+     * configuration file, symbolic link and reloading Nginx.
      *
      * @param string $url Fully Qualified Domain Name used to expose the site.
      * @return boolean True on success
      */
-    public function removeSite($url)
+    public function removeVhost($url)
     {
         $this->_flushLogs();
-        $this->_logStart("Deleting website $url");
+        $this->_logStart("Deleting virtual host $url");
 
         // Prevent removing default Cakebox site
         if ($url == 'default') {
             $this->_error("Removing 'default' as <url> is prohibited as this would destroy the default Cakebox site");
             return false;
         }
-        $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
-        if (!is_file($siteFile)) {
-            $this->_error("Site file $siteFile does not exist");
+        $vhostFile = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $url;
+        if (!is_file($vhostFile)) {
+            $this->_error("Virtual host file $vhostFile does not exist");
             return false;
         }
 
-        $this->_log("* Deleting virtual host file $siteFile");
-        if (!$this->shell("rm $siteFile", 'root')) {
+        $this->_log("* Deleting virtual host file $vhostFile");
+        if (!$this->shell("rm $vhostFile", 'root')) {
             $this->_error("Error deleting file");
             return false;
         }
 
-        $symlink = $this->cbi->webserverMeta['nginx']['sites-enabled'] . DS . $url;
+        $symlink = $this->Info->webserverMeta['nginx']['sites-enabled'] . DS . $url;
         if (!is_link($symlink)) {
             $this->_log("* Skipping unlink... $symlink does not exist");
         } else {
@@ -369,7 +397,7 @@ class CakeboxExecute
         if (!$this->reloadNginx()) {
             return false;
         }
-        $this->_log("Website deleted successully");
+        $this->_log("Virtual host removed successully");
         return true;
     }
 
@@ -427,7 +455,7 @@ class CakeboxExecute
      */
     protected function _isSystemDatabase($database)
     {
-        if (in_array($database, $this->cbi->databaseMeta['mysql']['system_databases'])) {
+        if (in_array($database, $this->Info->databaseMeta['mysql']['system_databases'])) {
             $this->_warn("* $database is a system database");
             return true;
         }
@@ -480,33 +508,6 @@ class CakeboxExecute
             return false;
         }
         Log::debug("* Directory is writable");
-        return true;
-    }
-
-    /**
-     * Create a symbolic link in /etc/nginx/sites-enabled as root.
-     *
-     * @param string $siteFile Name of the nginx site file witouht leading path.
-     * @return boolean True if created successfully
-     */
-    public function createSiteSymlink($siteFile)
-    {
-        $this->_log("Creating symbolic link");
-        $link = $this->cbi->webserverMeta['nginx']['sites-enabled'] . DS . $siteFile;
-        $target = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $siteFile;
-
-        // Do nothing if the symbolic link already exists
-        if (is_link($link)) {
-            $this->_warn("* Skipping: symbolic link $link already exists");
-            return true;
-        }
-
-        // shell `ln` command as root
-        if (!$this->shell("ln -s $target $link", 'root')) {
-            $this->_error("Error creating symbolic link");
-            return false;
-        }
-        $this->_log("* Successfully created symbolic link $link");
         return true;
     }
 
@@ -573,8 +574,8 @@ class CakeboxExecute
         $coreFile = $appdir . DS . "app" . DS . "Config" . DS . "core.php";
 
         $res = CakeboxUtility::updateConfigFile($coreFile, [
-            $this->cbi->frameworkMeta['cakephp2']['salt'] => CakeboxUtility::getSaltCipher($coreFile),
-            $this->cbi->frameworkMeta['cakephp2']['cipher'] => CakeboxUtility::getSaltCipher($coreFile)
+            $this->Info->frameworkMeta['cakephp2']['salt'] => CakeboxUtility::getSaltCipher($coreFile),
+            $this->Info->frameworkMeta['cakephp2']['cipher'] => CakeboxUtility::getSaltCipher($coreFile)
         ]);
         if (!$res) {
             $this->_error("Error updating core file");

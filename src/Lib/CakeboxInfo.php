@@ -327,7 +327,7 @@ class CakeboxInfo
      *
      * @return array Enriched array with found filenames
      */
-    public function getRichNginxFiles()
+    public function getRichVhosts()
     {
         foreach ($this->getNginxFiles() as $file) {
             $result[] = [
@@ -346,7 +346,7 @@ class CakeboxInfo
      */
     public function getNginxFileCount()
     {
-        return count($this->getRichNginxFiles());
+        return count($this->getRichVhosts());
     }
 
     /**
@@ -677,13 +677,13 @@ class CakeboxInfo
     public function getApps()
     {
         $result = [];
-        foreach ($this->getNginxFiles() as $sitefile) {
-            $appname = $this->getAppName($sitefile);
+        foreach ($this->getNginxFiles() as $vhostFile) {
+            $appname = $this->getAppName($vhostFile);
             if (!$appname) {
                 continue;
             }
 
-            $appdir = $this->getAppBase($sitefile);
+            $appdir = $this->getAppBase($vhostFile);
             if (!$appdir) {
                 continue;
             }
@@ -702,7 +702,7 @@ class CakeboxInfo
                 'framework_major_version' => CakeboxUtility::getMajorVersion($frameworkVersion),
                 'framework_version' => $frameworkVersion,
                 'appdir' => $appdir,
-                'webroot' => $this->getWebrootFromSite($sitefile)
+                'webroot' => $this->getWebrootFromSite($vhostFile)
             ];
         }
 
@@ -712,12 +712,12 @@ class CakeboxInfo
     /**
      * Get the application name by retrieving it's Nginx "server_name" directive.
      *
-     * @param string $sitefile Full path to application's Nginx site configuration file.
+     * @param string $vhostFile Full path to application's Nginx site configuration file.
      * @return string|bool Containing application name, or false
      */
-    public function getAppName($sitefile)
+    public function getAppName($vhostFile)
     {
-        $name = CakeboxUtility::getNginxFileSetting($sitefile, 'server_name');
+        $name = CakeboxUtility::getNginxFileSetting($vhostFile, 'server_name');
         if ($name === '_' || $name === false) {
             return false;
         }
@@ -727,12 +727,12 @@ class CakeboxInfo
     /**
      * Get the application's webroot directory by retrieving it's Nginx "root" directive.
      *
-     * @param string $sitefile Full path to application's Nginx site configuration file.
+     * @param string $vhostFile Full path to application's Nginx site configuration file.
      * @return mixed Containing application name
      */
-    public function getWebrootFromSite($sitefile)
+    public function getWebrootFromSite($vhostFile)
     {
-        $webroot = CakeboxUtility::getNginxFileSetting($sitefile, 'root');
+        $webroot = CakeboxUtility::getNginxFileSetting($vhostFile, 'root');
         return $webroot;
     }
 
@@ -762,12 +762,12 @@ class CakeboxInfo
     /**
      * Get the application's root/base directory by parsing it's Nginx "root" directive.
      *
-     * @param string $sitefile Full path to application's Nginx site configuration file.
+     * @param string $vhostFile Full path to application's Nginx site configuration file.
      * @return mixed Containing application name
      */
-    public function getAppBase($sitefile)
+    public function getAppBase($vhostFile)
     {
-        $webroot = $this->getWebrootFromSite($sitefile);
+        $webroot = $this->getWebrootFromSite($vhostFile);
 
         $cake2base = substr($webroot, 0, strrpos($webroot, '/app/webroot'));
         if (is_dir($cake2base)) {

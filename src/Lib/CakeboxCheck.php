@@ -1,6 +1,7 @@
 <?php
 namespace App\Lib;
 
+use App\Lib\CakeboxInfo;
 use Cake\Cache\Cache;
 use Cake\Datasource\ConnectionManager;
 use Cake\Utility\Hash;
@@ -17,7 +18,7 @@ class CakeboxCheck
      *
      * @var App\Lib\CakeboxInfo
      */
-    protected $cbi;
+    protected $Info;
 
     /**
      * Global box requirements. Basically the sum of the most demanding minimal
@@ -51,7 +52,7 @@ class CakeboxCheck
      */
     public function __construct()
     {
-        $this->cbi = new CakeboxInfo;
+        $this->Info = new CakeboxInfo;
     }
 
     /**
@@ -123,7 +124,7 @@ class CakeboxCheck
      */
     public function getApplicationChecks($appdir)
     {
-        $framework = $this->cbi->getFrameworkCommonName($appdir);
+        $framework = $this->Info->getFrameworkCommonName($appdir);
 
      // writebale directories
         foreach ($this->frameworkRequirements[$framework]['writeables'] as $dir) {

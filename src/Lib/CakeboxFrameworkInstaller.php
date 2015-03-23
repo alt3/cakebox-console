@@ -45,14 +45,14 @@ class CakeboxFrameworkInstaller
      *
      * @var App\Lib\CakeboxInfo
      */
-    protected $cbi;
+    protected $Info;
 
     /**
      * CakeboxExecute instance
      *
      * @var App\Lib\CakeboxInfo
      */
-    protected $execute;
+    protected $Execute;
 
     /**
      * Class constructor
@@ -61,8 +61,8 @@ class CakeboxFrameworkInstaller
      */
     public function __construct()
     {
-        $this->cbi = new CakeboxInfo();
-        $this->execute = new CakeboxExecute();
+        $this->Info = new CakeboxInfo();
+        $this->Execute = new CakeboxExecute();
     }
 
     /**
@@ -241,25 +241,25 @@ class CakeboxFrameworkInstaller
                 if ($this->options['majorversion'] == '3') {
                     $this->options['framework_short'] = 'cakephp3';
                     $this->options['framework_human'] = 'CakePHP 3.x';
-                    $this->options['installation_method'] = $this->cbi->frameworkMeta['cakephp3']['installation_method'];
-                    $this->options['source'] = $this->cbi->frameworkMeta['cakephp3']['source'];
-                    $this->options['webroot'] = $this->options['path'] . DS . $this->cbi->frameworkMeta['cakephp3']['webroot'];
+                    $this->options['installation_method'] = $this->Info->frameworkMeta['cakephp3']['installation_method'];
+                    $this->options['source'] = $this->Info->frameworkMeta['cakephp3']['source'];
+                    $this->options['webroot'] = $this->options['path'] . DS . $this->Info->frameworkMeta['cakephp3']['webroot'];
                 }
                 if ($this->options['majorversion'] == '2') {
                     $this->options['framework_short'] = 'cakephp2';
                     $this->options['framework_human'] = 'CakePHP 2.x';
-                    $this->options['installation_method'] = $this->cbi->frameworkMeta['cakephp2']['installation_method'];
-                    $this->options['source'] = $this->cbi->frameworkMeta['cakephp2']['source'];
-                    $this->options['webroot'] = $this->options['path'] . DS . $this->cbi->frameworkMeta['cakephp2']['webroot'];
+                    $this->options['installation_method'] = $this->Info->frameworkMeta['cakephp2']['installation_method'];
+                    $this->options['source'] = $this->Info->frameworkMeta['cakephp2']['source'];
+                    $this->options['webroot'] = $this->options['path'] . DS . $this->Info->frameworkMeta['cakephp2']['webroot'];
                 }
                 break;
 
             case 'laravel':
                 $this->options['framework_short'] = 'laravel';
                 $this->options['framework_human'] = 'Laravel 5';
-                $this->options['installation_method'] = $this->cbi->frameworkMeta['laravel']['installation_method'];
-                $this->options['source'] = $this->cbi->frameworkMeta['laravel']['source'];
-                $this->options['webroot'] = $this->options['path'] . DS . $this->cbi->frameworkMeta['laravel']['webroot'];
+                $this->options['installation_method'] = $this->Info->frameworkMeta['laravel']['installation_method'];
+                $this->options['source'] = $this->Info->frameworkMeta['laravel']['source'];
+                $this->options['webroot'] = $this->options['path'] . DS . $this->Info->frameworkMeta['laravel']['webroot'];
                 unset ($this->options['majorversion']);
                 unset ($this->options['template']);
                 break;
@@ -271,8 +271,8 @@ class CakeboxFrameworkInstaller
         # Attempt changing the source if --ssh option was used.
         if (isset($this->options['ssh'])) {
             log::debug("Trying to change Git source since user passed --ssh option");
-            if (isset($this->cbi->frameworkMeta[$this->options['framework_short']]['source_ssh'])) {
-                $this->options['source'] = $this->cbi->frameworkMeta[$this->options['framework_short']]['source_ssh'];
+            if (isset($this->Info->frameworkMeta[$this->options['framework_short']]['source_ssh'])) {
+                $this->options['source'] = $this->Info->frameworkMeta[$this->options['framework_short']]['source_ssh'];
                 log::debug("* Changed source to " . $this->options['source']);
             } else {
                 log::debug("* Skipping: metadata contains no alternative SSH source");
@@ -291,7 +291,7 @@ class CakeboxFrameworkInstaller
         log::Debug("Detecting framework options for custom application");
 
         # Detect framework first
-        $framework = $this->cbi->getFrameworkCommonName($this->options['path']);
+        $framework = $this->Info->getFrameworkCommonName($this->options['path']);
         if (empty($framework)) {
             log::debug("* No matching framework detected");
             log::debug("* Setting webroot to application directory");
@@ -303,7 +303,7 @@ class CakeboxFrameworkInstaller
         $this->options['framework_short'] = $framework;
 
         # Set webroot
-        $this->options['webroot'] = $this->options['path'] . DS . $this->cbi->frameworkMeta[$framework]['webroot'];
+        $this->options['webroot'] = $this->options['path'] . DS . $this->Info->frameworkMeta[$framework]['webroot'];
         return true;
     }
 
@@ -340,7 +340,7 @@ class CakeboxFrameworkInstaller
 
         if (!is_dir($this->options['path'])) {
             log::debug("Creating target directory " . $this->options['path']);
-            if (!$this->execute->mkVagrantDir($this->options['path'])) {
+            if (!$this->Execute->mkVagrantDir($this->options['path'])) {
                 throw new Exception("Error creating target directory " . $this->options['path']);
             }
         }
@@ -356,7 +356,7 @@ class CakeboxFrameworkInstaller
     protected function _composerInstall()
     {
         log::Debug("Composer installing " . $this->options['framework_human']);
-        if (!$this->execute->composerCreateProject($this->options['source'], $this->options['path'])) {
+        if (!$this->Execute->composerCreateProject($this->options['source'], $this->options['path'])) {
             throw new Exception("Error composer installing.");
         }
         return true;
@@ -371,7 +371,7 @@ class CakeboxFrameworkInstaller
     protected function _gitInstall()
     {
         log::Debug("Git installing " . $this->options['framework_human']);
-        if (!$this->execute->gitClone($this->options['source'], $this->options['path'])) {
+        if (!$this->Execute->gitClone($this->options['source'], $this->options['path'])) {
             throw new Exception("Error git cloning.");
         }
         return true;
@@ -394,14 +394,14 @@ class CakeboxFrameworkInstaller
         }
 
         # Skip if the framework does not use writable directories
-        if (!isset($this->cbi->frameworkMeta[$this->options['framework_short']]['writable_dirs'])) {
+        if (!isset($this->Info->frameworkMeta[$this->options['framework_short']]['writable_dirs'])) {
             log::debug("* Skipping: framework does not use writeable directories");
             return true;
         }
 
         # Set permissions
         log::debug("* Applying " . $this->options['framework_short'] . " folder permissions");
-        foreach ($this->cbi->frameworkMeta[$this->options['framework_short']]['writable_dirs'] as $directory) {
+        foreach ($this->Info->frameworkMeta[$this->options['framework_short']]['writable_dirs'] as $directory) {
             if (!CakeboxUtility::setFolderPermissions($this->options['path'] . DS . $directory)) {
                 throw new Exception("Error setting permissions.");
             }
@@ -419,7 +419,7 @@ class CakeboxFrameworkInstaller
     {
         log::debug("Updating configuration files");
 
-        $knownSources = Hash::extract($this->cbi->frameworkMeta, '{s}.source');
+        $knownSources = Hash::extract($this->Info->frameworkMeta, '{s}.source');
         if (!in_array($this->options['source'], $knownSources)) {
             log::debug("* Skipping: automated configuration updates are not supported for user specified applications");
             return true;
@@ -428,13 +428,13 @@ class CakeboxFrameworkInstaller
         log::debug("Updating " . $this->options['framework_human'] . " config files");
 
         if ($this->options['framework_short'] == 'cakephp3') {
-            if (!$this->execute->updateCake3Configuration($this->options['path'], $this->options['url'])) {
+            if (!$this->Execute->updateCake3Configuration($this->options['path'], $this->options['url'])) {
                 throw new Exception("Error updating config file.");
             }
         }
 
         if ($this->options['framework_short'] == 'cakephp2') {
-            if (!$this->execute->updateCake2Configuration($this->options['path'], $this->options['url'])) {
+            if (!$this->Execute->updateCake2Configuration($this->options['path'], $this->options['url'])) {
                 throw new Exception("Error updating config file.");
             }
         }

@@ -42,7 +42,7 @@ class AppController extends Controller
      *
      * @var \App\Lib\CakeboxInfo
      */
-    public $cbi;
+    public $Info;
 
     /**
      * Initialization hook method.
@@ -51,7 +51,7 @@ class AppController extends Controller
      */
     public function initialize()
     {
-        $this->cbi = new CakeboxInfo;
+        $this->Info = new CakeboxInfo;
     }
 
     /**
@@ -64,7 +64,7 @@ class AppController extends Controller
     public function beforeFilter(Event $event)
     {
         // set cakebox version
-        $this->set(['version' => $this->cbi->cakeboxVersion()]);
+        $this->set(['version' => $this->Info->cakeboxVersion()]);
 
 
         // Throw 404's for non-ajax connections to ajax_ prefixed actions

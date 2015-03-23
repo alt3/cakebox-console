@@ -133,7 +133,7 @@ class ApplicationShell extends AppShell
         }
 
         if (!$targetDirAvailable && !$dirHasData) {
-            if (!$this->execute->mkVagrantDir($installer->option('path'))) {
+            if (!$this->Execute->mkVagrantDir($installer->option('path'))) {
                 $this->exitBashError('Error creating target directory ' . $installer->option('path'));
             }
         }
@@ -151,7 +151,7 @@ class ApplicationShell extends AppShell
         if (!$dirHasData && $installer->option('installation_method') !== 'composer') {
             if (file_exists($installer->option('path') . DS . 'composer.json')) {
                 $this->logInfo('Composer installing detected composer.json');
-                if (!$this->execute->composerInstall($installer->option('path'))) {
+                if (!$this->Execute->composerInstall($installer->option('path'))) {
                     $this->exitBashError('Error Composer installing detected composer.json.');
                 }
             }
@@ -165,7 +165,7 @@ class ApplicationShell extends AppShell
         // remove existing (assumed orphaned) vhost when not in --repair mode
         if (CakeboxUtility::vhostAvailable($url) && !$this->params['repair']) {
             $this->out('* Removing existing (assumed orphaned) virtual host');
-            if (!$this->execute->removeSite($url)) {
+            if (!$this->Execute->removeVhost($url)) {
                 $this->exitBashError('Error removing virtual host');
             }
         }
@@ -182,7 +182,7 @@ class ApplicationShell extends AppShell
         }
 
         if (!$vhostAvailable) {
-            if (!$this->execute->addSite($url, $installer->option('webroot'), true)) {
+            if (!$this->Execute->addVhost($url, $installer->option('webroot'), true)) {
                 $this->exitBashError('Error creating virtual host');
             } else {
                 $this->out('* Successfully created virtual host');
@@ -192,10 +192,10 @@ class ApplicationShell extends AppShell
         // recheck symlink since it could have been created above
         if (!CakeboxUtility::vhostEnabled($url)) {
             $this->out('* Enabling virtual host');
-            if (!$this->execute->createSiteSymlink($url)) {
+            if (!$this->Execute->enableVhost($url)) {
                 $this->exitBashError('Error creating symbolic link');
             }
-            if (!$this->execute->reloadNginx()) {
+            if (!$this->Execute->reloadNginx()) {
                 $this->exitBashError('Error reloading Nginx');
             }
         }
@@ -205,7 +205,7 @@ class ApplicationShell extends AppShell
         # ------------------------------------------------------------
         $this->out('Creating databases');
         $mainDatabase = $installer->option('database');
-        $testDatabase = $this->cbi->databaseMeta['test_prefix'] . $installer->option('database');
+        $testDatabase = $this->Info->databaseMeta['test_prefix'] . $installer->option('database');
 
         // remove existing (assumed orphaned) databases when not in --repair mode
         if (CakeboxUtility::databaseExists($mainDatabase) && !$this->params['repair']) {
@@ -278,7 +278,7 @@ class ApplicationShell extends AppShell
             $this->out("  => Make sure to manually update your database credentials, plugins, etc.");
         }
 
-        $this->out("\nRemember to update your hosts file with: <info>" . $this->cbi->getVmIpAddress() . " http://$url</info>\n");
+        $this->out("\nRemember to update your hosts file with: <info>" . $this->Info->getVmIpAddress() . " http://$url</info>\n");
         $this->exitBashSuccess('Installation completed successfully');
     }
 }

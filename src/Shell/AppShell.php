@@ -18,14 +18,7 @@ class AppShell extends Shell
      *
      * @var \App\Lib\CakeboxInfo
      */
-    protected $cbi;
-
-    /**
-     * Instance of CakeboxExecute available to all Shells.
-     *
-     * @var \App\Lib\CakeboxExecute
-     */
-    protected $execute;
+    protected $Info;
 
     /**
      * Instance of CakeboxExecute available to all Shells.
@@ -43,8 +36,7 @@ class AppShell extends Shell
     public function initialize()
     {
         $this->_io->setLoggers(false);
-        $this->cbi = new CakeboxInfo();
-        $this->execute = new CakeboxExecute();
+        $this->Info = new CakeboxInfo();
         $this->Execute = new CakeboxExecute();
         parent::initialize();
     }
@@ -141,8 +133,8 @@ class AppShell extends Shell
      */
     public function exitBashSuccess($message = null)
     {
-        if (count($this->execute->debug()) != 0) {
-            foreach ($this->execute->debug() as $entry) {
+        if (count($this->Execute->debug()) != 0) {
+            foreach ($this->Execute->debug() as $entry) {
                 $this->out($entry, 1, Shell::VERBOSE);
             }
         }
@@ -160,8 +152,8 @@ class AppShell extends Shell
      */
     public function exitBashWarning($message)
     {
-        if (count($this->execute->debug()) != 0) {
-            foreach ($this->execute->debug() as $entry) {
+        if (count($this->Execute->debug()) != 0) {
+            foreach ($this->Execute->debug() as $entry) {
                 $this->out($entry, 1, Shell::VERBOSE);
             }
         }
@@ -182,8 +174,8 @@ class AppShell extends Shell
             $message = 'Error';
         }
 
-        if (count($this->execute->debug()) != 0) {
-            foreach ($this->execute->debug() as $entry) {
+        if (count($this->Execute->debug()) != 0) {
+            foreach ($this->Execute->debug() as $entry) {
                 $this->out($entry, 1, Shell::QUIET);
             }
         }
