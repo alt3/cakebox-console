@@ -82,7 +82,7 @@ class UpdateShell extends AppShell
             true // update file as root
         );
 
-        if (!$this->execute->shell("cd $path; composer update")) {
+        if (!$this->execute->shell("cd $path; composer update", 'root')) {
             return false;
         }
         return true;
