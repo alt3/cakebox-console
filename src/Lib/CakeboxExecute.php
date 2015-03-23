@@ -1,6 +1,7 @@
 <?php
 namespace App\Lib;
 
+use App\Lib\CakeboxInfo;
 use Cake\Cache\Cache;
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
@@ -18,9 +19,9 @@ class CakeboxExecute
     /**
      * Instance of \App\Lib\CakeboxInfo
      *
-     * @var Array
+     * @var \App\Lib\CakeboxInfo
      */
-    protected $cbi = [];
+    protected $Info;
 
     /**
      * List with debug information for the most recently executed command.
@@ -36,7 +37,7 @@ class CakeboxExecute
      */
     public function __construct()
     {
-        $this->cbi = new CakeboxInfo();
+        $this->Info = new CakeboxInfo();
     }
 
     /**
@@ -288,7 +289,7 @@ class CakeboxExecute
         }
 
         // Check for existing site file
-        $vhostFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
+        $vhostFile = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $url;
         if (file_exists($vhostFile)) {
             if (!$force) {
                 $this->_error("* Virtual host file $vhostFile already exists. Use --force to drop.");
@@ -334,8 +335,8 @@ class CakeboxExecute
     public function enableVhost($vhostFile)
     {
         $this->_log("Creating symbolic link");
-        $link = $this->cbi->webserverMeta['nginx']['sites-enabled'] . DS . $vhostFile;
-        $target = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $vhostFile;
+        $link = $this->Info->webserverMeta['nginx']['sites-enabled'] . DS . $vhostFile;
+        $target = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $vhostFile;
 
         // Do nothing if the symbolic link already exists
         if (is_link($link)) {
@@ -369,7 +370,7 @@ class CakeboxExecute
             $this->_error("Removing 'default' as <url> is prohibited as this would destroy the default Cakebox site");
             return false;
         }
-        $vhostFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
+        $vhostFile = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $url;
         if (!is_file($vhostFile)) {
             $this->_error("Virtual host file $vhostFile does not exist");
             return false;
@@ -381,7 +382,7 @@ class CakeboxExecute
             return false;
         }
 
-        $symlink = $this->cbi->webserverMeta['nginx']['sites-enabled'] . DS . $url;
+        $symlink = $this->Info->webserverMeta['nginx']['sites-enabled'] . DS . $url;
         if (!is_link($symlink)) {
             $this->_log("* Skipping unlink... $symlink does not exist");
         } else {
@@ -454,7 +455,7 @@ class CakeboxExecute
      */
     protected function _isSystemDatabase($database)
     {
-        if (in_array($database, $this->cbi->databaseMeta['mysql']['system_databases'])) {
+        if (in_array($database, $this->Info->databaseMeta['mysql']['system_databases'])) {
             $this->_warn("* $database is a system database");
             return true;
         }
@@ -573,8 +574,8 @@ class CakeboxExecute
         $coreFile = $appdir . DS . "app" . DS . "Config" . DS . "core.php";
 
         $res = CakeboxUtility::updateConfigFile($coreFile, [
-            $this->cbi->frameworkMeta['cakephp2']['salt'] => CakeboxUtility::getSaltCipher($coreFile),
-            $this->cbi->frameworkMeta['cakephp2']['cipher'] => CakeboxUtility::getSaltCipher($coreFile)
+            $this->Info->frameworkMeta['cakephp2']['salt'] => CakeboxUtility::getSaltCipher($coreFile),
+            $this->Info->frameworkMeta['cakephp2']['cipher'] => CakeboxUtility::getSaltCipher($coreFile)
         ]);
         if (!$res) {
             $this->_error("Error updating core file");

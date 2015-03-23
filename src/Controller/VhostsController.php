@@ -41,7 +41,7 @@ class VhostsController extends AppController
             'sites-available' => '/etc/nginx/sites-available',
             'sites-enabled' => '/etc/nginx/sites-enabled'
         ],
-        'sitefiles' => $this->cbi->getRichNginxFiles(),
+        'sitefiles' => $this->Info->getRichVhosts(),
         ]);
     }
 

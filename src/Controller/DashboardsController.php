@@ -17,17 +17,17 @@ class DashboardsController extends AppController
     public function index()
     {
         $data = [
-            'vm' => $this->cbi->getVmInfo(),
-            'apps' => $this->cbi->getApps(),
+            'vm' => $this->Info->getVmInfo(),
+            'apps' => $this->Info->getApps(),
             'counters' => [
-                'databases' => $this->cbi->getDatabaseCount(),
-                'sites' => $this->cbi->getNginxFileCount()
+                'databases' => $this->Info->getDatabaseCount(),
+                'sites' => $this->Info->getNginxFileCount()
             ],
-            'commits' => $this->cbi->getRepositoryCommits('alt3/cakebox-console', 5),
-            'contributions' => $this->cbi->getRepositoryContributions('alt3/cakebox-console', 'dev')
+            'commits' => $this->Info->getRepositoryCommits('alt3/cakebox-console', 5),
+            'contributions' => $this->Info->getRepositoryContributions('alt3/cakebox-console', 'dev')
         ];
 
-        if ($this->cbi->getLatestCommitLocal() != $this->cbi->getLatestCommitRemote()) {
+        if ($this->Info->getLatestCommitLocal() != $this->Info->getLatestCommitRemote()) {
             $data['update'] = true;
         }
 
@@ -42,8 +42,8 @@ class DashboardsController extends AppController
     public function vm()
     {
         $data = [
-            'vm' => $this->cbi->getVmInfo(),
-            'yaml' => $this->cbi->getRichCakeboxYaml()
+            'vm' => $this->Info->getVmInfo(),
+            'yaml' => $this->Info->getRichCakeboxYaml()
         ];
         $this->set('data', $data);
     }
@@ -80,14 +80,14 @@ class DashboardsController extends AppController
      */
     public function software()
     {
-        $packages = $this->cbi->getPackages();
-        $phpModules = $this->cbi->getPhpModules();
+        $packages = $this->Info->getPackages();
+        $phpModules = $this->Info->getPhpModules();
 
         $this->set([
-            'operating_system' => $this->cbi->getOperatingSystem(),
+            'operating_system' => $this->Info->getOperatingSystem(),
             'packages' => CakeboxUtility::columnizeArray($packages, 3),
             'php_modules' => CakeboxUtility::columnizeArray($phpModules, 3),
-            'nginx_modules' => $this->cbi->getNginxModules(),
+            'nginx_modules' => $this->Info->getNginxModules(),
             '_serialize' => ['operating_system', 'packages', 'php_modules', 'nginx_modules']
         ]);
     }
@@ -100,7 +100,7 @@ class DashboardsController extends AppController
     public function clilog()
     {
          $this->set([
-             'log' => $this->cbi->getCakeboxCliLog(),
+             'log' => $this->Info->getCakeboxCliLog(),
              '_serialize' => ['log']
          ]);
     }
@@ -112,7 +112,7 @@ class DashboardsController extends AppController
      */
         public function contributors()
         {
-            $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console', 'dev');
+            $contributors = $this->Info->getRepositoryContributors('alt3/cakebox-console', 'dev');
             $this->set([
             'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
             '_serialize' => ['contributors']
