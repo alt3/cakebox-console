@@ -27,7 +27,7 @@ $this->assign('title', 'Pro Tips!');
                             </p>
                             <ul>
                                 <li><i class="fa fa-arrow-right"></i><em>cakebox --help</em></li>
-                                <li><i class="fa fa-arrow-right"></i><em>cakebox site --help</em></li>
+                                <li><i class="fa fa-arrow-right"></i><em>cakebox vhost --help</em></li>
                                 <li><i class="fa fa-arrow-right"></i><em>cakebox database --help</em></li>
                                 <li><i class="fa fa-arrow-right"></i><em>cakebox application --help</em></li>
                             </ul>
