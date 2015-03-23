@@ -46,7 +46,7 @@ class CakeboxExecute
      * @param string $username User used to execute the command (e.g. `vagrant`).
      * @return boolean True if the command completed successfully
      */
-    protected function _shell($command, $username)
+    public function shell($command, $username)
     {
         // Generate different sudo command based on user
         if ($username == "root") {
@@ -133,11 +133,11 @@ class CakeboxExecute
     public function mkVagrantDir($path)
     {
         $this->_flushLogs();
-        if (!$this->_shell("mkdir $path", 'root')) {
+        if (!$this->shell("mkdir $path", 'root')) {
             return false;
         }
 
-        if (!$this->_shell("chown vagrant $path -R", 'root')) {
+        if (!$this->shell("chown vagrant $path -R", 'root')) {
             return false;
         }
 
@@ -153,8 +153,8 @@ class CakeboxExecute
      */
     public function gitConfig($gitKey, $value)
     {
-        log::debug("Updating global git configuration $gitKey to $value");
-        if (!$this->_shell("git config --global $gitKey $value", 'vagrant')) {
+        Log::debug("Updating global git configuration $gitKey to $value");
+        if (!$this->shell("git config --global $gitKey $value", 'vagrant')) {
             return false;
         }
         return true;
@@ -169,13 +169,13 @@ class CakeboxExecute
      */
     public function selfUpdate()
     {
-        log::debug('Self-updating Composer...');
+        Log::debug('Self-updating Composer...');
         $command = 'composer self-update';
-        if (!$this->_shell($command, 'root')) {
+        if (!$this->shell($command, 'root')) {
             return false;
         }
 
-        log::debug('Self-updating cakebox-console project...');
+        Log::debug('Self-updating cakebox-console project...');
 
         Log::debug('* Detecting branch');
         $command = 'cd /cakebox/console; git rev-parse --abbrev-ref HEAD';
@@ -187,13 +187,13 @@ class CakeboxExecute
 
         Log::debug('* Updating git repository');
         $command = "cd /cakebox/console; git pull origin $branch";
-        if (!$this->_shell($command, 'vagrant')) {
+        if (!$this->shell($command, 'vagrant')) {
             return false;
         }
 
         Log::debug('* Updating composer packages');
         $command = 'cd /cakebox/console; composer install --prefer-dist --no-dev';
-        if (!$this->_shell($command, 'vagrant')) {
+        if (!$this->shell($command, 'vagrant')) {
             return false;
         }
 
@@ -212,7 +212,7 @@ class CakeboxExecute
     {
         $this->_flushLogs();
         $command = "composer create-project --prefer-dist --no-interaction -s dev $package $path";
-        if (!$this->_shell($command, 'vagrant')) {
+        if (!$this->shell($command, 'vagrant')) {
             return false;
         }
         return true;
@@ -228,7 +228,7 @@ class CakeboxExecute
     {
         $this->_flushLogs();
         $command = "cd $directory; composer install --prefer-dist --no-interaction";
-        if (!$this->_shell($command, 'vagrant')) {
+        if (!$this->shell($command, 'vagrant')) {
             return false;
         }
         return true;
@@ -256,7 +256,7 @@ class CakeboxExecute
         }
 
         # Execute git clone
-        if (!$this->_shell("git clone $repository $path", 'vagrant')) {
+        if (!$this->shell("git clone $repository $path", 'vagrant')) {
             return false;
         }
         return true;
@@ -272,7 +272,7 @@ class CakeboxExecute
         $this->_log("Sanity checking SSH before attempting git clone");
 
         $this->_log("* Sanity checking SSH Agent forwarded SSH key");
-        if (!$this->_shell("ssh-add -l", 'vagrant')) {
+        if (!$this->shell("ssh-add -l", 'vagrant')) {
             $this->_error("Error: SSH git clone requires a SSH key, none found");
             $this->_log(" => Note: make sure your SSH agent is forwarding the required identity key if this is a private repository");
             $this->_log(" => Note: Windows users MUST use Pageant or SSH Agent Forwarding will simply not work");
@@ -280,7 +280,7 @@ class CakeboxExecute
         }
 
         $this->_log("* Sanity checking Github user.name");
-        if (!$this->_shell("git config user.name", 'vagrant')) {
+        if (!$this->shell("git config user.name", 'vagrant')) {
             return false;
         }
         return true;
@@ -296,12 +296,12 @@ class CakeboxExecute
         $this->_log("Reloading Nginx webserver");
 
         $this->_log("* Checking configuration");
-        if (!$this->_shell("nginx -t", 'root')) {
+        if (!$this->shell("nginx -t", 'root')) {
             return false;
         }
 
         $this->_log("* Restarting service");
-        if (!$this->_shell("service nginx reload", 'root')) {
+        if (!$this->shell("service nginx reload", 'root')) {
             return false;
         }
         return true;
@@ -389,7 +389,7 @@ class CakeboxExecute
         }
 
         $this->_log("* Deleting virtual host file $siteFile");
-        if (!$this->_shell("rm $siteFile", 'root')) {
+        if (!$this->shell("rm $siteFile", 'root')) {
             $this->_error("Error deleting file");
             return false;
         }
@@ -399,7 +399,7 @@ class CakeboxExecute
             $this->_log("* Skipping unlink... $symlink does not exist");
         } else {
             $this->_log("* Removing symbolic link $symlink");
-            if (!$this->_shell("unlink $symlink", 'root')) {
+            if (!$this->shell("unlink $symlink", 'root')) {
                 $this->_error("Error removing symlink");
                 return false;
             }
@@ -491,7 +491,7 @@ class CakeboxExecute
         $fh->write($content);
 
         // Move the tempfile
-        if (!$this->_shell("mv $tempFile $file", 'root')) {
+        if (!$this->shell("mv $tempFile $file", 'root')) {
             $this->_error("* Error moving $tempFile to $file");
             return false;
         }
@@ -507,7 +507,7 @@ class CakeboxExecute
      */
     public function isVagrantWritable($directory)
     {
-        log::debug("* Checking if directory is writable by vagrant user");
+        Log::debug("* Checking if directory is writable by vagrant user");
 
         if (!is_dir($directory)) {
             log::error("* Directory does not exist");
@@ -515,11 +515,11 @@ class CakeboxExecute
         }
 
         $testfile = $directory . DS . CakeboxUtility::getSaltCipher('heart-this');
-        if (!$this->_shell("touch $testfile; rm $testfile", 'vagrant')) {
+        if (!$this->shell("touch $testfile; rm $testfile", 'vagrant')) {
             log::error("* Directory is NOT writable");
             return false;
         }
-        log::debug("* Directory is writable");
+        Log::debug("* Directory is writable");
         return true;
     }
 
@@ -542,7 +542,7 @@ class CakeboxExecute
         }
 
         // shell `ln` command as root
-        if (!$this->_shell("ln -s $target $link", 'root')) {
+        if (!$this->shell("ln -s $target $link", 'root')) {
             $this->_error("Error creating symbolic link");
             return false;
         }
@@ -566,7 +566,7 @@ class CakeboxExecute
         }
 
         // not installed, shell installation
-        if (!$this->_shell("DEBIAN_FRONTEND=noninteractive apt-get install -y $package", 'root')) {
+        if (!$this->shell("DEBIAN_FRONTEND=noninteractive apt-get install -y $package", 'root')) {
             $this->_error("* Error installing package");
             return false;
         }
@@ -681,13 +681,13 @@ class CakeboxExecute
 
         // shell Percona XtraBackup job as root
         $this->_log("Starting hot backup");
-        if (!$this->_shell("xtrabackup --backup --target-dir=$tempFolder", 'root')) {
+        if (!$this->shell("xtrabackup --backup --target-dir=$tempFolder", 'root')) {
             return false;
         }
 
         // move backup from /tmp to synced folder
         $this->_log("Moving backup to Synced Folder");
-        if (!$this->_shell("mv $tempFolder $targetFolder", 'root')) {
+        if (!$this->shell("mv $tempFolder $targetFolder", 'root')) {
             return false;
         }
         return true;
@@ -714,7 +714,7 @@ class CakeboxExecute
         $template = APP . 'Template' . DS . 'Bake' . DS . "nginx-cakebox-$protocol";
 
         $this->_log("Replacing vhost $default with $template");
-        if (!$this->_shell("cp $template $default", 'root')) {
+        if (!$this->shell("cp $template $default", 'root')) {
             return false;
         }
 
@@ -745,7 +745,7 @@ class CakeboxExecute
      */
     protected function _logStart($message)
     {
-        log::debug(str_repeat("=", 80));
+        Log::debug(str_repeat("=", 80));
         Log::debug($message);
         $this->_debug[] = $message;
     }
