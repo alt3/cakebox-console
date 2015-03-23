@@ -46,15 +46,16 @@ class CakeboxExecute
      * @param string $username User used to execute the command (e.g. `vagrant`).
      * @return boolean True if the command completed successfully
      */
-    public function shell($command, $username)
+    public function shell($command, $username = 'vagrant')
     {
         // Generate different sudo command based on user
-        if ($username == "root") {
+        if ($username == 'root') {
             $command = "sudo $command 2>&1";
+            $this->_log("Shell command as root:`$command`");
         } else {
-            $command = "sudo su $username -c \"$command\" 2>&1";
+            $command = "$command 2>&1";
+            $this->_log("Shell command as vagrant: $command");
         }
-        $this->_log("Shelling command `$command` as user `$username`");
 
         // Execute the command, capture exit code, stdout and stderr
         $ret = exec($command, $stdout, $exitCode);
