@@ -411,15 +411,16 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
 </div>
 
 <?php
+    $flotData = [];
     // Count the number of app per unique framework to feed the donut
     $frameworks = array_values(array_unique(Hash::extract($data['apps'], '{n}.framework_human')));
-foreach ($frameworks as $framework) {
-    $frameworkCount = count(Hash::extract($data['apps'], "{n}[framework_human=/$framework/].name"));
-    $flotData[] = [
-        'label' => $framework,
-        'data' => $frameworkCount
-    ];
-}
+    foreach ($frameworks as $framework) {
+        $frameworkCount = count(Hash::extract($data['apps'], "{n}[framework_human=/$framework/].name"));
+        $flotData[] = [
+            'label' => $framework,
+            'data' => $frameworkCount
+        ];
+    }
 
     // Create inline Javascript variable "donutData"
     echo $this->Html->scriptBlock(
