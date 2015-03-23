@@ -165,7 +165,7 @@ class ApplicationShell extends AppShell
         // remove existing (assumed orphaned) vhost when not in --repair mode
         if (CakeboxUtility::vhostAvailable($url) && !$this->params['repair']) {
             $this->out('* Removing existing (assumed orphaned) virtual host');
-            if (!$this->Execute->removeSite($url)) {
+            if (!$this->Execute->removeVhost($url)) {
                 $this->exitBashError('Error removing virtual host');
             }
         }
@@ -182,7 +182,7 @@ class ApplicationShell extends AppShell
         }
 
         if (!$vhostAvailable) {
-            if (!$this->Execute->addSite($url, $installer->option('webroot'), true)) {
+            if (!$this->Execute->addVhost($url, $installer->option('webroot'), true)) {
                 $this->exitBashError('Error creating virtual host');
             } else {
                 $this->out('* Successfully created virtual host');
@@ -192,7 +192,7 @@ class ApplicationShell extends AppShell
         // recheck symlink since it could have been created above
         if (!CakeboxUtility::vhostEnabled($url)) {
             $this->out('* Enabling virtual host');
-            if (!$this->Execute->createSiteSymlink($url)) {
+            if (!$this->Execute->enableVhost($url)) {
                 $this->exitBashError('Error creating symbolic link');
             }
             if (!$this->Execute->reloadNginx()) {
