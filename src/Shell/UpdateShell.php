@@ -53,7 +53,7 @@ class UpdateShell extends AppShell
             $this->exitBashError();
         }
 
-        // Execute box-image updates
+        // Update CakePHP Code Sniffer
         if (!$this->_updateCakephpCodeSniffer()) {
             $this->exitBashError();
         }
@@ -67,15 +67,15 @@ class UpdateShell extends AppShell
      *
      * @return boolean True on success
      */
-     protected function _updateComposer()
-     {
+    protected function _updateComposer()
+    {
          $this->logInfo('Self-updating Composer');
          $command = 'composer self-update';
-         if (!$this->Execute->shell($command, 'root')) {
-             return false;
-         }
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
          return true;
-     }
+    }
 
     /**
      * Self-update cakebox-console projeect by self-updating Composer (to
@@ -84,31 +84,31 @@ class UpdateShell extends AppShell
      *
      * @return boolean True on success
      */
-     protected function _updateCakeboxConsole()
-     {
-         $this->logInfo('Updating Cakebox Commands and Dashboard');
+    protected function _updateCakeboxConsole()
+    {
+        $this->logInfo('Updating Cakebox Commands and Dashboard');
 
-         $this->logInfo('* Detecting branch');
-         $command = 'cd /cakebox/console; git rev-parse --abbrev-ref HEAD';
-         $branch = $this->Execute->getShellOutput($command, 'vagrant');
-         if (!$branch) {
-             return false;
-         }
-         $this->logDebug(" * Found branch $branch");
+        $this->logInfo('* Detecting branch');
+        $command = 'cd /cakebox/console; git rev-parse --abbrev-ref HEAD';
+        $branch = $this->Execute->getShellOutput($command, 'vagrant');
+        if (!$branch) {
+            return false;
+        }
+        $this->logDebug(" * Found branch $branch");
 
-         $this->logInfo('* Updating git repository');
-         $command = "cd /cakebox/console; git pull origin $branch";
-         if (!$this->Execute->shell($command, 'vagrant')) {
-             return false;
-         }
+        $this->logInfo('* Updating git repository');
+        $command = "cd /cakebox/console; git pull origin $branch";
+        if (!$this->Execute->shell($command, 'vagrant')) {
+            return false;
+        }
 
-         $this->logInfo('* Updating composer packages');
-         $command = 'cd /cakebox/console; composer install --prefer-dist --no-dev';
-         if (!$this->Execute->shell($command, 'vagrant')) {
-             return false;
-         }
-         return true;
-     }
+        $this->logInfo('* Updating composer packages');
+        $command = 'cd /cakebox/console; composer install --prefer-dist --no-dev';
+        if (!$this->Execute->shell($command, 'vagrant')) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Box-fix: composer update globally installed cakephp-codesniffer
@@ -121,7 +121,8 @@ class UpdateShell extends AppShell
     {
         $this->logInfo('Updating global CakePHP Code Sniffer');
 
-        $path = '/opt/composer-libraries/php_codesniffer';
+        // update package version in composer.json to 2.*
+        $path = '/opt/composer-libraries/cakephp_codesniffer';
         $requiredVersion = '2.*';
         $result = CakeboxUtility::updateConfigFile(
             "$path/composer.json",
@@ -129,9 +130,27 @@ class UpdateShell extends AppShell
             true // update file as root
         );
 
-        if (!$this->Execute->shell("composer update --working-dir $path", 'root')) {
+        // composer update
+        $this->logInfo('* Composer updating');
+        $command = "composer update --no-dev --working-dir $path";
+        if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
+
+    #        $this->logInfo('* Enabling Coding Standard');
+    #        $csPath = $path . '/vendor/cakephp/cakephp-codesniffer';
+    #        $command = "phpcs --config-set installed_paths $csPath";
+    #        if (!$this->Execute->shell($command, 'root')) {
+    #            return false;
+    #        }
+
+            // Repair broken standard CakePHP as default sniffer
+    #        $this->logInfo('* Setting CakePHP as default Coding Standard');
+    #        $command = "phpcs --config-set default_standard $path";
+    #        if (!$this->Execute->shell($command, 'root')) {
+    #            return false;
+    #        }
+
         return true;
     }
 }
