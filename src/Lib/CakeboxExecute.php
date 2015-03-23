@@ -170,7 +170,7 @@ class CakeboxExecute
     public function composerCreateProject($package, $path)
     {
         $this->_flushLogs();
-        $command = "composer create-project --prefer-dist --no-interaction -s dev $package $path";
+        $command = "composer create-project --prefer-dist --no-interaction $package $path";
         if (!$this->shell($command, 'vagrant')) {
             return false;
         }
