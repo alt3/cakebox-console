@@ -161,36 +161,43 @@ class CakeboxExecute
     }
 
     /**
-     * Self-update cakebox console and dashboard by updating git repository and
+     * Self-update cakebox-console projeect by self-updating Composer (to
+     * prevent outdated warning), updating the git repository and finally
      * running composer update.
      *
      * @return boolean True on success
      */
     public function selfUpdate()
     {
-        log::debug("Self-updating cakebox-console...");
+        log::debug('Self-updating Composer...');
+        $command = 'composer self-update';
+        if (!$this->_shell($command, 'root')) {
+            return false;
+        }
 
-        Log::debug("* Detecting branch");
-        $command = "cd /cakebox/console; git rev-parse --abbrev-ref HEAD";
+        log::debug('Self-updating cakebox-console project...');
+
+        Log::debug('* Detecting branch');
+        $command = 'cd /cakebox/console; git rev-parse --abbrev-ref HEAD';
         $branch = $this->_getShellOutput($command, 'vagrant');
         if (!$branch) {
             return false;
         }
         Log::debug(" * Detected branch $branch");
 
-        Log::debug("* Updating git repository");
+        Log::debug('* Updating git repository');
         $command = "cd /cakebox/console; git pull origin $branch";
         if (!$this->_shell($command, 'vagrant')) {
             return false;
         }
 
-        Log::debug("* Updating composer packages");
+        Log::debug('* Updating composer packages');
         $command = 'cd /cakebox/console; composer install --prefer-dist --no-dev';
         if (!$this->_shell($command, 'vagrant')) {
             return false;
         }
 
-        Log::debug("* Self-update completed successfully");
+        Log::debug('* Self-update completed successfully');
         return true;
     }
 
