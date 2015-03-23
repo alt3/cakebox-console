@@ -44,9 +44,9 @@ class UpdateShell extends AppShell
         $this->logStart('Self-updating cakebox');
 
         // Update Composer
-#        if (!$this->_updateComposer()) {
-#            $this->exitBashError();
-#        }
+        if (!$this->_updateComposer()) {
+            $this->exitBashError();
+        }
 
         // Update Cakebox Commands and Dashboard
         if (!$this->_updateCakeboxConsole()) {
