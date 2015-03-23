@@ -91,7 +91,7 @@ class DatabaseShell extends AppShell
         }
 
         # Database either does not exist or --force option used
-        if ($this->execute->addDatabase($database, $this->params['username'], $this->params['password'], true) == false) {
+        if ($this->Execute->addDatabase($database, $this->params['username'], $this->params['password'], true) == false) {
             $this->exitBashError("Error creating databases");
         }
         $this->exitBashSuccess("Databases created successfully");

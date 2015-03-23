@@ -205,7 +205,7 @@ class ApplicationShell extends AppShell
         # ------------------------------------------------------------
         $this->out('Creating databases');
         $mainDatabase = $installer->option('database');
-        $testDatabase = $this->cbi->databaseMeta['test_prefix'] . $installer->option('database');
+        $testDatabase = $this->Info->databaseMeta['test_prefix'] . $installer->option('database');
 
         // remove existing (assumed orphaned) databases when not in --repair mode
         if (CakeboxUtility::databaseExists($mainDatabase) && !$this->params['repair']) {
@@ -278,7 +278,7 @@ class ApplicationShell extends AppShell
             $this->out("  => Make sure to manually update your database credentials, plugins, etc.");
         }
 
-        $this->out("\nRemember to update your hosts file with: <info>" . $this->cbi->getVmIpAddress() . " http://$url</info>\n");
+        $this->out("\nRemember to update your hosts file with: <info>" . $this->Info->getVmIpAddress() . " http://$url</info>\n");
         $this->exitBashSuccess('Installation completed successfully');
     }
 }

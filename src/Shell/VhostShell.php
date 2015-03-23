@@ -81,7 +81,7 @@ class VhostShell extends AppShell
         $this->logStart("Creating Nginx configuration file for $url");
 
         # Don't overwrite existing site file without --force option
-        $vhostFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
+        $vhostFile = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $url;
         if (file_exists($vhostFile) && !$this->params['force']) {
             $this->exitBashWarning('* Skipping: virtual host already exists. Use --force to overwrite.');
         }
@@ -90,7 +90,7 @@ class VhostShell extends AppShell
         if ($this->Execute->addVhost($url, $webroot, true) == false) {
             $this->exitBashError('Error creating virtual host configuration file');
         }
-        $this->out("\nRemember to update your hosts file with: <info>" . $this->cbi->getVmIpAddress() . " http://$url</info>\n");
+        $this->out("\nRemember to update your hosts file with: <info>" . $this->Info->getVmIpAddress() . " http://$url</info>\n");
         $this->out('Installation completed successfully');
     }
 
@@ -104,7 +104,7 @@ class VhostShell extends AppShell
     public function remove($url)
     {
         $this->logStart("Removing website $url");
-        $vhostFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
+        $vhostFile = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $url;
         if (!file_exists($vhostFile)) {
             $this->exitBashWarning('* Skipping: virtual host does not exist.');
         }
@@ -124,7 +124,7 @@ class VhostShell extends AppShell
     public function listall()
     {
         $this->out('Enabled websites highlighted:');
-        foreach ($this->cbi->getRichNginxFiles() as $site) {
+        foreach ($this->Info->getRichNginxFiles() as $site) {
             if ($site['enabled'] == true) {
                 $this->out("  <info>" . $site['name'] . "</info>");
             } else {

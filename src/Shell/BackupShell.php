@@ -42,7 +42,7 @@ class BackupShell extends AppShell
         $this->logStart("Creating full (hot) backup of your MySQL server");
         $this->out("Please wait... this can take a moment");
 
-        if (!$this->execute->backupDatabases()) {
+        if (!$this->Execute->backupDatabases()) {
             $this->exitBashError("Error creating backup.");
         }
         $this->exitBashSuccess("Backups created successfully.");
