@@ -28,6 +28,13 @@ class AppShell extends Shell
     protected $execute;
 
     /**
+     * Instance of CakeboxExecute available to all Shells.
+     *
+     * @var \App\Lib\CakeboxExecute
+     */
+    protected $Execute;
+
+    /**
      * Initialization. Used to disconnect default loggers from consoleIO output
      * and instantiating Cakebox objects.
      *
@@ -38,6 +45,7 @@ class AppShell extends Shell
         $this->_io->setLoggers(false);
         $this->cbi = new CakeboxInfo();
         $this->execute = new CakeboxExecute();
+        $this->Execute = new CakeboxExecute();
         parent::initialize();
     }
 
