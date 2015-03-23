@@ -54,9 +54,9 @@ class UpdateShell extends AppShell
         }
 
         // Update CakePHP Code Sniffer
-        if (!$this->_updateCakephpCodeSniffer()) {
-            $this->exitBashError();
-        }
+#        if (!$this->_updateCakephpCodeSniffer()) {
+#            $this->exitBashError();
+#        }
 
         $this->exitBashSuccess('Self-update completed successfully');
     }
