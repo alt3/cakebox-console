@@ -291,7 +291,7 @@ class CakeboxUtility
      *
      * @param string $file Path to the file containing the string to replace.
      * @param array $valuePairs Containing 'old' => 'new' values.
-     * @param boolean $root True to write new file as root
+     * @param bool $root True to write new file as root
      * @return boolean True if the file was updated successfully
      */
     public static function updateConfigFile($file, $valuePairs, $root = false)
