@@ -119,7 +119,7 @@ class UpdateShell extends AppShell
      */
     protected function _updateCakephpCodeSniffer()
     {
-        $this->logInfo('Updating global CakePHP Code Sniffer');
+        $this->logInfo('Updating CakePHP Code Sniffer');
 
         // update package version in composer.json to 2.*
         $path = '/opt/composer-libraries/cakephp_codesniffer';
