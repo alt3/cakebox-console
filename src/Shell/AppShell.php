@@ -62,9 +62,9 @@ class AppShell extends Shell
      */
     public function logStart($message)
     {
-        log::debug(str_repeat("=", 80));
+        Log::debug(str_repeat("=", 80));
         $this->out($message, 2, Shell::QUIET);
-        log::debug($message);
+        Log::debug($message);
     }
 
     /**
