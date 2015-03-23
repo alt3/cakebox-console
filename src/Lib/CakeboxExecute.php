@@ -87,7 +87,7 @@ class CakeboxExecute
      * @param string $username User used to execute the command (e.g. `vagrant`).
      * @return boolean True if the command completed successfully
      */
-    protected function _getShellOutput($command, $username)
+    public function getShellOutput($command, $username)
     {
         // Generate different sudo command based on user
         if ($username == "root") {
@@ -157,47 +157,6 @@ class CakeboxExecute
         if (!$this->shell("git config --global $gitKey $value", 'vagrant')) {
             return false;
         }
-        return true;
-    }
-
-    /**
-     * Self-update cakebox-console projeect by self-updating Composer (to
-     * prevent outdated warning), updating the git repository and finally
-     * running composer update.
-     *
-     * @return boolean True on success
-     */
-    public function selfUpdate()
-    {
-        Log::debug('Self-updating Composer...');
-        $command = 'composer self-update';
-        if (!$this->shell($command, 'root')) {
-            return false;
-        }
-
-        Log::debug('Self-updating cakebox-console project...');
-
-        Log::debug('* Detecting branch');
-        $command = 'cd /cakebox/console; git rev-parse --abbrev-ref HEAD';
-        $branch = $this->_getShellOutput($command, 'vagrant');
-        if (!$branch) {
-            return false;
-        }
-        Log::debug(" * Detected branch $branch");
-
-        Log::debug('* Updating git repository');
-        $command = "cd /cakebox/console; git pull origin $branch";
-        if (!$this->shell($command, 'vagrant')) {
-            return false;
-        }
-
-        Log::debug('* Updating composer packages');
-        $command = 'cd /cakebox/console; composer install --prefer-dist --no-dev';
-        if (!$this->shell($command, 'vagrant')) {
-            return false;
-        }
-
-        Log::debug('* Self-update completed successfully');
         return true;
     }
 
