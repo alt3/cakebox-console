@@ -6,7 +6,7 @@ use Cake\Console\Shell;
 /**
  * Shell class for managing website configuration files.
  */
-class SiteShell extends AppShell
+class VhostShell extends AppShell
 {
 
     /**
@@ -17,16 +17,16 @@ class SiteShell extends AppShell
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser->description([__('Manage Nginx site configuration files.')]);
+        $parser->description([__('Manage Nginx virtual hosts.')]);
 
         $parser->addSubcommand('add', [
             'parser' => [
                 'description' => [
-                __("Creates and enables an Nginx site configuration file.")
+                __("Create and enable a virtual host.")
                 ],
                 'arguments' => [
                     'url' => [
-                        'help' => __('Fully qualified domain name used to expose the site.'),
+                        'help' => __('Fully qualified domain name used for the virtual host.'),
                         'required' => true
                     ],
                     'webroot' => [
@@ -37,7 +37,7 @@ class SiteShell extends AppShell
                 'options' => [
                     'force' => [
                         'short' => 'f',
-                        'help' => __('Overwrite existing configuration file.'),
+                        'help' => __('Use to overwrite an existing virtual host configuration file.'),
                         'boolean' => true
                     ]
                 ]
@@ -47,7 +47,7 @@ class SiteShell extends AppShell
         $parser->addSubcommand('remove', [
             'parser' => [
                 'description' => [
-                    __("Removes an Nginx website by deleting virtual hosts file, unlinking sites-enabled and reloading Nginx.")
+                    __("Remove a virtual host by deleting virtual hosts file, unlinking sites-enabled and reloading Nginx.")
                 ],
                 'arguments' => [
                     'url' => [
@@ -61,7 +61,7 @@ class SiteShell extends AppShell
         $parser->addSubcommand('listall', [
             'parser' => [
                 'description' => [
-                 __("Lists all available nginx site configuration files.")
+                 __("List all virtual hosts.")
                 ]
             ]
         ]);
@@ -69,8 +69,8 @@ class SiteShell extends AppShell
     }
 
     /**
-     * Create a new website by generating a virtual host file, creating a symoblic
-     * link and reloading the webserver.
+     * Create a new Nginx virtual host by generating a virtual host file,
+     * creating a symoblic link and reloading the webserver.
      *
      * @param string $url Fully Qualified Domain Name used to expose the site.
      * @param string $webroot Full path to the site's webroot directory.
@@ -81,22 +81,22 @@ class SiteShell extends AppShell
         $this->logStart("Creating Nginx configuration file for $url");
 
         # Don't overwrite existing site file without --force option
-        $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
-        if (file_exists($siteFile) && !$this->params['force']) {
-            $this->exitBashWarning("* Skipping: site already exists. Use --force to overwrite.");
+        $vhostFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
+        if (file_exists($vhostFile) && !$this->params['force']) {
+            $this->exitBashWarning('* Skipping: virtual host already exists. Use --force to overwrite.');
         }
 
         # Site file either does not exist or --force option used
-        if ($this->execute->addSite($url, $webroot, true) == false) {
-            $this->exitBashError("Error creating site file");
+        if ($this->Execute->addVhost($url, $webroot, true) == false) {
+            $this->exitBashError('Error creating virtual host configuration file');
         }
-        $this->out("\nAdd the following line to your hosts file: <info>" . $this->cbi->getVmIpAddress() . " http://$url</info>\n");
-        $this->out("Installation completed successfully");
+        $this->out("\nRemember to update your hosts file with: <info>" . $this->cbi->getVmIpAddress() . " http://$url</info>\n");
+        $this->out('Installation completed successfully');
     }
 
     /**
-     * Remove an Nginx website by removing virtual hosts file, removing symbolic
-     * link and reloading the webserver.
+     * Completely remove an Nginx virtual host by removing virtual hosts file,
+     * symbolic link and reloading the webserver.
      *
      * @param string $url Fully Qualified Domain Name used to expose the site.
      * @return void
@@ -104,15 +104,15 @@ class SiteShell extends AppShell
     public function remove($url)
     {
         $this->logStart("Removing website $url");
-        $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
-        if (!file_exists($siteFile)) {
-            $this->exitBashWarning("* Skipping: virtual host does not exist.");
+        $vhostFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
+        if (!file_exists($vhostFile)) {
+            $this->exitBashWarning('* Skipping: virtual host does not exist.');
         }
 
-        if ($this->execute->removeSite($url) == false) {
-            $this->exitBashError("Error removing website");
+        if ($this->Execute->removeVhost($url) == false) {
+            $this->exitBashError('Error removing virtual host');
         }
-        $this->exitBashSuccess("Website removed successfully.");
+        $this->exitBashSuccess('Virtual host removed successfully.');
     }
 
     /**

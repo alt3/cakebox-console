@@ -9,7 +9,7 @@ use Cake\Event\Event;
 use Cake\Filesystem\Folder;
 use Cake\Network\Exception\NotFoundException;
 
-class SiteFilesController extends AppController
+class VhostsController extends AppController
 {
 
     /**
