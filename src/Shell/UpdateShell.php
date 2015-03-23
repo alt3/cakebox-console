@@ -130,27 +130,12 @@ class UpdateShell extends AppShell
             true // update file as root
         );
 
-        // composer update
+        // composer update CakePHP Coding Standard
         $this->logInfo('* Composer updating');
         $command = "composer update --no-dev --working-dir $path";
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
-
-    #        $this->logInfo('* Enabling Coding Standard');
-    #        $csPath = $path . '/vendor/cakephp/cakephp-codesniffer';
-    #        $command = "phpcs --config-set installed_paths $csPath";
-    #        if (!$this->Execute->shell($command, 'root')) {
-    #            return false;
-    #        }
-
-            // Repair broken standard CakePHP as default sniffer
-    #        $this->logInfo('* Setting CakePHP as default Coding Standard');
-    #        $command = "phpcs --config-set default_standard $path";
-    #        if (!$this->Execute->shell($command, 'root')) {
-    #            return false;
-    #        }
-
         return true;
     }
 }
