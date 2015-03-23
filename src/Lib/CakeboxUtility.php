@@ -307,7 +307,8 @@ class CakeboxUtility
         foreach ($valuePairs as $old => $new) {
             $content = str_replace($old, $new, $content, $count);
             if ($count == 0) {
-                Log::warning("* Nothing to replace, `$old` could not be found");
+                Log::warning("* Skipping: nothing to replace, `$old` could not be found");
+                return true;
             } else {
                 Log::debug("* Replaced $count occurences of `$old`");
             }
