@@ -28,6 +28,13 @@ class AppShell extends Shell
     protected $execute;
 
     /**
+     * Instance of CakeboxExecute available to all Shells.
+     *
+     * @var \App\Lib\CakeboxExecute
+     */
+    protected $Execute;
+
+    /**
      * Initialization. Used to disconnect default loggers from consoleIO output
      * and instantiating Cakebox objects.
      *
@@ -38,6 +45,7 @@ class AppShell extends Shell
         $this->_io->setLoggers(false);
         $this->cbi = new CakeboxInfo();
         $this->execute = new CakeboxExecute();
+        $this->Execute = new CakeboxExecute();
         parent::initialize();
     }
 
@@ -62,9 +70,9 @@ class AppShell extends Shell
      */
     public function logStart($message)
     {
-        log::debug(str_repeat("=", 80));
+        Log::debug(str_repeat("=", 80));
         $this->out($message, 2, Shell::QUIET);
-        log::debug($message);
+        Log::debug($message);
     }
 
     /**
@@ -115,8 +123,11 @@ class AppShell extends Shell
      * @param string $message  Message to be logged.
      * @return void
      */
-    public function logError($message)
+    public function logError($message = null)
     {
+        if (empty($message)) {
+            $message = 'Error';
+        }
         log::warning($message);
         $this->out("<error>$message</error>", 1, Shell::QUIET);
         $this->out("<info>See /var/log/cakephp/cakebox.cli.log for details.</info>");
@@ -165,8 +176,12 @@ class AppShell extends Shell
      * @param string $message  Message to be logged.
      * @return void
      */
-    public function exitBashError($message)
+    public function exitBashError($message = null)
     {
+        if (empty($message)) {
+            $message = 'Error';
+        }
+
         if (count($this->execute->debug()) != 0) {
             foreach ($this->execute->debug() as $entry) {
                 $this->out($entry, 1, Shell::QUIET);

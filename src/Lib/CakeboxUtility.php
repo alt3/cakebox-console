@@ -291,9 +291,10 @@ class CakeboxUtility
      *
      * @param string $file Path to the file containing the string to replace.
      * @param array $valuePairs Containing 'old' => 'new' values.
+     * @param bool $root True to write new file as root
      * @return boolean True if the file was updated successfully
      */
-    public static function updateConfigFile($file, $valuePairs)
+    public static function updateConfigFile($file, $valuePairs, $root = false)
     {
         Log::debug("* Updating config file $file");
         if (!file_exists($file)) {
@@ -306,17 +307,25 @@ class CakeboxUtility
         foreach ($valuePairs as $old => $new) {
             $content = str_replace($old, $new, $content, $count);
             if ($count == 0) {
-                Log::warning("* Nothing to replace, `$old` could not be found");
+                Log::warning("* Skipping: nothing to replace, `$old` could not be found");
+                return true;
             } else {
                 Log::debug("* Replaced $count occurences of `$old`");
             }
         }
 
         # Update file
-        $result = file_put_contents($file, $content);
-        if (!$result) {
-            Log::error("* Error writing to config file: " . error_get_last());
-            return false;
+        if (!$root) {
+            $result = file_put_contents($file, $content);
+            if (!$result) {
+                Log::error("* Error writing to config file: " . error_get_last());
+                return false;
+            }
+        } else {
+            $Execute = new CakeboxExecute();
+            if (!$Execute->shell("echo '$content' | sudo tee $file", 'root')) {
+                return false;
+            }
         }
         Log::info("* Successfully updated config file");
         return true;
@@ -414,8 +423,8 @@ class CakeboxUtility
         }
 
         # Check if the directory is writable by vagrant user
-        $execute = new CakeboxExecute();
-        if (!$execute->isVagrantWritable($directory)) {
+        $Execute = new CakeboxExecute();
+        if (!$Execute->isVagrantWritable($directory)) {
             return false;
         }
         Log::debug("* Pass: directory is writable");

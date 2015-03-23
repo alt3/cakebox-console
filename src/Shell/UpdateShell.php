@@ -1,6 +1,7 @@
 <?php
 namespace App\Shell;
 
+use App\Lib\CakeboxUtility;
 use Cake\Console\Shell;
 
 /**
@@ -40,12 +41,101 @@ class UpdateShell extends AppShell
      */
     public function self()
     {
-        $this->logStart("Updating Cakebox Commands and Dashboard");
-        $this->out("Please wait... this can take a moment");
+        $this->logStart('Self-updating cakebox');
 
-        if (!$this->execute->selfUpdate()) {
-            $this->exitBashError("Error updating application.");
+        // Update Composer
+        if (!$this->_updateComposer()) {
+            $this->exitBashError();
         }
-        $this->exitBashSuccess("Update completed successfully");
+
+        // Update Cakebox Commands and Dashboard
+        if (!$this->_updateCakeboxConsole()) {
+            $this->exitBashError();
+        }
+
+        // Update CakePHP Code Sniffer
+        if (!$this->_updateCakephpCodeSniffer()) {
+            $this->exitBashError();
+        }
+
+        $this->exitBashSuccess('Self-update completed successfully');
+    }
+
+
+    /**
+     * Self-update global composer to prevent outdated warnings.
+     *
+     * @return boolean True on success
+     */
+    protected function _updateComposer()
+    {
+         $this->logInfo('Self-updating Composer');
+         $command = 'composer self-update';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+         return true;
+    }
+
+    /**
+     * Self-update cakebox-console projeect by self-updating Composer (to
+     * prevent outdated warning), updating the git repository and finally
+     * running composer update.
+     *
+     * @return boolean True on success
+     */
+    protected function _updateCakeboxConsole()
+    {
+        $this->logInfo('Updating Cakebox Commands and Dashboard');
+
+        $this->logInfo('* Detecting branch');
+        $command = 'cd /cakebox/console; git rev-parse --abbrev-ref HEAD';
+        $branch = $this->Execute->getShellOutput($command, 'vagrant');
+        if (!$branch) {
+            return false;
+        }
+        $this->logDebug(" * Found branch $branch");
+
+        $this->logInfo('* Updating git repository');
+        $command = "cd /cakebox/console; git pull origin $branch";
+        if (!$this->Execute->shell($command, 'vagrant')) {
+            return false;
+        }
+
+        $this->logInfo('* Updating composer packages');
+        $command = 'cd /cakebox/console; composer install --prefer-dist --no-dev';
+        if (!$this->Execute->shell($command, 'vagrant')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Box-fix: composer update globally installed cakephp-codesniffer
+     * by updating version in composer.json (if needed) and then running
+     * composer update.
+     *
+     * @return boolean True on success
+     */
+    protected function _updateCakephpCodeSniffer()
+    {
+        $this->logInfo('Updating global CakePHP Code Sniffer');
+
+        // update package version in composer.json to 2.*
+        $path = '/opt/composer-libraries/cakephp_codesniffer';
+        $requiredVersion = '2.*';
+        $result = CakeboxUtility::updateConfigFile(
+            "$path/composer.json",
+            [ '2.*@dev' => '2.*' ],
+            true // update file as root
+        );
+
+        // composer update CakePHP Coding Standard
+        $this->logInfo('* Composer updating');
+        $command = "composer update --no-dev --working-dir $path";
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+        return true;
     }
 }
