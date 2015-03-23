@@ -41,23 +41,26 @@ class UpdateShell extends AppShell
      */
     public function self()
     {
+        $this->logStart('Self-updating cakebox');
+
         // Update Cakebox Commands and Dashboard
         $this->logStart('Updating Cakebox Commands and Dashboard');
         $this->LogDebug('* Please wait... this can take a moment');
 
-        #if (!$this->execute->selfUpdate()) {
-        #    $this->exitBashError("Error updating application.");
-        #}
+        if (!$this->execute->selfUpdate()) {
+            $this->exitBashError("Error updating application.");
+        }
         $this->logInfo('* Update completed successfully');
 
         // Execute box-image updates
-        $this->_updateCakephpCodeSniffer();
+        if (!$this->_updateCakephpCodeSniffer()) {
+            $this->exitBashError('Error running composer update');
+        }
+        $this->logInfo('* composer update completed succesfully');
 
 
 
-
-
-        $this->exitBashSuccess('Update completed successfully');
+        $this->exitBashSuccess('Self-update completed successfully');
     }
 
     /**
@@ -69,14 +72,19 @@ class UpdateShell extends AppShell
      */
     protected function _updateCakephpCodeSniffer()
     {
-        $composerFile = '/opt/composer-libraries/php_codesniffer/composer.json';
+        $path = '/opt/composer-libraries/php_codesniffer';
         $requiredVersion = '2.*';
 
         $this->logInfo('Updating global cakephp-codesniffer');
         $result = CakeboxUtility::updateConfigFile(
-            $composerFile,
+            "$path/composer.json",
             [ '2.*@dev' => '2.*' ],
             true // update file as root
         );
+
+        if (!$this->execute->shell("cd $path; composer update")) {
+            return false;
+        }
+        return true;
     }
 }
