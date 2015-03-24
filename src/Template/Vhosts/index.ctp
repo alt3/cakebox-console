@@ -14,7 +14,7 @@ $this->assign('title', 'Virtual Hosts');
         </span>
     </div>
 
-    <!-- Sitefiles widget -->
+    <!-- Vhosts widget -->
     <div class="widget stacked widget-table action-table">
 
         <div class="widget-header">
