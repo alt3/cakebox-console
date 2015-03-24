@@ -55,13 +55,9 @@ $config = [
 /**
  * Security and encryption configuration
  *
- * - salt - A random string used in security hashing methods.
- *   The salt value is also used as the encryption key.
- *   You should treat it as extremely sensitive data.
+ * Your salt is stored in config/salt.php and should not be added below.
  */
-    'Security' => [
-        'salt' => '0bb252e95d69be635b3e04e9d21b8b1f06550a54bfa944b8013600483433f7d8',
-    ],
+    'Security' => [],
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).
