@@ -1,8 +1,18 @@
 
 <div class="col-sm-10 column">
 
-    <!-- Sitefiles widget -->
+    <!-- Applicatins widget -->
+    <?php
+    if (!empty($data['apps'])) :
+    ?>
     <div class="widget stacked widget-table action-table">
+    <?php
+    else :
+    ?>
+    <div class="widget stacked">
+    <?php
+    endif;
+    ?>
 
         <div class="widget-header">
             <i class="fa fa-file-text-o"></i>
@@ -11,6 +21,10 @@
 
         <div class="widget-content">
             <div class="panel-body">
+                <?php
+                if (!empty($data['apps'])) :
+                ?>
+
                 <table class="table collection">
                     <thead>
                         <tr>
@@ -43,6 +57,25 @@
                         ?>
                     </tbody>
                 </table>
+
+                <?php
+                else :
+                ?>
+                <p>
+                    Follow
+                    <?php
+                        echo $this->Html->link(
+                            __('these instructions'),
+                            'http://cakebox.readthedocs.org/en/latest/tutorials/creating-your-first-website/'
+                        );
+                    ?>
+                    to create your first application.
+                </p>
+
+                <?php
+                endif;
+                ?>
+
             </div>
 
         </div> <!-- /widget-content -->
