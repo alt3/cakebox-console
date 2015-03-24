@@ -34,26 +34,34 @@ class Installer
         $io = $event->getIO();
 
         $rootDir = dirname(dirname(__DIR__));
-        static::createAppConfig($rootDir, $io);
+        static::createConfig($rootDir, $io);
         static::setFolderPermissions($rootDir, $io);
         static::setSecuritySalt($rootDir, $io);
     }
 
     /**
-     * Create the config/app.php file if it does not exist.
+     * Create the config file if it does not exist.
+     *
+     * Used to create config/app.php and config/salt.php
      *
      * @param string $dir The application's root directory.
      * @param \Composer\IO\IOInterface $io IO interface to write to console.
-     * @return void
+     * @param string $name The config file name without .php extension
+     *
+     * @return bool
      */
-    public static function createAppConfig($dir, $io)
+    public static function createConfig($dir, $io, $name = 'app')
     {
-        $appConfig = $dir . '/config/app.php';
-        $defaultConfig = $dir . '/config/app.default.php';
-        if (!file_exists($appConfig)) {
-            copy($defaultConfig, $appConfig);
-            $io->write('Created `config/app.php` file');
+        $config = $dir . "/config/$name.php";
+        if (file_exists($config)) {
+            return false;
         }
+
+        $defaultConfig = $dir . "/config/$name.default.php";
+        copy($defaultConfig, $config);
+        $io->write("Created `config/$name.php` file");
+
+        return true;
     }
 
     /**
@@ -104,15 +112,18 @@ class Installer
     }
 
     /**
-     * Set the security.salt value in the application's config file.
+     * Set the security.salt value in the application's salt.php config file.
      *
      * @param string $dir The application's root directory.
      * @param \Composer\IO\IOInterface $io IO interface to write to console.
      * @return void
      */
-    public static function setSecuritySalt($dir, $io)
-    {
-        $config = $dir . '/config/app.php';
+    public static function setSecuritySalt($dir, $io) {
+        $created = static::createConfig($dir, $io, 'salt');
+        if (!$created) {
+            return;
+        }
+        $config = $dir . '/config/salt.php';
         $content = file_get_contents($config);
 
         $newKey = hash('sha256', $dir . php_uname() . microtime(true));
@@ -125,7 +136,7 @@ class Installer
 
         $result = file_put_contents($config, $content);
         if ($result) {
-            $io->write('Updated Security.salt value in config/app.php');
+            $io->write('Updated Security.salt value in config/salt.php');
             return;
         }
         $io->write('Unable to update Security.salt value.');
