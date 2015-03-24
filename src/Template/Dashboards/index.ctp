@@ -78,8 +78,18 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
     </div> <!-- /widget -->
 
 
-    <!-- Applications widget -->
+    <!-- Applications widget (only use table CSS when user has apps)-->
+    <?php
+    if (!empty($data['apps'])) :
+    ?>
     <div class="widget stacked widget-table action-table">
+    <?php
+    else :
+    ?>
+    <div class="widget stacked">
+    <?php
+    endif;
+    ?>
 
         <div class="widget-header">
             <i class="fa fa-th-list"></i>
@@ -87,7 +97,9 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
         </div> <!-- /widget-header -->
 
         <div class="widget-content">
-
+            <?php
+            if (!empty($data['apps'])) :
+            ?>
             <table class="table table-striped table-bordered">
                 <tbody>
 
@@ -117,6 +129,23 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
 
                 </tbody>
             </table>
+            <?php
+            else :
+            ?>
+            <p>
+                Follow
+                <?php
+                    echo $this->Html->link(
+                        __('these instructions'),
+                        'http://cakebox.readthedocs.org/en/latest/tutorials/creating-your-first-website/'
+                    );
+                ?>
+                to create your first application.
+            </p>
+
+            <?php
+            endif;
+            ?>
 
         </div> <!-- /widget-content -->
 
@@ -411,19 +440,20 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
 </div>
 
 <?php
-    $flotData = [];
-    // Count the number of app per unique framework to feed the donut
-    $frameworks = array_values(array_unique(Hash::extract($data['apps'], '{n}.framework_human')));
-    foreach ($frameworks as $framework) {
-        $frameworkCount = count(Hash::extract($data['apps'], "{n}[framework_human=/$framework/].name"));
-        $flotData[] = [
-            'label' => $framework,
-            'data' => $frameworkCount
-        ];
-    }
 
-    // Create inline Javascript variable "donutData"
-    echo $this->Html->scriptBlock(
-        "var donutData = " . json_encode($flotData),
-        ['inline' => false]
-    );
+$flotData = [];
+// Count the number of app per unique framework to feed the donut
+$frameworks = array_values(array_unique(Hash::extract($data['apps'], '{n}.framework_human')));
+foreach ($frameworks as $framework) {
+    $frameworkCount = count(Hash::extract($data['apps'], "{n}[framework_human=/$framework/].name"));
+    $flotData[] = [
+        'label' => $framework,
+        'data' => $frameworkCount
+    ];
+}
+
+// Create inline Javascript variable "donutData"
+echo $this->Html->scriptBlock(
+    "var donutData = " . json_encode($flotData),
+    ['inline' => false]
+);
