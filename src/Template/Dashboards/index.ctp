@@ -87,13 +87,12 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
         </div> <!-- /widget-header -->
 
         <div class="widget-content">
+            <?php if (!empty($data['apps'])) : ?>
 
-            <table class="table table-striped table-bordered">
-                <tbody>
+                <table class="table table-striped table-bordered">
+                    <tbody>
 
-                    <?php
-                    foreach ($data['apps'] as $app) :
-                    ?>
+                    <?php foreach ($data['apps'] as $app): ?>
                         <tr>
                             <td class="app-name">
                                 <?= $this->Html->link($app['name'], "http://" . $app['name'], ['class' => 'app-link']) ?>
@@ -103,23 +102,29 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
                             </td>
                             <td class="app-actions">
                                 <?php
-                                    echo $this->Html->link(
-                                        '<i class="btn-icon-only fa fa-share"></i>' . '',
-                                        ['controller' => 'Applications', 'action' => 'index'],
-                                        ['escape' => false, 'class' => 'btn btn-xs btn-primary']
-                                    );
+                                echo $this->Html->link(
+                                    '<i class="btn-icon-only fa fa-share"></i>' . '',
+                                    ['controller' => 'Applications', 'action' => 'index'],
+                                    ['escape' => false, 'class' => 'btn btn-xs btn-primary']
+                                );
                                 ?>
                             </td>
                         </tr>
-                    <?php
-                    endforeach;
-                    ?>
+                    <?php endforeach ?>
 
-                </tbody>
-            </table>
-
+                    </tbody>
+                </table>
+            <?php else : ?>
+                <div class="no-applications">
+                    <p>
+	                    So you haven't created any applications yet. Get started quickly with your first CakePHP
+	                    application. Log into your cakebox by entering the command `vagrant ssh` and create your
+	                    application with the following command: `cakebox application add appname.app` from the
+	                    cakebox command line.
+                    </p>
+                </div>
+            <?php endif; ?>
         </div> <!-- /widget-content -->
-
     </div> <!-- /widget -->
 
 </div> <!-- /span6 -->
@@ -238,8 +243,7 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
         </div> <!-- /widget-header -->
 
         <div class="widget-content">
-
-            <ul class="pull-requests list-unstyled">
+	        <ul class="pull-requests list-unstyled">
                 <?php
                 if (empty($data['contributions'])) :
                 ?>
