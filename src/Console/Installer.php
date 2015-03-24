@@ -118,7 +118,8 @@ class Installer
      * @param \Composer\IO\IOInterface $io IO interface to write to console.
      * @return void
      */
-    public static function setSecuritySalt($dir, $io) {
+    public static function setSecuritySalt($dir, $io)
+    {
         $created = static::createConfig($dir, $io, 'salt');
         if (!$created) {
             return;
