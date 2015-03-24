@@ -24,7 +24,7 @@
                         <?php
                         foreach ($databases as $key => $database) :
                         ?>
-?>                            <tr>
+                            <tr>
                                 <td><?= $key + 1 ?></td>
                                 <td><?= $database['name'] ?></td>
                                 <td class="actions">
