@@ -1036,13 +1036,26 @@ class CakeboxInfo
     }
 
     /**
+     * Gets the branch name of the cakebox Git repository on the local machine
+     * by xxxxx.
+     *
+     * @return string Name of the local cakebox Git branch.
+     */
+    public function getCakeboxBranch()
+    {
+         $composerVersion = $this->_yaml['cakebox']['version'];
+         $parts = explode('-', $composerVersion);
+         return $parts[1];
+    }
+
+    /**
      * Gets the branch name of the provisioned cakebox-console Git repository by
      * parsing the Composer packagist version in the most recently provisioned
      * Cakebox.yaml.
      *
      * @return string Name of the provisioned Git branch.
      */
-    public function getCakeboxBranch()
+    public function getCakeboxConsoleBranch()
     {
          $composerVersion = $this->_yaml['cakebox']['version'];
          $parts = explode('-', $composerVersion);
@@ -1120,12 +1133,38 @@ class CakeboxInfo
     {
         $result = [];
 
-        // set update notification for cakebox-console project
+        // set update notification if update is available for cakebox-console project
         $cakeboxConsoleUpdate = $this->_getCakeboxConsoleUpdateNotification();
         if ($cakeboxConsoleUpdate) {
             $result[] = $cakeboxConsoleUpdate;
         }
+
+        // set update notification if update is available for cakebox project
+        $cakeboxUpdate = $this->_getCakeboxUpdateNotification();
+        if ($cakeboxUpdate) {
+            $result[] = $cakeboxUpdate;
+        }
         return $result;
+    }
+
+    /**
+     * Checks if an update is available for the cakebox project on user's local
+     * machine.
+     *
+     * @return mixed Rich hash if update is available, false if up-to-date
+     */
+    protected function _getCakeboxUpdateNotification()
+    {
+        if ($this->_getLatestCakeboxCommitLocal() === $this->_getLatestRemoteCommit('alt3/cakebox', $this->getCakeboxBranch())) {
+            return false;
+        }
+        return [
+            'message' => __("An update is available for the cakebox project on your local machine. Instructions available %s."),
+            'link' => [
+                'text' => 'here',
+                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#local-update'
+            ]
+        ];
     }
 
     /**
@@ -1135,16 +1174,28 @@ class CakeboxInfo
      */
     protected function _getCakeboxConsoleUpdateNotification()
     {
-        if ($this->_getLatestCakeboxConsoleCommitLocal() === $this->_getLatestCakeboxConsoleCommitRemote()) {
+        if ($this->_getLatestCakeboxConsoleCommitLocal() === $this->_getLatestRemoteCommit('alt3/cakebox-console', $this->getCakeboxConsoleBranch())) {
             return false;
         }
         return [
-            'message' => __("Self-update available for Cakebox Commands and Dashboard. Instructions available %s."),
+            'message' => __("An update is available for your Cakebox Commands and Dashboard. Instructions available %s."),
             'link' => [
                 'text' => 'here',
                 'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#self-update'
             ]
         ];
+    }
+
+    /**
+     * Retrieve most recent cakebox commit by parsing uploaded
+     * last-know-cakebox-commit in /home/vagrant/.cakebox
+     *
+     * @return string String containing git sha
+     */
+    protected function _getLatestCakeboxCommitLocal()
+    {
+        $commit = trim(file_get_contents('/home/vagrant/.cakebox/last-known-cakebox-commit'));
+        return $commit;
     }
 
     /**
@@ -1155,18 +1206,20 @@ class CakeboxInfo
      */
     protected function _getLatestCakeboxConsoleCommitLocal()
     {
-        $commit = trim(file_get_contents('/cakebox/console/.git/refs/heads/' . $this->getCakeboxBranch()));
+        $commit = trim(file_get_contents('/cakebox/console/.git/refs/heads/' . $this->getCakeboxConsoleBranch()));
         return $commit;
     }
 
     /**
      * Fetch most recent remote cakebox-console commit from Github api.
      *
+     * @param string $repository Github repository shortname (owner/repo).
+     * @param string $branch Defaults to master
      * @return string String containing git sha
      */
-    protected function _getLatestCakeboxConsoleCommitRemote()
+    protected function _getLatestRemoteCommit($repository, $branch = 'master')
     {
-        $commits = $this->getRepositoryCommits('alt3/cakebox-console', 1);
+        $commits = $this->getRepositoryCommits($repository, $branch, 1);
         $commit = $commits[0]['sha'];
         return $commit;
     }
@@ -1175,12 +1228,14 @@ class CakeboxInfo
      * Fetch commits for any given git repository from the Github API.
      *
      * @param string $repository Github repository shortname (owner/repo).
+     * @param string $branch Branch to get commits for
      * @param string $limit Number of results to return.
      * @return array Array
      */
-    public function getRepositoryCommits($repository, $limit = null)
+    public function getRepositoryCommits($repository, $branch = 'master', $limit = null)
     {
-        $commits = Cache::read('commits', 'short');
+        $cacheKey = 'commits_' . str_replace('/', '_', $repository);
+        $commits = Cache::read($cacheKey, 'short');
         if ($commits) {
             return $commits;
         }
@@ -1189,17 +1244,18 @@ class CakeboxInfo
             if (!is_int($limit)) {
                 throw new Exception("Parameter limit must be an integer");
             }
-            $limit = "?page=1&per_page=$limit";
+            $limit = "page=1&per_page=$limit";
         }
+        $params = "?sha=$branch&$limit";
 
         try {
             $http = new Client();
-            $response = $http->get("https://api.github.com/repos/$repository/commits$limit");
+            $response = $http->get("https://api.github.com/repos/$repository/commits$params");
             if (!$response->isOk()) {
                 return null;
             }
             $result = json_decode($response->body(), true);
-            Cache::write('commits', $result, 'short');
+            Cache::write($cacheKey, $result, 'short');
             return $result;
         } catch (\Exception $e) {
             return null;
