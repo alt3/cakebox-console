@@ -1133,7 +1133,7 @@ class CakeboxInfo
     {
         $cakeboxConsoleUpdate = $this->_getCakeboxConsoleUpdateNotification();
         $cakeboxUpdate = $this->_getCakeboxUpdateNotification();
-        if (!$cakeboxUpdate || !$cakeboxConsoleUpdate) {
+        if (!$cakeboxUpdate && !$cakeboxConsoleUpdate) {
             return false;
         }
 
@@ -1155,6 +1155,9 @@ class CakeboxInfo
      */
     protected function _getCakeboxUpdateNotification()
     {
+        pr($this->_getLatestCakeboxCommitLocal());
+        pr($this->_getLatestRemoteCommit('alt3/cakebox', $this->getCakeboxBranch()));
+
         if ($this->_getLatestCakeboxCommitLocal() === $this->_getLatestRemoteCommit('alt3/cakebox', $this->getCakeboxBranch())) {
             return false;
         }
