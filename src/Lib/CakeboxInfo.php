@@ -1229,8 +1229,9 @@ class CakeboxInfo
      *
      * @param string $repository Github repository shortname (owner/repo).
      * @param string $branch Branch to get commits for
-     * @param string $limit Number of results to return.
+     * @param int $limit Number of results to return.
      * @return array Array
+     * @throws Cake\Core\Exception\Exception
      */
     public function getRepositoryCommits($repository, $branch = 'master', $limit = null)
     {
