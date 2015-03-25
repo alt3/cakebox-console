@@ -1125,7 +1125,7 @@ class CakeboxInfo
     }
 
     /**
-     * Get notifications.
+     * Returns an array with update notifications but could hold any message.
      *
      * @return array Rich hash with notifications or empty array.
      */
