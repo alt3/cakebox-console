@@ -40,9 +40,9 @@
 
 				<!-- logout button -->
 				<li>
-					<a href="#" class="todo" data-toggle="dropdown">
-						<i class="fa fa-sign-out"></i>
+					<a href="#" class="todo">
 						<?= __('Logout'); ?>
+						<i class="fa fa-sign-out"></i>
 					</a>
 				</li>
 			</ul>

@@ -81,6 +81,10 @@ a.btn-primary:focus {
     visibility: visible !important; /* fix to get jQuery show() working */
 }
 
+.navbar-right li a i {
+    padding-left: 2px;
+}
+
 /*------------------------------------------------------------------
  * 3. Widgets
  * ---------------------------------------------------------------*/
