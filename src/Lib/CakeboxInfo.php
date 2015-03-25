@@ -1036,41 +1036,6 @@ class CakeboxInfo
     }
 
     /**
-     * Fetch commits for a repository from the Github API.
-     *
-     * @param string $repository Github repository shortname (owner/repo).
-     * @param string $limit Number of results to return.
-     * @return array Array
-     */
-    public function getRepositoryCommits($repository, $limit = null)
-    {
-        $commits = Cache::read('commits', 'short');
-        if ($commits) {
-            return $commits;
-        }
-
-        if ($limit) {
-            if (!is_int($limit)) {
-                throw new Exception("Parameter limit must be an integer");
-            }
-            $limit = "?page=1&per_page=$limit";
-        }
-
-        try {
-            $http = new Client();
-            $response = $http->get("https://api.github.com/repos/$repository/commits$limit");
-            if (!$response->isOk()) {
-                return null;
-            }
-            $result = json_decode($response->body(), true);
-            Cache::write('commits', $result, 'short');
-            return $result;
-        } catch (\Exception $e) {
-            return null;
-        }
-    }
-
-    /**
      * Gets the branch name of the provisioned cakebox-console Git repository by
      * parsing the Composer packagist version in the most recently provisioned
      * Cakebox.yaml.
@@ -1147,24 +1112,98 @@ class CakeboxInfo
     }
 
     /**
-     * Get latest commit header from Github api.
+     * Get notifications.
      *
-     * @return string String containing git sha
+     * @return array Rich hash with notifications or empty array.
      */
-    public function getLatestCommitRemote()
+    public function getNotifications()
     {
-        $commits = $this->getRepositoryCommits('alt3/cakebox-console', 1);
-        return $commits[0]['sha'];
+        $result = [];
+
+        // set update notification for cakebox-console project
+        $cakeboxConsoleUpdate = $this->_getCakeboxConsoleUpdateNotification();
+        if ($cakeboxConsoleUpdate) {
+            $result[] = $cakeboxConsoleUpdate;
+        }
+        return $result;
     }
 
     /**
-     * Get local commit header.
+     * Checks if an update is available for the cakebox-console project.
+     *
+     * @return mixed Rich hash if update is available, false if up-to-date
+     */
+    protected function _getCakeboxConsoleUpdateNotification()
+    {
+        if ($this->_getLatestCakeboxConsoleCommitLocal() === $this->_getLatestCakeboxConsoleCommitRemote()) {
+            return false;
+        }
+        return [
+            'message' => __("Self-update available for Cakebox Commands and Dashboard. Instructions available %s."),
+            'link' => [
+                'text' => 'here',
+                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#self-update'
+            ]
+        ];
+    }
+
+    /**
+     * Retrieve most recent local cakebox-console commit by parsing local
+     * header file.
      *
      * @return string String containing git sha
      */
-    public function getLatestCommitLocal()
+    protected function _getLatestCakeboxConsoleCommitLocal()
     {
-        return file_get_contents('/cakebox/console/.git/refs/heads/' . $this->getCakeboxBranch());
+        $commit = trim(file_get_contents('/cakebox/console/.git/refs/heads/' . $this->getCakeboxBranch()));
+        return $commit;
+    }
+
+    /**
+     * Fetch most recent remote cakebox-console commit from Github api.
+     *
+     * @return string String containing git sha
+     */
+    protected function _getLatestCakeboxConsoleCommitRemote()
+    {
+        $commits = $this->getRepositoryCommits('alt3/cakebox-console', 1);
+        $commit = $commits[0]['sha'];
+        return $commit;
+    }
+
+    /**
+     * Fetch commits for any given git repository from the Github API.
+     *
+     * @param string $repository Github repository shortname (owner/repo).
+     * @param string $limit Number of results to return.
+     * @return array Array
+     */
+    public function getRepositoryCommits($repository, $limit = null)
+    {
+        $commits = Cache::read('commits', 'short');
+        if ($commits) {
+            return $commits;
+        }
+
+        if ($limit) {
+            if (!is_int($limit)) {
+                throw new Exception("Parameter limit must be an integer");
+            }
+            $limit = "?page=1&per_page=$limit";
+        }
+
+        try {
+            $http = new Client();
+            $response = $http->get("https://api.github.com/repos/$repository/commits$limit");
+            if (!$response->isOk()) {
+                return null;
+            }
+            $result = json_decode($response->body(), true);
+            Cache::write('commits', $result, 'short');
+            return $result;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**

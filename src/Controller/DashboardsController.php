@@ -24,13 +24,9 @@ class DashboardsController extends AppController
                 'sites' => $this->Info->getNginxFileCount()
             ],
             'commits' => $this->Info->getRepositoryCommits('alt3/cakebox-console', 5),
-            'contributions' => $this->Info->getRepositoryContributions('alt3/cakebox-console', 'dev')
+            'contributions' => $this->Info->getRepositoryContributions('alt3/cakebox-console', 'dev'),
+            'notifications' => $this->Info->getNotifications()
         ];
-
-        if ($this->Info->getLatestCommitLocal() != $this->Info->getLatestCommitRemote()) {
-            $data['update'] = true;
-        }
-
         $this->set('data', $data);
     }
 

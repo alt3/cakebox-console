@@ -2,6 +2,7 @@
 /**
  * Bootstrap 3 top navigation
  */
+//pr($data);
 ?>
 
 <nav class="navbar navbar-inverse" role="navigation">
@@ -25,6 +26,19 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav navbar-right">
+
+				<!-- notifications -->
+				<?php if (empty($data['notifications'])) : ?>
+					<li class="navbar-notifier">
+						<a href="#">Messages <span class="badge">0</span></a>
+					</li>
+				<?php else : ?>
+					<li class="navbar-notifier has-messages">
+						<a data-toggle="collapse" href="#collapseNotifier" aria-expanded="false" aria-controls="collapseExample">Messages <span class="badge"><?= count($data['notifications']) ?></span></a>
+					</li>
+				<?php endif ?>
+
+				<!-- logout button -->
 				<li>
 					<a href="#" class="todo" data-toggle="dropdown">
 						<i class="fa fa-sign-out"></i>
@@ -34,6 +48,34 @@
 			</ul>
 
 		</div><!-- /.navbar-collapse -->
+
+		<!-- Collapsable Notification Well -->
+		<?php if (!empty($data['notifications'])) : ?>
+			<div class="collapse" id="collapseNotifier">
+				<div class="well">
+					<ul class="list-unstyled">
+						<?php foreach($data['notifications'] as $notification) : ?>
+							<li class="notification">
+								<i class="fa fa-bell-o"></i>
+								<?php if (!empty($notification['link'])) : ?>
+									<?php
+										echo sprintf ($notification['message'], $this->Html->link(
+											$notification['link']['text'],
+											$notification['link']['url']
+										));
+									?>
+								<?php else : ?>
+									<?= $notification['message'] ?>
+								<?php endif ?>
+
+
+							</li>
+						<?php endforeach ?>
+					</ul>
+				</div>
+			</div>
+		<?php endif ?>
+
 	</div> <!-- /.container -->
 </nav>
 
@@ -114,5 +156,9 @@
 		</div> <!-- /container -->
 
 	</div> <!-- /subnavbar-inner -->
+
+
+
+
 
 </div> <!-- /subnavbar -->
