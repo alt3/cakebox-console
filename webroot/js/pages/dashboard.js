@@ -21,7 +21,9 @@
  * set in the Dashboards index view (http://www.flotcharts.org)
  * ---------------------------------------------------------------*/
 $(document).ready(function () {
-    //console.dir(donutData)
+    if ((typeof donutData === 'undefined')) {
+        return true;
+    }
 
     $.plot(
         $("#donut-chart"),

@@ -456,7 +456,9 @@ foreach ($frameworks as $framework) {
 }
 
 // Create inline Javascript variable "donutData"
-echo $this->Html->scriptBlock(
-    "var donutData = " . json_encode($flotData),
-    ['inline' => false]
-);
+if (count($data['apps'])) {
+    echo $this->Html->scriptBlock(
+        "var donutData = " . json_encode($flotData),
+        ['inline' => false]
+    );
+}
