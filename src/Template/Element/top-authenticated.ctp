@@ -34,7 +34,7 @@
 					</li>
 				<?php else : ?>
 					<li class="navbar-notifier has-messages">
-						<a data-toggle="collapse" href="#collapseNotifier" aria-expanded="false" aria-controls="collapseExample">Messages <span class="badge"><?= count($data['notifications']) ?></span></a>
+						<a data-toggle="collapse" href="#collapseNotifications" aria-expanded="false" aria-controls="collapseExample">Messages <span class="badge"><?= count($data['notifications']) ?></span></a>
 					</li>
 				<?php endif ?>
 
@@ -51,7 +51,7 @@
 
 		<!-- Collapsable Notification Well -->
 		<?php if (!empty($data['notifications'])) : ?>
-			<div class="collapse" id="collapseNotifier">
+			<div class="collapse" id="collapseNotifications">
 				<div class="well">
 					<ul class="list-unstyled">
 						<?php foreach($data['notifications'] as $notification) : ?>

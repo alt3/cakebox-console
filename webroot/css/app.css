@@ -229,5 +229,13 @@ ul.pair li span.key {
 }
 
 li.notification i {
-    padding-right: 1px;
+    padding-right: 5px;
+    color: #f9f9f9;
+}
+
+#collapseNotifications .well {
+    background: transparent;
+    border: none;
+    color: #9d9d9d;
+
 }
