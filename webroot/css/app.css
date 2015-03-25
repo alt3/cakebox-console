@@ -14,6 +14,7 @@
 	8. Key/Value Pairs
 	9. Footer
     10. Syntax Highlighting
+    11. Notifications
 
 -------------------------------------------------------------------*/
 
@@ -118,10 +119,12 @@ caption {
 }
 .widget.danger .widget-header {
     background-image: linear-gradient(to bottom, #D9534F 0%, #C9302C 100%);
+
 }
 .widget.danger .widget-header i,
 .widget.danger .widget-header h3 {
     color: #fff;
+    font-weight: normal;
 }
 
 /*------------------------------------------------------------------
@@ -210,4 +213,29 @@ ul.pair li span.key {
 * ---------------------------------------------------------------*/
 .syntaxhighlighter {
     overflow-y: hidden !important; /* prevent 1px vertical scrollbar on Chrome */
+}
+
+/*------------------------------------------------------------------
+* 11. Notifications
+* ---------------------------------------------------------------*/
+.navbar-notifier span {
+    margin-left: 3px;
+    color: #ccc;
+}
+.navbar-notifier.has-messages span {
+    background-color: #337AB7;
+    background-color: red;
+    color: #fff;
+}
+
+li.notification i {
+    padding-right: 5px;
+    color: #f9f9f9;
+}
+
+#collapseNotifications .well {
+    background: transparent;
+    border: none;
+    color: #9d9d9d;
+
 }

@@ -8,6 +8,7 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.min', ['block'
 $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.pie.min', ['block' => 'scriptBottom']);
 $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', ['block' => 'scriptBottom']);
 
+//pr($data);
 ?>
 
 <div class="col-md-6 col-xs-12">
@@ -156,6 +157,8 @@ $this->Html->script('cdn-fallback/jquery-plugins/flot/jquery.flot.resize.min', [
 
 <div class="col-md-6">
 
+
+    <!-- Icon Toolbox -->
     <div class="widget stacked">
 
         <div class="widget-header">

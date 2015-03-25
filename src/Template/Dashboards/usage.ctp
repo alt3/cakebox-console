@@ -106,7 +106,7 @@ $this->assign('title', 'Pro Tips!');
                         <div class="faq-text">
                             <h4><?= __("Vagrant Commands") ?></h4>
                             <p>
-                                Your box lives is a Vagrant virtual machine so get familiar with the
+                                Your box lives inside a Vagrant virtual machine so get familiar with the
                                 <?php
                                     echo $this->Html->link('Vagrant CLI', 'https://docs.vagrantup.com/v2/cli/index.html')
                                 ?>

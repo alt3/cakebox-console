@@ -27,8 +27,9 @@ class DashboardsController extends AppController
             'contributions' => $this->Info->getRepositoryContributions('alt3/cakebox-console', 'dev')
         ];
 
-        if ($this->Info->getLatestCommitLocal() != $this->Info->getLatestCommitRemote()) {
-            $data['update'] = true;
+        $notifications = $this->Info->getNotifications();
+        if ($notifications) {
+            $data['notifications'] = $notifications;
         }
 
         $this->set('data', $data);
