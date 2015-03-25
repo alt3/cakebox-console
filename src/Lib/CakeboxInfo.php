@@ -1131,16 +1131,16 @@ class CakeboxInfo
      */
     public function getNotifications()
     {
-        $result = [];
-
-        // set update notification if update is available for cakebox-console project
         $cakeboxConsoleUpdate = $this->_getCakeboxConsoleUpdateNotification();
+        $cakeboxUpdate = $this->_getCakeboxUpdateNotification();
+        if (!$cakeboxUpdate || !$cakeboxConsoleUpdate) {
+            return false;
+        }
+
+        $result = [];
         if ($cakeboxConsoleUpdate) {
             $result[] = $cakeboxConsoleUpdate;
         }
-
-        // set update notification if update is available for cakebox project
-        $cakeboxUpdate = $this->_getCakeboxUpdateNotification();
         if ($cakeboxUpdate) {
             $result[] = $cakeboxUpdate;
         }
