@@ -30,7 +30,7 @@
 				<!-- notifications -->
 				<?php if (empty($data['notifications'])) : ?>
 					<li class="navbar-notifier">
-						<a href="#">Messages <span class="badge">0</span></a>
+						<a>Messages <span class="badge">0</span></a>
 					</li>
 				<?php else : ?>
 					<li class="navbar-notifier has-messages">
