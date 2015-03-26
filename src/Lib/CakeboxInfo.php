@@ -1159,10 +1159,10 @@ class CakeboxInfo
             return false;
         }
         return [
-            'message' => __("An update is available for the cakebox project on your local machine. Instructions available %s."),
+            'message' => __("Local Machine update available. Instructions available %s."),
             'link' => [
                 'text' => 'here',
-                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#local-update'
+                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#local-machine-update'
             ]
         ];
     }
@@ -1178,10 +1178,10 @@ class CakeboxInfo
             return false;
         }
         return [
-            'message' => __("An update is available for your Cakebox Commands and Dashboard. Instructions available %s."),
+            'message' => __("Virtual Machine (self) update available. Instructions available %s."),
             'link' => [
                 'text' => 'here',
-                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#self-update'
+                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#virtual-machine-update'
             ]
         ];
     }
