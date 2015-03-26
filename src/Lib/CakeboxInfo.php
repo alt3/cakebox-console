@@ -1159,9 +1159,9 @@ class CakeboxInfo
             return false;
         }
         return [
-            'message' => __("Local Machine update available. Instructions available %s."),
+            'message' => __("Update available for your %s."),
             'link' => [
-                'text' => 'here',
+                'text' => 'local machine',
                 'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#local-machine-update'
             ]
         ];
@@ -1178,9 +1178,9 @@ class CakeboxInfo
             return false;
         }
         return [
-            'message' => __("Virtual Machine (self) update available. Instructions available %s."),
+            'message' => __("Update available for your %s."),
             'link' => [
-                'text' => 'here',
+                'text' => 'virtual machine',
                 'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#virtual-machine-update'
             ]
         ];
