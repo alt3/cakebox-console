@@ -73,12 +73,13 @@ $this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' =
 
 						<div class="widget-content">
 							<div class="panel-body">
+								<p>Optimize box performance by:</p>
 								<ul>
 								<li>
-									Increase vm memory to 2048 MB for optimal performance
+									Increasing vm memory to 2048 MB (but never allocate more than 25% of physical host memory)
 								</li>
 								<li>
-									Never allocate more than 25% of physical host memory
+									Setting vm cpus to the same number as physically installed host CPUs
 								</li>
 							</div>
 						</div>
