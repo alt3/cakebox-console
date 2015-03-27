@@ -1,1 +1,1 @@
-cakebox-console 0.1.2
+cakebox-console 1.0-alpha1
