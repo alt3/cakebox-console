@@ -81,6 +81,10 @@ a.btn-primary:focus {
     visibility: visible !important; /* fix to get jQuery show() working */
 }
 
+.navbar-right li a i {
+    padding-left: 2px;
+}
+
 /*------------------------------------------------------------------
  * 3. Widgets
  * ---------------------------------------------------------------*/
@@ -229,8 +233,8 @@ ul.pair li span.key {
 }
 
 li.notification i {
-    padding-right: 5px;
-    color: #f9f9f9;
+    padding-right: 1px;
+    /*color: #f9f9f9;*/
 }
 
 #collapseNotifications .well {

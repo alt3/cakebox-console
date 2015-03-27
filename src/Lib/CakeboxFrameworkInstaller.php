@@ -282,32 +282,6 @@ class CakeboxFrameworkInstaller
     }
 
     /**
-     * Try to detect framework specific settings for user specified applications.
-     *
-     * @return boolean True if successful
-     */
-    protected function _setCustomOptions()
-    {
-        log::Debug("Detecting framework options for custom application");
-
-        # Detect framework first
-        $framework = $this->Info->getFrameworkCommonName($this->options['path']);
-        if (empty($framework)) {
-            log::debug("* No matching framework detected");
-            log::debug("* Setting webroot to application directory");
-            $this->options['webroot'] = $this->options['path'];
-            unset($this->option['framework_short']);
-            return true;
-        }
-        log::debug("* Detected $framework");
-        $this->options['framework_short'] = $framework;
-
-        # Set webroot
-        $this->options['webroot'] = $this->options['path'] . DS . $this->Info->frameworkMeta[$framework]['webroot'];
-        return true;
-    }
-
-    /**
      * Detect the installation method for user specified sources. Assumes
      * composer if the source does not match a git repository.
      *

@@ -30,7 +30,7 @@
 				<!-- notifications -->
 				<?php if (empty($data['notifications'])) : ?>
 					<li class="navbar-notifier">
-						<a href="#">Messages <span class="badge">0</span></a>
+						<a>Messages <span class="badge">0</span></a>
 					</li>
 				<?php else : ?>
 					<li class="navbar-notifier has-messages">
@@ -40,9 +40,9 @@
 
 				<!-- logout button -->
 				<li>
-					<a href="#" class="todo" data-toggle="dropdown">
-						<i class="fa fa-sign-out"></i>
+					<a href="#" class="todo">
 						<?= __('Logout'); ?>
+						<i class="fa fa-sign-out"></i>
 					</a>
 				</li>
 			</ul>
@@ -55,6 +55,7 @@
 				<div class="well">
 					<ul class="list-unstyled">
 						<?php foreach($data['notifications'] as $notification) : ?>
+
 							<li class="notification">
 								<i class="fa fa-bell-o"></i>
 								<?php if (!empty($notification['link'])) : ?>
@@ -67,9 +68,8 @@
 								<?php else : ?>
 									<?= $notification['message'] ?>
 								<?php endif ?>
-
-
 							</li>
+
 						<?php endforeach ?>
 					</ul>
 				</div>

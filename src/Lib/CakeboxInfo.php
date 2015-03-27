@@ -192,21 +192,15 @@ class CakeboxInfo
      */
     public function cakeboxVersion()
     {
-        $cached = Cache::read('version');
-        if ($cached) {
-            return $cached;
-        }
-
         $file = ROOT . DS . 'VERSION.txt';
         if (!file_exists($file)) {
             return false;
         }
         $lines = file_get_contents($file);
-        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $lines, $matches);
+        preg_match('/cakebox-console (\d.+)/', $lines, $matches);
         if (empty($matches[1])) {
             return false;
         }
-        Cache::write('version', $matches[1]);
         return $matches[1];
     }
 
@@ -1159,10 +1153,10 @@ class CakeboxInfo
             return false;
         }
         return [
-            'message' => __("An update is available for the cakebox project on your local machine. Instructions available %s."),
+            'message' => __("Update available for your %s"),
             'link' => [
-                'text' => 'here',
-                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#local-update'
+                'text' => 'local machine',
+                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#local-machine-update'
             ]
         ];
     }
@@ -1178,10 +1172,10 @@ class CakeboxInfo
             return false;
         }
         return [
-            'message' => __("An update is available for your Cakebox Commands and Dashboard. Instructions available %s."),
+            'message' => __("Update available for your %s"),
             'link' => [
-                'text' => 'here',
-                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#self-update'
+                'text' => 'virtual machine',
+                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#virtual-machine-update'
             ]
         ];
     }
