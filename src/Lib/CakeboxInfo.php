@@ -192,21 +192,15 @@ class CakeboxInfo
      */
     public function cakeboxVersion()
     {
-        $cached = Cache::read('version');
-        if ($cached) {
-            return $cached;
-        }
-
         $file = ROOT . DS . 'VERSION.txt';
         if (!file_exists($file)) {
             return false;
         }
         $lines = file_get_contents($file);
-        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $lines, $matches);
+        preg_match('/cakebox-console (\d.+)/', $lines, $matches);
         if (empty($matches[1])) {
             return false;
         }
-        Cache::write('version', $matches[1]);
         return $matches[1];
     }
 
