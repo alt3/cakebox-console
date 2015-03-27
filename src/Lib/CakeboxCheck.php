@@ -1,6 +1,7 @@
 <?php
 namespace App\Lib;
 
+use App\Lib\CakeboxInfo;
 use Cake\Cache\Cache;
 use Cake\Datasource\ConnectionManager;
 use Cake\Utility\Hash;
@@ -17,7 +18,7 @@ class CakeboxCheck
      *
      * @var App\Lib\CakeboxInfo
      */
-    protected $cbi;
+    protected $Info;
 
     /**
      * Global box requirements. Basically the sum of the most demanding minimal
@@ -51,7 +52,7 @@ class CakeboxCheck
      */
     public function __construct()
     {
-        $this->cbi = new CakeboxInfo;
+        $this->Info = new CakeboxInfo;
     }
 
     /**
@@ -123,7 +124,7 @@ class CakeboxCheck
      */
     public function getApplicationChecks($appdir)
     {
-        $framework = $this->cbi->getFrameworkCommonName($appdir);
+        $framework = $this->Info->getFrameworkCommonName($appdir);
 
      // writebale directories
         foreach ($this->frameworkRequirements[$framework]['writeables'] as $dir) {
@@ -161,7 +162,9 @@ class CakeboxCheck
     /**
      * Check if an application's caching is properly configured and working.
      *
-     * @todo make the check work for any app (now uses cakebox-console context)
+     * Note: this check now uses cakebox-console context but should ideally be
+     * update so it can be used for any app (thus enriching the dashboard)
+     *
      * @return array Named array containing "messsage" string and "pass" boolean
      */
     public function getApplicationCacheCheck()
@@ -205,8 +208,11 @@ class CakeboxCheck
     /**
      * Test if a connection can be made to a database.
      *
-     * @todo make framework/version agnostic (now uses cakebox-console context).
-     * @todo fix errorMsg not displaying for failed connections
+     * Note: this function now uses cakebox-console context but should ideally
+     * be made framework/version agnostic so that it could perform the check
+     * for any app (and then be used to enrich dashboard application info).
+     *
+     * Note: errorMsg is currently not displaying for failed connections.
      *
      * @return bool Success when a connection was made successfully
      */

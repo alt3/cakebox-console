@@ -1,6 +1,7 @@
 <?php
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
+
 ?>
 <h2><?= __d('cake', 'An Internal Error Has Occurred') ?></h2>
 <p class="error">
@@ -14,22 +15,29 @@ if (Configure::read('debug')) :
 		<?= h($error->getFile()); ?> in line
 		<?= h($error->getLine()); ?>
 	</p>
-<?php if (!empty($error->queryString)) : ?>
+<?php
+if (!empty($error->queryString)) :
+?>
 	<p class="notice">
 		<strong>SQL Query: </strong>
 		<?= h($error->queryString); ?>
 	</p>
-<?php endif; ?>
-<?php if (!empty($error->params)) : ?>
-		<strong>SQL Query Params: </strong>
-		<?= Debugger::dump($error->params); ?>
-<?php endif; ?>
 <?php
-	echo $this->element('auto_table_warning');
-	echo $this->element('exception_stack_trace');
-
-	if (extension_loaded('xdebug')) {
-		xdebug_print_function_stack();
-	}
 endif;
 ?>
+<?php
+if (!empty($error->params)) :
+?>
+		<strong>SQL Query Params: </strong>
+		<?= Debugger::dump($error->params); ?>
+<?php
+endif;
+?>
+<?php
+    echo $this->element('auto_table_warning');
+    echo $this->element('exception_stack_trace');
+
+if (extension_loaded('xdebug')) {
+    xdebug_print_function_stack();
+}
+endif;

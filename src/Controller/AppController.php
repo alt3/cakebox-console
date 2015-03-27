@@ -21,22 +21,20 @@ class AppController extends Controller
     public $uses = false;
 
     /**
-    * @var Components available to all views
-    */
+     * @var Components available to all views
+     */
     public $components = [
         'Flash',
         'RequestHandler',
         'Security',
-        'Csrf',
-        'BootstrapUI.Flash'
+        'Csrf'
     ];
 
     /**
      * @var Helpers available to all views
      */
     public $helpers = [
-        'Cakebox',
-        'BootstrapUI.Form'
+        'Cakebox'
     ];
 
     /**
@@ -44,7 +42,7 @@ class AppController extends Controller
      *
      * @var \App\Lib\CakeboxInfo
      */
-    public $cbi;
+    public $Info;
 
     /**
      * Initialization hook method.
@@ -53,18 +51,20 @@ class AppController extends Controller
      */
     public function initialize()
     {
-        $this->cbi = new CakeboxInfo;
+        $this->Info = new CakeboxInfo;
     }
 
     /**
      * BeforeFilter
      *
-     * @param \Cake\Event\Event $event
+     * @param \Cake\Event\Event $event Event instance.
+     * @return void
+     * @throws Cake\Network\Exception\NotFoundException
      */
     public function beforeFilter(Event $event)
     {
-		// set cakebox version
-		$this->set(['version' => $this->cbi->cakeboxVersion()]);
+        // set cakebox version
+        $this->set(['version' => $this->Info->cakeboxVersion()]);
 
 
         // Throw 404's for non-ajax connections to ajax_ prefixed actions
@@ -74,5 +74,4 @@ class AppController extends Controller
             }
         }
     }
-
 }

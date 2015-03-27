@@ -1,16 +1,48 @@
 <?php
 namespace App\Lib;
 
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Log\Log;
 use Cake\Utility\Hash;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Class library for box agnostic helper functions
  */
 class CakeboxUtility
 {
+
+    /**
+     * Checks if a virtual host file exists in /etc/nginx/sites-available.
+     *
+     * @param string $url Virtuals host's FQDN
+     * @return boolean True if a vhost is found for the given URL
+     */
+    public static function vhostAvailable($url)
+    {
+        if (file_exists('/etc/nginx/sites-available/' . $url)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a virtual host is enabled by checking for symbolic link in
+     * /etc/nginx/sites-enabled.
+     *
+     * @param string $url Virtuals host's FQDN
+     * @return boolean True if a symlink is found for the given URL
+     */
+    public static function vhostEnabled($url)
+    {
+        if (is_link('/etc/nginx/sites-enabled/' . $url)) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Retrieve a specific setting from an Ngninx site configuration file.
@@ -85,7 +117,7 @@ class CakeboxUtility
      * @param string $file Name of the site file.
      * @return string html-escaped file contents
      */
-    public function getFileContent($file)
+    public static function getFileContent($file)
     {
         if (!file_exists($file)) {
             return false;
@@ -101,7 +133,7 @@ class CakeboxUtility
      * @param int $numColumns Number of parts to chop the data into.
      * @return array Array
      */
-    public function columnizeArray($data, $numColumns)
+    public static function columnizeArray($data, $numColumns)
     {
         $n = count($data);
         $perColumn = floor($n / $numColumns);
@@ -150,10 +182,8 @@ class CakeboxUtility
             };
             return false;
         } catch (\Exception $e) {
-            log::error("Error showing databases: " . $e->getMessage());
+            Log::error("Error showing databases: " . $e->getMessage());
             return false;
-            //$this->out("Error: " . $e->getMessage());
-            //$this->Exec->exitBashError();
         }
     }
 
@@ -170,48 +200,66 @@ class CakeboxUtility
 
         foreach ($databases as $database) {
             if (self::databaseExists($database) == false) {
-                log::warning("* Skipping: database $database does not exist");
+                Log::warning("* Skipping: database $database does not exist");
                 continue;
             }
             try {
                 $connection = ConnectionManager::get('default');
                 $connection->execute("DROP DATABASE `$database`");
-                log::debug("* Database `$database` dropped successfully");
+                Log::debug("* Database `$database` dropped successfully");
             } catch (\Exception $e) {
-                log::error("Error dropping database `$database`: " . $e->getMessage());
+                Log::error("Error dropping database `$database`: " . $e->getMessage());
                 return false;
             }
         }
         return true;
     }
 
+
+
     /**
-     * Create a main database and accompanying 'test_' prefixed test database.
+     * Creates a MySQL database with specified database user GRANT.
      *
-     * @param string $database Name used for the new databases.
+     * @param string $database Name used for the new database.
      * @param string $username User granted local access to (only) this database.
      * @param string $password Password for above user.
      * @return boolean True if created successfully
+     * @throws Cake\Core\Exception\Exception
      */
     public static function createDatabase($database, $username, $password)
     {
         $database = self::normalizeDatabaseName($database);
-        $databases = [ $database, 'test_' . $database ];
+        if (self::databaseExists($database)) {
+            Log::warning("* Skipping: database $database already exists");
+            return false;
+        }
 
+        try {
+            $connection = ConnectionManager::get('default');
+            $connection->execute("CREATE DATABASE `$database`");
+            Log::debug("* Database `$database` created successfully");
+            self::grantDatabaseRights($database, $username, $password);
+        } catch (Exception $e) {
+            Log::error("Error creating database: " . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Creates a MySQL database pair with a main database and and a test database.
+     *
+     * @param string $database Name used for the new databases.
+     * @param string $username User granted local access to (only) this database.
+     * @param string $password Password for above user.
+     * @return boolean True if both databases are created successfully
+     */
+    public static function createDatabasePair($database, $username, $password)
+    {
+        $database = self::normalizeDatabaseName($database);
+        $databases = [ $database, 'test_' . $database ];
         foreach ($databases as $database) {
-            if (self::databaseExists($database)) {
-                log::warn("* Skipping: database $database already exists");
-                continue;
-            }
-            try {
-                $connection = ConnectionManager::get('default');
-                $connection->execute("CREATE DATABASE `$database`");
-                log::debug("* Database `$database` created successfully");
-                self::grantDatabaseRights($database, $username, $password);
-            } catch (\Exception $e) {
-                log::error("Error creating database: " . $e->getMessage());
-                return false;
-            }
+            self::createDatabase($database, $username, $password);
         }
         return true;
     }
@@ -224,15 +272,15 @@ class CakeboxUtility
      * @param string $password Password for given user.
      * @return boolean True on success
      */
-    protected static function grantDatabaseRights($database, $username, $password)
+    public static function grantDatabaseRights($database, $username, $password)
     {
         $database = self::normalizeDatabaseName($database);
         try {
             $connection = ConnectionManager::get('default');
             $connection->execute("GRANT ALL ON `$database`.* to  '$username'@'localhost' identified by '$password'");
-            log::debug("* Granted user `$username` localhost access on database `$database`");
+            Log::debug("* Granted user `$username` localhost access on database `$database`");
         } catch (\Exception $e) {
-            log::error("Error granting user `$username` localhost access on database `$database`");
+            Log::error("Error granting user `$username` localhost access on database `$database`");
             return false;
         }
         return true;
@@ -243,13 +291,14 @@ class CakeboxUtility
      *
      * @param string $file Path to the file containing the string to replace.
      * @param array $valuePairs Containing 'old' => 'new' values.
+     * @param bool $root True to write new file as root
      * @return boolean True if the file was updated successfully
      */
-    public static function updateConfigFile($file, $valuePairs)
+    public static function updateConfigFile($file, $valuePairs, $root = false)
     {
-        log::debug("* Updating config file $file");
+        Log::debug("* Updating config file $file");
         if (!file_exists($file)) {
-            log::error("* Cannot replace values in non-existent file $file");
+            Log::error("* Cannot replace values in non-existent file $file");
             return false;
         }
         $content = file_get_contents($file);
@@ -258,19 +307,27 @@ class CakeboxUtility
         foreach ($valuePairs as $old => $new) {
             $content = str_replace($old, $new, $content, $count);
             if ($count == 0) {
-                log::warning("* Nothing to replace, `$old` could not be found");
+                Log::warning("* Skipping: nothing to replace, `$old` could not be found");
+                return true;
             } else {
                 Log::debug("* Replaced $count occurences of `$old`");
             }
         }
 
         # Update file
-        $result = file_put_contents($file, $content);
-        if (!$result) {
-            log::error("* Error writing to config file: " . error_get_last());
-            return false;
+        if (!$root) {
+            $result = file_put_contents($file, $content);
+            if (!$result) {
+                Log::error("* Error writing to config file: " . error_get_last());
+                return false;
+            }
+        } else {
+            $Execute = new CakeboxExecute();
+            if (!$Execute->shell("echo '$content' | sudo tee $file", 'root')) {
+                return false;
+            }
         }
-        log::info("* Successfully updated config file");
+        Log::info("* Successfully updated config file");
         return true;
     }
 
@@ -284,22 +341,23 @@ class CakeboxUtility
      */
     public static function setFolderPermissions($dir)
     {
-        log::debug("Setting permissions on $dir");
+        Log::info("Setting permissions on $dir to world writable");
 
         // Change the permissions on a path and output the results.
         $changePerms = function ($path, $perms) {
             // Get current permissions in decimal format so we can bitmask it.
             $currentPerms = octdec(substr(sprintf('%o', fileperms($path)), -4));
             if (($currentPerms & $perms) == $perms) {
-                return;
+                Log::debug('* Skipping: desired permissions already set for ' . $path);
+                return true;
             }
 
             $res = chmod($path, $currentPerms | $perms);
             if (!$res) {
-                log::error('Failed to set permissions on ' . $path);
+                Log::error('Failed to set permissions on ' . $path);
                 return false;
             }
-            log::debug('Permissions set on ' . $path);
+            Log::debug('* Successfully updated permissions for ' . $path);
         };
 
         $walker = function ($dir, $perms) use (&$walker, $changePerms) {
@@ -315,7 +373,6 @@ class CakeboxUtility
                 $walker($path, $perms);
             }
         };
-
         $worldWritable = bindec('0000000111');
         $changePerms($dir, $worldWritable);
         $walker($dir, $worldWritable);
@@ -348,26 +405,26 @@ class CakeboxUtility
      */
     public function dirAvailable($directory)
     {
-        log::debug("Checking installation directory readiness");
+        Log::debug("Checking installation directory readiness");
 
         # Directory does not exist
-        log::debug("* Checking if installation directory exists");
+        Log::debug("* Checking if installation directory exists");
         if (!file_exists($directory)) {
-            log::debug("* Pass: directory does not exist");
+            Log::debug("* Pass: directory does not exist");
             return true;
         }
 
         # Directory exists but is not empty
-        log::debug("* Checking if existing directory is empty");
+        Log::debug("* Checking if existing directory is empty");
         $files = scandir($directory);
         if (count($files) > 2) {
-            log::error("* Fail: directory exists but is NOT empty");
+            Log::warning("* Fail: directory exists but is NOT empty");
             return false;
         }
 
         # Check if the directory is writable by vagrant user
-        $execute = new CakeboxExecute();
-        if (!$execute->isVagrantWritable($directory)) {
+        $Execute = new CakeboxExecute();
+        if (!$Execute->isVagrantWritable($directory)) {
             return false;
         }
         Log::debug("* Pass: directory is writable");
@@ -383,5 +440,21 @@ class CakeboxUtility
     public function getSaltCipher($randomText)
     {
         return hash('sha256', $randomText . php_uname() . microtime(true));
+    }
+
+    /**
+     * Returns the content of a yaml file as an array.
+     *
+     * @param string $yaml Full path to the yaml file
+     * @return string Hash
+     * @throws Symfony\Component\Yaml\Exception\ParseException
+     */
+    public static function yamlToArray($yaml)
+    {
+        try {
+            return (new Parser)->parse(file_get_contents($yaml));
+        } catch (ParseException $e) {
+            printf("Unable to parse YAML file $yaml: %s", $e->getMessage());
+        }
     }
 }

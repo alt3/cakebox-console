@@ -2,10 +2,13 @@
 namespace App\Lib;
 
 use Cake\Cache\Cache;
+use Cake\Collection\Collection;
 use Cake\Core\App;
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
+use Cake\I18n\Time;
 use Cake\Network\Http\Client;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -23,6 +26,25 @@ class CakeboxInfo
      * @var \Cake\Database\Connection
      */
     protected $conn;
+
+    /**
+     * Most recently provisioned Cakebox.yaml converted to an array.
+     *
+     * @var Array Hash
+     */
+    protected $_yaml;
+
+    /**
+     * @var array Hash with webserver specific information.
+     */
+    public $cakeboxMeta = [
+        'host' => [
+            'yaml' => '/home/vagrant/.cakebox/last-known-cakebox-yaml',
+            'commit' => '/home/vagrant/.cakebox/last-known-cakebox-commit',
+            'box_version' => '/home/vagrant/.cakebox/last-known-box-version',
+        ],
+        'cli_log' => '/var/log/cakephp/cakebox.cli.log'
+    ];
 
     /**
      * @var array Hash with webserver specific information.
@@ -52,8 +74,8 @@ class CakeboxInfo
     public $frameworkMeta = [
         'cakephp2' => [
             'installation_method' => 'git',
-            'source' => 'https://github.com/cakephp/cakephp.git',
-            'source_ssh' => 'git@github.com:cakephp/cakephp.git',
+            'source' => 'https://github.com/cakephp/cakephp.git -b 2.7',
+            'source_ssh' => 'git@github.com:cakephp/cakephp.git -b 2.7',
             'webroot' => 'app/webroot',
             'writable_dirs' => ['app/tmp'],
             'salt' => 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi',
@@ -68,7 +90,7 @@ class CakeboxInfo
             'installation_method' => 'composer',
             'source' => 'laravel/laravel',
             'webroot' => 'public',
-            'writable_dirs' => ['app/storage']
+            'writable_dirs' => ['storage'] // app/storage for Laravel 4
         ]
     ];
 
@@ -107,17 +129,22 @@ class CakeboxInfo
      *
      * @var array Hash
      */
-    protected $packages = [
+    public $packages = [
         'composer' => ['link' => 'https://getcomposer.org'],
         'curl' => ['link' => 'http://curl.haxx.se'],
         'elasticsearch' => ['link' => 'https://www.elasticsearch.org'],
         'git' => ['link' => 'https://launchpad.net/~git-core'],
         'java' => ['link' => 'http://openjdk.java.net'],
         'heroku' => ['link' => 'https://toolbelt.heroku.com'],
+        'hhvm' => ['link' => 'http://hhvm.com'],
         'kibana' => ['link' => 'https://www.elasticsearch.org/overview/kibana'],
         'logstash' => ['link' => 'http://logstash.net'],
         'mysql' => ['link' => 'http://www.percona.com/software/percona-server'],
         'memcached' => ['link' => 'http://memcached.org'],
+        'mongodb' => [
+            'link' => 'https://www.mongodb.org/',
+            'alias' => 'mongod'
+        ],
         'nginx' => ['link' => 'https://launchpad.net/nginx'],
         'openssl' => ['link' => 'https://www.openssl.org'],
         'php' => ['link' => 'https://launchpad.net/~ondrej/+archive/ubuntu/php5-5.6'],
@@ -145,6 +172,7 @@ class CakeboxInfo
     public function __construct()
     {
         $this->_conn = ConnectionManager::get('default');
+        $this->_yaml = CakeboxUtility::yamlToArray($this->cakeboxMeta['host']['yaml']);
     }
 
     /**
@@ -164,21 +192,15 @@ class CakeboxInfo
      */
     public function cakeboxVersion()
     {
-        $cached = Cache::read('version');
-        if ($cached) {
-            return $cached;
-        }
-
         $file = ROOT . DS . 'VERSION.txt';
         if (!file_exists($file)) {
             return false;
         }
         $lines = file_get_contents($file);
-        preg_match('/(\d*\.\d*\.\d*-\d*\.\d*|\d*\.\d*\.\d*-\d*|\d*\.\d*\.\d*|\d*\.\d*-\w+)/m', $lines, $matches);
+        preg_match('/cakebox-console (\d.+)/', $lines, $matches);
         if (empty($matches[1])) {
             return false;
         }
-        Cache::write('version', $matches[1]);
         return $matches[1];
     }
 
@@ -191,7 +213,7 @@ class CakeboxInfo
     {
         return ([
             'hostname' => $this->getHostname(),
-            'ip_address' => $this->getPrimaryIpAddress(),
+            'ip_address' => $this->getVmIpAddress(),
             'cpus' => $this->getCpuCount(),
             'memory' => $this->getMemory(),
             'uptime' => $this->getUptime()
@@ -209,13 +231,20 @@ class CakeboxInfo
     }
 
     /**
-     * Returns the primary (external) IP address used by the vm.
+     * Returns the IP address assigned by Vagrant for external communication
+     * by parsing the Vagrant added section in /etc/network/interfaces.
      *
-     * @return string Hostname
+     * @return string IP-address of the vm
+     * @throws Cake\Core\Exception\Exception
      */
-    public function getPrimaryIpAddress()
+    public function getVmIpAddress()
     {
-        return (getenv('SERVER_ADDR'));
+        $file = file_get_contents('/etc/network/interfaces');
+        preg_match('/address ([0-9]{2,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})/', $file, $matches);
+        if (empty($matches[1])) {
+            throw new Exception('Error determining vm IP address');
+        }
+        return $matches[1];
     }
 
     /**
@@ -292,7 +321,7 @@ class CakeboxInfo
      *
      * @return array Enriched array with found filenames
      */
-    public function getRichNginxFiles()
+    public function getRichVhosts()
     {
         foreach ($this->getNginxFiles() as $file) {
             $result[] = [
@@ -311,7 +340,7 @@ class CakeboxInfo
      */
     public function getNginxFileCount()
     {
-        return count($this->getRichNginxFiles());
+        return count($this->getRichVhosts());
     }
 
     /**
@@ -459,11 +488,11 @@ class CakeboxInfo
      *
      * @return string Installed Elasticsearch version
      */
-    public function _getPackageVersionElasticsearch()
+    protected function _getPackageVersionElasticsearch()
     {
         try {
             $http = new Client();
-            $response = $http->get('http://' . $this->getPrimaryIpAddress() . ':9200');
+            $response = $http->get('http://' . $this->getVmIpAddress() . ':9200');
             $result = json_decode($response->body(), true);
             return $result['version']['number'];
         } catch (\Exception $e) {
@@ -642,43 +671,49 @@ class CakeboxInfo
     public function getApps()
     {
         $result = [];
-        foreach ($this->getNginxFiles() as $sitefile) {
-            $appname = $this->getAppName($sitefile);
-            $appdir = $this->getAppBase($sitefile);
-
-            if ($appdir) {
-                $framework = $this->getFrameworkName($appdir);
-                $frameworkVersion = $this->getFrameworkVersion($appdir);
-                $frameworkHuman = Inflector::humanize($framework);
-                if ($frameworkHuman == 'Cakephp') {
-                    $frameworkHuman = 'CakePHP';
-                }
-
-                $result[] = [
-                    'name' => $appname,
-                    'framework' => $framework,
-                    'framework_human' => $frameworkHuman,
-                    'framework_major_version' => CakeboxUtility::getMajorVersion($frameworkVersion),
-                    'framework_version' => $frameworkVersion,
-                    'appdir' => $appdir,
-                    'webroot' => $this->getWebrootFromSite($sitefile)
-                ];
+        foreach ($this->getNginxFiles() as $vhostFile) {
+            $appname = $this->getAppName($vhostFile);
+            if (!$appname) {
+                continue;
             }
+
+            $appdir = $this->getAppBase($vhostFile);
+            if (!$appdir) {
+                continue;
+            }
+
+            $framework = $this->getFrameworkName($appdir);
+            $frameworkVersion = $this->getFrameworkVersion($appdir);
+            $frameworkHuman = Inflector::humanize($framework);
+            if ($frameworkHuman == 'Cakephp') {
+                $frameworkHuman = 'CakePHP';
+            }
+
+            $result[] = [
+                'name' => $appname,
+                'framework' => $framework,
+                'framework_human' => $frameworkHuman,
+                'framework_major_version' => CakeboxUtility::getMajorVersion($frameworkVersion),
+                'framework_version' => $frameworkVersion,
+                'appdir' => $appdir,
+                'webroot' => $this->getWebrootFromSite($vhostFile)
+            ];
         }
+
         return $result;
     }
 
     /**
      * Get the application name by retrieving it's Nginx "server_name" directive.
      *
-     * @param string $sitefile Full path to application's Nginx site configuration file.
-     * @return mixed Containing application name
+     * @param string $vhostFile Full path to application's Nginx site configuration file.
+     * @return string|bool Containing application name, or false
      */
-    public function getAppName($sitefile)
+    public function getAppName($vhostFile)
     {
-        $name = CakeboxUtility::getNginxFileSetting($sitefile, 'server_name');
-        if ($name == '_') {
-            return "cakebox";
+        $name = CakeboxUtility::getNginxFileSetting($vhostFile, 'server_name');
+        if ($name === '_' || $name === false) {
+            return false;
         }
         return $name;
     }
@@ -686,12 +721,12 @@ class CakeboxInfo
     /**
      * Get the application's webroot directory by retrieving it's Nginx "root" directive.
      *
-     * @param string $sitefile Full path to application's Nginx site configuration file.
+     * @param string $vhostFile Full path to application's Nginx site configuration file.
      * @return mixed Containing application name
      */
-    public function getWebrootFromSite($sitefile)
+    public function getWebrootFromSite($vhostFile)
     {
-        $webroot = CakeboxUtility::getNginxFileSetting($sitefile, 'root');
+        $webroot = CakeboxUtility::getNginxFileSetting($vhostFile, 'root');
         return $webroot;
     }
 
@@ -721,12 +756,12 @@ class CakeboxInfo
     /**
      * Get the application's root/base directory by parsing it's Nginx "root" directive.
      *
-     * @param string $sitefile Full path to application's Nginx site configuration file.
+     * @param string $vhostFile Full path to application's Nginx site configuration file.
      * @return mixed Containing application name
      */
-    public function getAppBase($sitefile)
+    public function getAppBase($vhostFile)
     {
-        $webroot = $this->getWebrootFromSite($sitefile);
+        $webroot = $this->getWebrootFromSite($vhostFile);
 
         $cake2base = substr($webroot, 0, strrpos($webroot, '/app/webroot'));
         if (is_dir($cake2base)) {
@@ -919,48 +954,283 @@ class CakeboxInfo
     public function getFrameworkCommonName($appdir)
     {
         $framework = $this->getFrameworkName($appdir);
-        $frameworkVersion = $this->getFrameworkVersion($appdir);
         $majorVersion = CakeboxUtility::getMajorVersion($this->getFrameworkVersion($appdir));
         return $framework . $majorVersion;
     }
 
     /**
-     * Return Github API statistics the 5 most recent contributors by extracting
-     * merged Pull Requests in the dev branch of any given repository.
+     * Return Github API statistics the 5 most recent contributions by extracting
+     * merged Pull Requests in the provided branch of given repository.
      *
      * - Limit fetch query 10 results assuming no more than 50% is rejected
      * - Merged PRs found by extracting elements with non-empty "merged_at" subkey
      *
      * @param string $repository Github repository shortname (owner/repo).
+     * @param string $branch Github branch
      * @return array Array
      */
-    public function getRepositoryContributors($repository)
+    public function getRepositoryContributions($repository, $branch)
     {
-        $cached = Cache::read('contributors', 'short');
+        $cached = Cache::read('contributions', 'short');
         if ($cached) {
             return $cached;
         }
 
         $http = new Client();
-        $response = $http->get("https://api.github.com/repos/$repository/pulls?base=dev&state=closed&page=1&per_page=10");
-        $result = Hash::extract(json_decode($response->body(), true), "{n}[merged_at]");
-        if (count($result > 5)) {
-            $result = array_slice($result, 0, 5);
+        try {
+            $response = $http->get("https://api.github.com/repos/$repository/pulls?base=$branch&state=closed&page=1&per_page=10");
+            if (!$response->isOk()) {
+                return [];
+            }
+        } catch (\Exception $e) {
+            return [];
         }
-        Cache::write('contributors', $result, 'short');
+
+        $avatars = (array)Cache::read('avatars', 'medium');
+
+        $result = collection(json_decode($response->body(), true))
+            ->reject(function ($record) {
+                return $record['merged_at'] === null;
+            })
+            ->sortBy('merged_at', SORT_DESC, SORT_STRING)
+            ->take(5)
+            ->map(function ($record) use ($avatars, $http) {
+                if (!empty($record['user']['avatar_data'])) {
+                    return $record;
+                }
+
+                $url = $record['user']['avatar_url'];
+                if (array_key_exists($url, $avatars)) {
+                    $record['user']['avatar_data'] = $avatars[$url];
+                    return $record;
+                }
+
+                try {
+                    $response = $http->get($record['user']['avatar_url'] . "&amp;size=40");
+                    if (!$response->isOk()) {
+                        $record['user']['avatar_data'] = false;
+                        return $record;
+                    }
+                } catch (\Exception $e) {
+                    $record['user']['avatar_data'] = null;
+                    return $record;
+                }
+
+                $avatar = $response->body();
+                $avatars[$url] = base64_encode($avatar);
+                Cache::write('avatars', $avatars, 'medium');
+
+                $record['user']['avatar_data'] = $avatars[$url];
+                return $record;
+            })
+            ->toArray();
+
+        Cache::write('contributions', $result, 'short');
         return $result;
     }
 
     /**
-     * Fetch commits for a repository from the Github API.
+     * Gets the branch name of the cakebox Git repository on the local machine
+     * by xxxxx.
+     *
+     * @return string Name of the local cakebox Git branch.
+     */
+    public function getCakeboxBranch()
+    {
+         $composerVersion = $this->_yaml['cakebox']['version'];
+         $parts = explode('-', $composerVersion);
+         return $parts[1];
+    }
+
+    /**
+     * Gets the branch name of the provisioned cakebox-console Git repository by
+     * parsing the Composer packagist version in the most recently provisioned
+     * Cakebox.yaml.
+     *
+     * @return string Name of the provisioned Git branch.
+     */
+    public function getCakeboxConsoleBranch()
+    {
+         $composerVersion = $this->_yaml['cakebox']['version'];
+         $parts = explode('-', $composerVersion);
+         return $parts[1];
+    }
+
+    /**
+     * Returns hash with lines found in /var/log/cakephp/cakebox.cli.log
+     *
+     * @return string Array Containing all log entries
+     */
+    public function getCakeboxCliLog()
+    {
+        $lines = file($this->cakeboxMeta['cli_log']);
+        $result = [];
+
+        // extract timestamp, level and message from Monolog logstash format
+        foreach ($lines as $line) {
+            preg_match('/\"@timestamp\":\"(.+)\",\"@source.+\"level\":(\d{3}).+\"@message\":\"(.+)\",\"@tags".+/', $line, $matches);
+
+            // parse timestamp so we can split into human readable date and time
+            $time = Time::parse($matches[1]);
+
+            // add Monolog/RFC 5424 level names
+            //
+            // Should ideally be moved into testable logic or... ask Monolog lib.
+            $level = $matches[2];
+            switch ($level){
+                case 100:
+                    $levelName = 'debug';
+                    break;
+                case 200:
+                    $levelName = 'info';
+                    break;
+                case 250:
+                    $levelName = 'notice';
+                    break;
+                case 300:
+                    $levelName = 'warning';
+                    break;
+                case 400:
+                    $levelName = 'error';
+                    break;
+                case 500:
+                    $levelName = 'critical';
+                    break;
+                case 550:
+                    $levelName = 'alert';
+                    break;
+                case 600:
+                    $levelName = 'emergency';
+                    break;
+                default:
+                    $levelName = $level;
+            }
+
+            // store as rich formatted hash entry
+            $result[] = [
+              'date' => $time->i18nFormat('YYYY-MM-dd'),
+              'time' => $time->i18nFormat('HH:mm:ss'),
+              'level' => $level,
+              'level_name' => $levelName,
+              'message' => $matches[3]
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * Returns an array with update notifications but could hold any message.
+     *
+     * @return array Rich hash with notifications or empty array.
+     */
+    public function getNotifications()
+    {
+        $cakeboxConsoleUpdate = $this->_getCakeboxConsoleUpdateNotification();
+        $cakeboxUpdate = $this->_getCakeboxUpdateNotification();
+        if (!$cakeboxUpdate && !$cakeboxConsoleUpdate) {
+            return false;
+        }
+
+        $result = [];
+        if ($cakeboxConsoleUpdate) {
+            $result[] = $cakeboxConsoleUpdate;
+        }
+        if ($cakeboxUpdate) {
+            $result[] = $cakeboxUpdate;
+        }
+        return $result;
+    }
+
+    /**
+     * Checks if an update is available for the cakebox project on user's local
+     * machine.
+     *
+     * @return mixed Rich hash if update is available, false if up-to-date
+     */
+    protected function _getCakeboxUpdateNotification()
+    {
+        if ($this->_getLatestCakeboxCommitLocal() === $this->_getLatestRemoteCommit('alt3/cakebox', $this->getCakeboxBranch())) {
+            return false;
+        }
+        return [
+            'message' => __("Update available for your %s"),
+            'link' => [
+                'text' => 'local machine',
+                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#local-machine-update'
+            ]
+        ];
+    }
+
+    /**
+     * Checks if an update is available for the cakebox-console project.
+     *
+     * @return mixed Rich hash if update is available, false if up-to-date
+     */
+    protected function _getCakeboxConsoleUpdateNotification()
+    {
+        if ($this->_getLatestCakeboxConsoleCommitLocal() === $this->_getLatestRemoteCommit('alt3/cakebox-console', $this->getCakeboxConsoleBranch())) {
+            return false;
+        }
+        return [
+            'message' => __("Update available for your %s"),
+            'link' => [
+                'text' => 'virtual machine',
+                'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#virtual-machine-update'
+            ]
+        ];
+    }
+
+    /**
+     * Retrieve most recent cakebox commit by parsing uploaded
+     * last-know-cakebox-commit in /home/vagrant/.cakebox
+     *
+     * @return string String containing git sha
+     */
+    protected function _getLatestCakeboxCommitLocal()
+    {
+        $commit = trim(file_get_contents('/home/vagrant/.cakebox/last-known-cakebox-commit'));
+        return $commit;
+    }
+
+    /**
+     * Retrieve most recent local cakebox-console commit by parsing local
+     * header file.
+     *
+     * @return string String containing git sha
+     */
+    protected function _getLatestCakeboxConsoleCommitLocal()
+    {
+        $commit = trim(file_get_contents('/cakebox/console/.git/refs/heads/' . $this->getCakeboxConsoleBranch()));
+        return $commit;
+    }
+
+    /**
+     * Fetch most recent remote cakebox-console commit from Github api.
      *
      * @param string $repository Github repository shortname (owner/repo).
-     * @param string $limit Number of results to return.
-     * @return array Array
+     * @param string $branch Defaults to master
+     * @return string String containing git sha
      */
-    public function getRepositoryCommits($repository, $limit = null)
+    protected function _getLatestRemoteCommit($repository, $branch = 'master')
     {
-        $commits = Cache::read('commits', 'short');
+        $commits = $this->getRepositoryCommits($repository, $branch, 1);
+        $commit = $commits[0]['sha'];
+        return $commit;
+    }
+
+    /**
+     * Fetch commits for any given git repository from the Github API.
+     *
+     * @param string $repository Github repository shortname (owner/repo).
+     * @param string $branch Branch to get commits for
+     * @param int $limit Number of results to return.
+     * @return array Array
+     * @throws Cake\Core\Exception\Exception
+     */
+    public function getRepositoryCommits($repository, $branch = 'master', $limit = null)
+    {
+        $cacheKey = 'commits_' . str_replace('/', '_', $repository);
+        $commits = Cache::read($cacheKey, 'short');
         if ($commits) {
             return $commits;
         }
@@ -969,17 +1239,18 @@ class CakeboxInfo
             if (!is_int($limit)) {
                 throw new Exception("Parameter limit must be an integer");
             }
-            $limit = "?page=1&per_page=$limit";
+            $limit = "page=1&per_page=$limit";
         }
+        $params = "?sha=$branch&$limit";
 
         try {
             $http = new Client();
-            $response = $http->get("https://api.github.com/repos/$repository/commits$limit");
+            $response = $http->get("https://api.github.com/repos/$repository/commits$params");
             if (!$response->isOk()) {
                 return null;
             }
             $result = json_decode($response->body(), true);
-            Cache::write('commits', $result, 'short');
+            Cache::write($cacheKey, $result, 'short');
             return $result;
         } catch (\Exception $e) {
             return null;
@@ -987,23 +1258,37 @@ class CakeboxInfo
     }
 
     /**
-     * Get latest commit header from Github api.
+     * Returns rich information for the Cakebox.yaml file.
      *
-     * @return string String containing git sha
+     * @return array Hash with raw file data and timestamp.
+     * @throws Exception
      */
-    public function getLatestCommitRemote()
+    public function getRichCakeboxYaml()
     {
-        $commits = $this->getRepositoryCommits('alt3/cakebox-console', 1);
-        return $commits[0]['sha'];
+        try {
+            $fileHandle = new File($this->cakeboxMeta['host']['yaml']);
+            return [
+                'timestamp' => $fileHandle->lastChange(),
+                'raw' => $fileHandle->read()
+            ];
+        } catch (\Exception $e) {
+            throw new \Exception("Error reading " . $this->cakeboxMeta['yamlFile'] . ": " . $e->getMessage());
+        }
     }
 
     /**
-     * Get local commit header.
+     * Checks if the Cakebox Dashboard is using HTTPS by parsing the default
+     * Nginx catch-all website.
      *
-     * @return string String containing git sha
+     * @return array boolean True when HTTPS is being used.
      */
-    public function getLatestCommitLocal()
+    public function dashboardUsesHttps()
     {
-        return file_get_contents('/cakebox/console/.git/refs/heads/master');
+        $vhost = file_get_contents($this->webserverMeta['nginx']['sites-available'] . DS . 'default');
+        preg_match('/HTTPS/', $vhost, $matches);
+        if (!empty($matches)) {
+            return true;
+        }
+        return false;
     }
 }

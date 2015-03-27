@@ -3,6 +3,14 @@
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 
+$this->assign('title', 'Virtual Machine');
+
+// Load SyntaxHighlighter for Cakebox.yaml into CakePHP script/stylesheet blocks
+$this->Html->css('cdn-fallback/syntax-highlighter/shCore.min.css', ['block' => true]);
+$this->Html->css('cdn-fallback/syntax-highlighter/shThemeDefault.min.css', ['block' => true]);
+$this->Html->script('cdn-fallback/syntax-highlighter/shCore.min.js', ['block' => 'scriptBottom']);
+$this->Html->script('cdn-fallback/syntax-highlighter/shBrushYaml.js', ['block' => 'scriptBottom']);
+
 //pr($data);
 ?>
 
@@ -14,7 +22,9 @@ use Cake\Utility\Inflector;
 			<ul class="nav nav-tabs">
 				<li id="tab-summary" class="active"><a href="#panel-summary" data-toggle="tab"><?= __("Summary") ?></a></li>
 				<li id="tab-status"><a href="#panel-status" data-toggle="tab"><?= __("Box status") ?></a></li>
+				<li id="tab-provisioning"><a href="#panel-provisioning" data-toggle="tab"><?= __("Provisioning") ?></a></li>
 				<li id="tab-software"><a href="#panel-software" data-toggle="tab"><?= __("Box software") ?></a></li>
+				<li id="tab-clilog"><a href="#panel-clilog" data-toggle="tab"><?= __("Log") ?></a></li>
 			</ul>
 
 			<!-- Tab content -->
@@ -23,11 +33,12 @@ use Cake\Utility\Inflector;
 				<!-- Summary  tab -->
 				<div role="tabpanel" id="panel-summary" class="tab-pane active">
 
+					<!-- Virtual Machine widget -->
 					<div class="widget stacked widget-table action-table">
 						<div class="widget-header">
 							<i class="fa fa-cube"></i>
 							<h3><?= __('Virtual Machine') ?></h3>
-						</div> <!-- /widget-header -->
+						</div>
 
 						<div class="widget-content">
 							<div class="panel-body">
@@ -52,6 +63,28 @@ use Cake\Utility\Inflector;
 							</div>
 						</div>
 					</div>
+
+					<!-- Performance -->
+					<div class="widget stacked widget-table action-table">
+						<div class="widget-header">
+							<i class="fa fa-bar-chart"></i>
+							<h3><?= __('Performance') ?></h3>
+						</div>
+
+						<div class="widget-content">
+							<div class="panel-body">
+								<p>Optimize box performance by:</p>
+								<ul>
+								<li>
+									Increasing vm memory to 2048 MB (but never allocate more than 25% of physical host memory)
+								</li>
+								<li>
+									Setting vm cpus to the same number as physically installed host CPUs
+								</li>
+							</div>
+						</div>
+					</div>
+
 				</div>
 
 				<!-- Status tab -->
@@ -110,7 +143,38 @@ use Cake\Utility\Inflector;
 					</div>
 
 				</div>
-				<!-- EOF Status tab -->
+
+
+				<!-- Provisioning tab -->
+				<div role="tabpanel" id="panel-provisioning" class="tab-pane">
+
+					<!-- Cakebox.yaml widget -->
+					<div class="widget stacked widget-table action-table">
+						<div class="widget-header">
+							<i class="fa fa-file-text-o"></i>
+							<h3><?= 'Cakebox.yaml' ?></h3>
+						</div>
+
+						<div class="widget-content">
+							<div class="panel-body">
+								<pre class='class="brush: yaml; gutter: false;'><?php echo $data['yaml']['raw']; ?></pre>
+							</div>
+						</div>
+					</div>
+					<div>
+						<?php
+                            echo sprintf(__('Settings applied on %s.'), $this->Time->format($data['yaml']['timestamp'], 'YYYY-MM-dd'));
+                            echo sprintf(
+                                __('More information available %s.'),
+                                $this->Html->link(
+                                    __('here'),
+                                    'http://cakebox.readthedocs.org/en/latest/usage/cakebox-yaml/'
+                                )
+                            );
+                        ?>
+					</div>
+				</div>
+
 
 				<!-- Software tab -->
 				<div role="tabpanel" id="panel-software" class="tab-pane">
@@ -206,7 +270,44 @@ use Cake\Utility\Inflector;
 						</div>
 					</div>
 
-				</div><!-- EOF software tab -->
+				</div>
+
+
+				<!-- CLI log tab -->
+				<div role="tabpanel" id="panel-clilog" class="tab-pane">
+
+					<div class="ajax-loader text-center">
+						<i class="fa fa-spinner fa-spin"></i>
+					</div>
+
+					<div class="widget stacked widget-table hidden">
+						<div class="widget-header">
+							<i class="fa fa-file-text-o"></i>
+							<h3><?= __('Log') ?></h3>
+						</div>
+
+						<div class="widget-content">
+							<div class="panel-body clilog">
+								<table class="table collection">
+									<caption><?= sprintf(__('As found in %s'), '/var/log/cakephp/cakebox.cli.log') ?></caption>
+									<thead>
+										<tr>
+											<th><?= __('Date'); ?></th>
+											<th><?= __('Time'); ?></th>
+											<th><?= __("Severity") ?></th>
+											<th><?= __("Message") ?></th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- ajax loaded table rows here -->
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
 
 			</div>
 		</div>

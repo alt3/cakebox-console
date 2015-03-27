@@ -1,9 +1,12 @@
 <?php
 namespace App\Lib;
 
+use App\Lib\CakeboxInfo;
 use Cake\Cache\Cache;
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
-use Cake\FileSystem\File;
+use Cake\Filesystem\File;
+use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Utility\String;
 
@@ -16,9 +19,9 @@ class CakeboxExecute
     /**
      * Instance of \App\Lib\CakeboxInfo
      *
-     * @var Array
+     * @var \App\Lib\CakeboxInfo
      */
-    protected $cbi = [];
+    protected $Info;
 
     /**
      * List with debug information for the most recently executed command.
@@ -34,7 +37,7 @@ class CakeboxExecute
      */
     public function __construct()
     {
-        $this->cbi = new CakeboxInfo();
+        $this->Info = new CakeboxInfo();
     }
 
     /**
@@ -44,15 +47,16 @@ class CakeboxExecute
      * @param string $username User used to execute the command (e.g. `vagrant`).
      * @return boolean True if the command completed successfully
      */
-    protected function shell($command, $username)
+    public function shell($command, $username = 'vagrant')
     {
         // Generate different sudo command based on user
-        if ($username == "root") {
+        if ($username == 'root') {
             $command = "sudo $command 2>&1";
+            $this->_log("Shell command as root:`$command`");
         } else {
-            $command = "sudo su $username -c \"$command\" 2>&1";
+            $command = "$command 2>&1";
+            $this->_log("Shell command as vagrant: $command");
         }
-        $this->_log("Shelling command `$command` as user `$username`");
 
         // Execute the command, capture exit code, stdout and stderr
         $ret = exec($command, $stdout, $exitCode);
@@ -85,7 +89,7 @@ class CakeboxExecute
      * @param string $username User used to execute the command (e.g. `vagrant`).
      * @return boolean True if the command completed successfully
      */
-    protected function getShellOutput($command, $username)
+    public function getShellOutput($command, $username)
     {
         // Generate different sudo command based on user
         if ($username == "root") {
@@ -130,62 +134,31 @@ class CakeboxExecute
      */
     public function mkVagrantDir($path)
     {
-        $this->flushLogs();
-        if ($this->shell("mkdir $path", 'root') == false) {
+        $this->_flushLogs();
+        if (!$this->shell("mkdir $path", 'root')) {
             return false;
         }
-        if ($this->shell("chown vagrant $path -R", 'root') == false) {
+
+        if (!$this->shell("chown vagrant $path -R", 'root')) {
             return false;
         }
+
         return true;
     }
 
     /**
      * Run a git config command as vagrant user.
      *
-     * @param string $path Full path of directory to be created.
+     * @param string $gitKey Name of the git config key (e.g. user.name)
+     * @param string $value Value the git key will be set to
      * @return boolean True on success
      */
     public function gitConfig($gitKey, $value)
     {
-        log::debug("Updating global git configuration $gitKey to $value");
+        Log::debug("Updating global git configuration $gitKey to $value");
         if (!$this->shell("git config --global $gitKey $value", 'vagrant')) {
             return false;
         }
-        return true;
-    }
-
-    /**
-     * Self-update cakebox console and dashboard by updating git repository and
-     * running composer update.
-     *
-     * @return boolean True on success
-     */
-    public function selfUpdate()
-    {
-        log::debug("Self-updating cakebox-console...");
-
-        Log::debug("* Detecting branch");
-        $command = "cd /cakebox/console; git rev-parse --abbrev-ref HEAD";
-        $branch = $this->getShellOutput($command, 'vagrant');
-        if (!$branch) {
-            return false;
-        }
-        Log::debug(" * Detected branch $branch");
-
-        Log::debug("* Updating git repository");
-        $command = "cd /cakebox/console; git fetch; git reset --hard origin/$branch";
-        if (!$this->shell($command, 'vagrant')) {
-            return false;
-        }
-
-        Log::debug("* Updating composer packages");
-        $command = 'cd /cakebox/console; composer update --prefer-dist --no-dev';
-        if (!$this->shell($command, 'vagrant')) {
-            return false;
-        }
-
-        Log::debug("* Self-update completed successfully");
         return true;
     }
 
@@ -198,25 +171,25 @@ class CakeboxExecute
      */
     public function composerCreateProject($package, $path)
     {
-        $this->flushLogs();
-        $command = "composer create-project --prefer-dist --no-interaction -s dev $package $path";
-        if ($this->shell($command, 'vagrant') == false) {
+        $this->_flushLogs();
+        $command = "composer create-project --prefer-dist --no-interaction $package $path";
+        if (!$this->shell($command, 'vagrant')) {
             return false;
         }
         return true;
     }
 
     /**
-    * Run `composer install` for a given package as user vagrant.
-    *
-    * @param string $directory Full path to the directory holding composer.json.
-    * @return boolean True on success
-    */
+     * Run `composer install` for a given package as user vagrant.
+     *
+     * @param string $directory Full path to the directory holding composer.json.
+     * @return boolean True on success
+     */
     public function composerInstall($directory)
     {
-        $this->flushLogs();
+        $this->_flushLogs();
         $command = "cd $directory; composer install --prefer-dist --no-interaction";
-        if ($this->shell($command, 'vagrant') == false) {
+        if (!$this->shell($command, 'vagrant')) {
             return false;
         }
         return true;
@@ -231,20 +204,20 @@ class CakeboxExecute
      */
     public function gitClone($repository, $path)
     {
-        $this->flushLogs();
+        $this->_flushLogs();
         $this->_log("Cloning repository");
         $this->_log("* Repository: $repository");
         $this->_log("* Targetdir : $path");
 
         # Check SSH preconditions before attempting a git clone
         if (substr($repository, 0, 4) == 'git@') {
-            if (!$this->sanityCheckSSH()) {
+            if (!$this->_sanityCheckSSH()) {
                 return false;
             }
         }
 
         # Execute git clone
-        if ($this->shell("git clone $repository $path", 'vagrant') == false) {
+        if (!$this->shell("git clone $repository $path", 'vagrant')) {
             return false;
         }
         return true;
@@ -255,11 +228,12 @@ class CakeboxExecute
      *
      * @return boolean True on success
      */
-    protected function sanityCheckSSH() {
+    protected function _sanityCheckSSH()
+    {
         $this->_log("Sanity checking SSH before attempting git clone");
 
         $this->_log("* Sanity checking SSH Agent forwarded SSH key");
-        if ($this->shell("ssh-add -l", 'vagrant') == false) {
+        if (!$this->shell("ssh-add -l", 'vagrant')) {
             $this->_error("Error: SSH git clone requires a SSH key, none found");
             $this->_log(" => Note: make sure your SSH agent is forwarding the required identity key if this is a private repository");
             $this->_log(" => Note: Windows users MUST use Pageant or SSH Agent Forwarding will simply not work");
@@ -267,7 +241,7 @@ class CakeboxExecute
         }
 
         $this->_log("* Sanity checking Github user.name");
-        if ($this->shell("git config user.name", 'vagrant') == false) {
+        if (!$this->shell("git config user.name", 'vagrant')) {
             return false;
         }
         return true;
@@ -283,12 +257,12 @@ class CakeboxExecute
         $this->_log("Reloading Nginx webserver");
 
         $this->_log("* Checking configuration");
-        if ($this->shell("nginx -t", 'root') == false) {
+        if (!$this->shell("nginx -t", 'root')) {
             return false;
         }
 
         $this->_log("* Restarting service");
-        if ($this->shell("service nginx reload", 'root') == false) {
+        if (!$this->shell("service nginx reload", 'root')) {
             return false;
         }
         return true;
@@ -303,10 +277,10 @@ class CakeboxExecute
      * @param bool $force Optional, true to overwrite existing file.
      * @return boolean True on success
      */
-    public function addSite($url, $webroot, $force = false)
+    public function addVhost($url, $webroot, $force = false)
     {
-        $this->flushLogs();
-        $this->_logStart("Creating website $url");
+        $this->_flushLogs();
+        $this->_logStart("Creating virtual host for $url");
 
         // Prevent overwriting default Cakebox site
         if ($url == 'default') {
@@ -315,11 +289,10 @@ class CakeboxExecute
         }
 
         // Check for existing site file
-        $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
-        $this->_log("Creating virtual host file for $url");
-        if (file_exists($siteFile)) {
-            if ($force == false) {
-                $this->_error("* Site file $siteFile already exists. Use --force to drop.");
+        $vhostFile = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $url;
+        if (file_exists($vhostFile)) {
+            if (!$force) {
+                $this->_error("* Virtual host file $vhostFile already exists. Use --force to drop.");
                 return false;
             }
             $this->_log("* Overwriting existing file");
@@ -333,57 +306,83 @@ class CakeboxExecute
         ]);
 
         // Write generated vhost configuration to file
-        if ($this->writeSystemFile($siteFile, $config) == false) {
-            $this->_error("Error writing virtual hosts file $siteFile");
+        if (!$this->_writeSystemFile($vhostFile, $config)) {
+            $this->_error("Error writing virtual hosts file $vhostFile");
             return false;
         }
-        $this->_log("* Successfully created $siteFile");
+        $this->_log("* Successfully created $vhostFile");
 
         // Create symbolic link in sites-enabled
-        if ($this->createSiteSymlink($url) == false) {
+        if (!$this->enableVhost($url)) {
             $this->_error("Error creating symbolic link");
             return false;
         }
 
         // Reload nginx service to effectuate changes
-        if ($this->reloadNginx() == false) {
+        if (!$this->reloadNginx()) {
             return false;
         }
         return true;
     }
 
     /**
-     * Create a new Nginx website by generating a virtual host file, creating a
-     * symoblic link and reloading the webserver.
+     * Enables an Nginx virtual host by creating a symbolic link in
+     * /etc/nginx/sites-enabled as root.
+     *
+     * @param string $vhostFile Name of the nginx virtual host file without path.
+     * @return boolean True if created successfully
+     */
+    public function enableVhost($vhostFile)
+    {
+        $this->_log("Creating symbolic link");
+        $link = $this->Info->webserverMeta['nginx']['sites-enabled'] . DS . $vhostFile;
+        $target = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $vhostFile;
+
+        // Do nothing if the symbolic link already exists
+        if (is_link($link)) {
+            $this->_warn("* Skipping: symbolic link $vhostFile already exists");
+            return true;
+        }
+
+        // shell `ln` command as root
+        if (!$this->shell("ln -s $target $link", 'root')) {
+            $this->_error("Error creating symbolic link");
+            return false;
+        }
+        $this->_log("* Successfully created symbolic link $link");
+        return true;
+    }
+
+    /**
+     * Completely removes an Nginx website by removing virtual host
+     * configuration file, symbolic link and reloading Nginx.
      *
      * @param string $url Fully Qualified Domain Name used to expose the site.
-     * @param string $webroot Full path to the site's webroot directory.
-     * @param bool $force Optional, true to overwrite existing file.
      * @return boolean True on success
      */
-    public function removeSite($url)
+    public function removeVhost($url)
     {
-        $this->flushLogs();
-        $this->_logStart("Deleting website $url");
+        $this->_flushLogs();
+        $this->_logStart("Deleting virtual host $url");
 
         // Prevent removing default Cakebox site
         if ($url == 'default') {
             $this->_error("Removing 'default' as <url> is prohibited as this would destroy the default Cakebox site");
             return false;
         }
-        $siteFile = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $url;
-        if (!is_file($siteFile)) {
-            $this->_error("Site file $siteFile does not exist");
+        $vhostFile = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $url;
+        if (!is_file($vhostFile)) {
+            $this->_error("Virtual host file $vhostFile does not exist");
             return false;
         }
 
-        $this->_log("* Deleting virtual host file $siteFile");
-        if (!$this->shell("rm $siteFile", 'root')) {
+        $this->_log("* Deleting virtual host file $vhostFile");
+        if (!$this->shell("rm $vhostFile", 'root')) {
             $this->_error("Error deleting file");
             return false;
         }
 
-        $symlink = $this->cbi->webserverMeta['nginx']['sites-enabled'] . DS . $url;
+        $symlink = $this->Info->webserverMeta['nginx']['sites-enabled'] . DS . $url;
         if (!is_link($symlink)) {
             $this->_log("* Skipping unlink... $symlink does not exist");
         } else {
@@ -395,10 +394,10 @@ class CakeboxExecute
         }
 
         // Reload nginx service to effectuate changes
-        if ($this->reloadNginx() == false) {
+        if (!$this->reloadNginx()) {
             return false;
         }
-        $this->_log("Website deleted successully");
+        $this->_log("Virtual host removed successully");
         return true;
     }
 
@@ -414,24 +413,24 @@ class CakeboxExecute
      */
     public function addDatabase($database, $username, $password, $force = false)
     {
-        $this->flushLogs();
+        $this->_flushLogs();
         $database = CakeboxUtility::normalizeDatabaseName($database);
         $this->_log("* Normalized database name to $database");
 
         // do not continue if it concerns a system database
-        if ($this->isSystemDatabase($database)) {
+        if ($this->_isSystemDatabase($database)) {
             $this->_error("Cannot proceed... `$database` is a protected system database");
             return false;
         }
 
         // drop existing databases if needed
         if (CakeboxUtility::databaseExists($database)) {
-            if ($force == false) {
+            if (!$force) {
                 $this->_error("* Database $database already exists. Use --force to drop.");
                 return false;
             }
             $this->_log("Dropping existing databases");
-            if (CakeboxUtility::dropDatabase($database) == false) {
+            if (!CakeboxUtility::dropDatabase($database)) {
                 $this->_error("Error dropping databases");
                 return false;
             }
@@ -439,7 +438,7 @@ class CakeboxExecute
 
         // create databases
         $this->_log("Creating databases");
-        if (CakeboxUtility::createDatabase($database, $username, $password) == false) {
+        if (!CakeboxUtility::createDatabasePair($database, $username, $password)) {
             $this->_error("Error creating databases");
             return false;
         }
@@ -454,9 +453,9 @@ class CakeboxExecute
      * @param string $database Name to be used for the databases.
      * @return boolean True if it is a system database
      */
-    protected function isSystemDatabase($database)
+    protected function _isSystemDatabase($database)
     {
-        if (in_array($database, $this->cbi->databaseMeta['mysql']['system_databases'])) {
+        if (in_array($database, $this->Info->databaseMeta['mysql']['system_databases'])) {
             $this->_warn("* $database is a system database");
             return true;
         }
@@ -472,7 +471,7 @@ class CakeboxExecute
      * @param string $content Containing file body.
      * @return boolean True if the write is successful
      */
-    protected function writeSystemFile($file, $content)
+    protected function _writeSystemFile($file, $content)
     {
         $this->_log("Writing system file");
         $tempFile = '/tmp/' . String::uuid();
@@ -480,7 +479,7 @@ class CakeboxExecute
         $fh->write($content);
 
         // Move the tempfile
-        if ($this->shell("mv $tempFile $file", 'root') == false) {
+        if (!$this->shell("mv $tempFile $file", 'root')) {
             $this->_error("* Error moving $tempFile to $file");
             return false;
         }
@@ -494,8 +493,9 @@ class CakeboxExecute
      * @param string $directory Full path to the directory.
      * @return boolean True if writable
      */
-    public function isVagrantWritable($directory) {
-        log::debug("* Checking if directory is writable by vagrant user");
+    public function isVagrantWritable($directory)
+    {
+        Log::debug("* Checking if directory is writable by vagrant user");
 
         if (!is_dir($directory)) {
             log::error("* Directory does not exist");
@@ -507,34 +507,7 @@ class CakeboxExecute
             log::error("* Directory is NOT writable");
             return false;
         }
-        log::debug("* Directory is writable");
-        return true;
-    }
-
-    /**
-     * Create a symbolic link in /etc/nginx/sites-enabled as root.
-     *
-     * @param string $siteFile Name of the nginx site file witouht leading path.
-     * @return boolean True if created successfully
-     */
-    public function createSiteSymlink($siteFile)
-    {
-        $this->_log("Creating symbolic link");
-        $link = $this->cbi->webserverMeta['nginx']['sites-enabled'] . DS . $siteFile;
-        $target = $this->cbi->webserverMeta['nginx']['sites-available'] . DS . $siteFile;
-
-        // Do nothing if the symbolic link already exists
-        if (is_link($link)) {
-            $this->_warn("* Skipping: symbolic link $link already exists");
-            return true;
-        }
-
-        // shell `ln` command as root
-        if ($this->shell("ln -s $target $link", 'root') == false) {
-            $this->_error("Error creating symbolic link");
-            return false;
-        }
-        $this->_log("* Successfully created symbolic link $link");
+        Log::debug("* Directory is writable");
         return true;
     }
 
@@ -554,7 +527,7 @@ class CakeboxExecute
         }
 
         // not installed, shell installation
-        if ($this->shell("DEBIAN_FRONTEND=noninteractive apt-get install -y $package", 'root') == false) {
+        if (!$this->shell("DEBIAN_FRONTEND=noninteractive apt-get install -y $package", 'root')) {
             $this->_error("* Error installing package");
             return false;
         }
@@ -580,20 +553,20 @@ class CakeboxExecute
             "'database' => 'my_app'" => "'database' => '$database'",
             "'database' => 'test_myapp'" => "'database' => 'test_$database'"
             ]);
-            if ($result == false) {
-                $this->_log("Error updating config file");
-                return false;
-            }
-            return true;
+        if (!$result) {
+            $this->_log("Error updating config file");
+            return false;
         }
+            return true;
+    }
 
     /**
-    * Convenience function to update all required CakePHP2 configuration files.
-    *
-    * @param string $appdir Full path to the application directory (APP).
-    * @param string $url FQDN used to expose the application.
-    * @return boolean True if the file was updated successfully
-    */
+     * Convenience function to update all required CakePHP2 configuration files.
+     *
+     * @param string $appdir Full path to the application directory (APP).
+     * @param string $url FQDN used to expose the application.
+     * @return boolean True if the file was updated successfully
+     */
     public function updateCake2Configuration($appdir, $url)
     {
         # Update salt/cipher in core.php
@@ -601,10 +574,10 @@ class CakeboxExecute
         $coreFile = $appdir . DS . "app" . DS . "Config" . DS . "core.php";
 
         $res = CakeboxUtility::updateConfigFile($coreFile, [
-            $this->cbi->frameworkMeta['cakephp2']['salt'] => CakeboxUtility::getSaltCipher($coreFile),
-            $this->cbi->frameworkMeta['cakephp2']['cipher'] => CakeboxUtility::getSaltCipher($coreFile)
+            $this->Info->frameworkMeta['cakephp2']['salt'] => CakeboxUtility::getSaltCipher($coreFile),
+            $this->Info->frameworkMeta['cakephp2']['cipher'] => CakeboxUtility::getSaltCipher($coreFile)
         ]);
-        if ($res == false) {
+        if (!$res) {
             $this->_error("Error updating core file");
             return false;
         }
@@ -626,7 +599,7 @@ class CakeboxExecute
             'user' => 'cakebox',
             "'password' => 'password'" => "'password' => 'secret'"
         ]);
-        if ($result == false) {
+        if (!$result) {
             $this->_error("Error updating database file");
             return false;
         }
@@ -641,11 +614,85 @@ class CakeboxExecute
     }
 
     /**
+     * Creates a Percona XtraBackup (hot) backup of the MySQL server in
+     * /tmp before moving it to the Vagrant Synced folder /cakebox/backups
+     * (to prevent speed issues on systems with slow synced folders).
+     *
+     * @return boolean Success if the backup completes succesfully
+     * @throws Cake\Core\Exception\Exception
+     */
+    public function backupDatabases()
+    {
+        // determine paths
+        $this->_log("Determining backup folders");
+
+        $timestamp = (new Time)->now()->i18nFormat('YYYY-MM-dd-HH-mm-ss');
+        $tempFolder = "/tmp/$timestamp";
+        $this->_log("* Temporary folder => $tempFolder");
+
+        $targetFolder = '/cakebox/backups/mysql/';
+        if (!file_exists($targetFolder)) {
+            $this->_log("* Creating database backup root folder $targetFolder");
+            if (!mkdir($targetFolder)) {
+                return false;
+            };
+        }
+        $targetFolder .= (new Time)->now()->i18nFormat('YYYY-MM-dd-HH-mm-ss');
+        $this->_log("* Destination folder => $targetFolder");
+
+        // shell Percona XtraBackup job as root
+        $this->_log("Starting hot backup");
+        if (!$this->shell("xtrabackup --backup --target-dir=$tempFolder", 'root')) {
+            return false;
+        }
+
+        // move backup from /tmp to synced folder
+        $this->_log("Moving backup to Synced Folder");
+        if (!$this->shell("mv $tempFolder $targetFolder", 'root')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Changes the protocol used by the Cakebox Dashboard by replacing the
+     * default catch-all virtual host configuration file with the http or
+     * https template found in the Bake directory. Then restarts Nginx to
+     * effectuate the new template.
+     *
+     * @param string $protocol Either `http` or `https`.
+     * @return boolean True if protocol was changed successfully
+     */
+    public function setDashboardProtocol($protocol)
+    {
+        $this->_log("Changing Cakebox Dashboard protocol to $protocol");
+        if ($protocol !== 'http' && $protocol !== 'https') {
+            $this->_error("* Unsupported protocol");
+            return false;
+        }
+
+        $default = "/etc/nginx/sites-available/default";
+        $template = APP . 'Template' . DS . 'Bake' . DS . "nginx-cakebox-$protocol";
+
+        $this->_log("Replacing vhost $default with $template");
+        if (!$this->shell("cp $template $default", 'root')) {
+            return false;
+        }
+
+        // Reload nginx service to effectuate changes
+        if (!$this->reloadNginx()) {
+            return false;
+        }
+        $this->_log("* Dashboard protocol changed successfully");
+        return true;
+    }
+
+    /**
      * Flush log and error buffers.
      *
      * @return void
      */
-    protected function flushLogs()
+    protected function _flushLogs()
     {
         $this->_debug = [];
     }
@@ -654,11 +701,12 @@ class CakeboxExecute
      * Convenience function adds a "hr" splitter element to the logs to easily
      * identify various actions when reading the plain logfile.
      *
-     * @param string $message
+     * @param string $message As it will appear in the log
      * @return void
      */
-    protected function _logStart($message) {
-        log::debug(str_repeat("=", 80));
+    protected function _logStart($message)
+    {
+        Log::debug(str_repeat("=", 80));
         Log::debug($message);
         $this->_debug[] = $message;
     }

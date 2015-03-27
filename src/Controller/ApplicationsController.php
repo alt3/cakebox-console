@@ -16,9 +16,8 @@ class ApplicationsController extends AppController
     public function index()
     {
         $data = [
-            'apps' => $this->cbi->getApps()
+            'apps' => $this->Info->getApps()
         ];
         $this->set('data', $data);
     }
-
 }

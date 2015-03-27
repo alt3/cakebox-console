@@ -44,13 +44,13 @@ class PackageShell extends AppShell
      */
     public function add($package)
     {
-        $this->logStart("Please wait... installing software package `$package`");
+        $this->logStart("Please wait... installing apt package $package");
 
         if (CakeboxUtility::packageInstalled($package)) {
             $this->exitBashWarning("* Skipping: package already installed");
         }
 
-        if (!$this->execute->installPackage($package)) {
+        if (!$this->Execute->installPackage($package)) {
             $this->exitBashError('Error installing package.');
         }
         $this->exitBashSuccess("Package installed successfully.");

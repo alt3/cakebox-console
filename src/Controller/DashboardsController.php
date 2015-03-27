@@ -3,8 +3,8 @@ namespace App\Controller;
 
 use App\Lib\CakeboxCheck;
 use App\Lib\CakeboxUtility;
-use Cake\Log\Log;
 use Cake\Filesystem\File;
+use Cake\Log\Log;
 
 class DashboardsController extends AppController
 {
@@ -17,18 +17,19 @@ class DashboardsController extends AppController
     public function index()
     {
         $data = [
-            'vm' => $this->cbi->getVmInfo(),
-            'apps' => $this->cbi->getApps(),
+            'vm' => $this->Info->getVmInfo(),
+            'apps' => $this->Info->getApps(),
             'counters' => [
-                'databases' => $this->cbi->getDatabaseCount(),
-                'sites' => $this->cbi->getNginxFileCount()
+                'databases' => $this->Info->getDatabaseCount(),
+                'sites' => $this->Info->getNginxFileCount()
             ],
-            'commits' => $this->cbi->getRepositoryCommits('alt3/cakebox-console', 5),
-			'contributors' => $this->cbi->getRepositoryContributors('alt3/cakebox-console')
+            'commits' => $this->Info->getRepositoryCommits('alt3/cakebox-console', 5),
+            'contributions' => $this->Info->getRepositoryContributions('alt3/cakebox-console', 'dev')
         ];
 
-        if ($this->cbi->getLatestCommitLocal() != $this->cbi->getLatestCommitRemote()) {
-            $data['update'] = true;
+        $notifications = $this->Info->getNotifications();
+        if ($notifications) {
+            $data['notifications'] = $notifications;
         }
 
         $this->set('data', $data);
@@ -39,8 +40,12 @@ class DashboardsController extends AppController
      *
      * @return void
      */
-    public function vm() {
-        $data['vm'] = $this->cbi->getVmInfo();
+    public function vm()
+    {
+        $data = [
+            'vm' => $this->Info->getVmInfo(),
+            'yaml' => $this->Info->getRichCakeboxYaml()
+        ];
         $this->set('data', $data);
     }
 
@@ -49,8 +54,8 @@ class DashboardsController extends AppController
      *
      * @return void
      */
-    public function usage() {
-
+    public function usage()
+    {
     }
 
     /**
@@ -76,16 +81,29 @@ class DashboardsController extends AppController
      */
     public function software()
     {
-        $packages = $this->cbi->getPackages();
-        $phpModules = $this->cbi->getPhpModules();
+        $packages = $this->Info->getPackages();
+        $phpModules = $this->Info->getPhpModules();
 
         $this->set([
-            'operating_system' => $this->cbi->getOperatingSystem(),
+            'operating_system' => $this->Info->getOperatingSystem(),
             'packages' => CakeboxUtility::columnizeArray($packages, 3),
             'php_modules' => CakeboxUtility::columnizeArray($phpModules, 3),
-            'nginx_modules' => $this->cbi->getNginxModules(),
+            'nginx_modules' => $this->Info->getNginxModules(),
             '_serialize' => ['operating_system', 'packages', 'php_modules', 'nginx_modules']
         ]);
+    }
+
+    /**
+     * Serve cakebox.cli.log as enriched json hash
+     *
+     * @return void
+     */
+    public function clilog()
+    {
+         $this->set([
+             'log' => $this->Info->getCakeboxCliLog(),
+             '_serialize' => ['log']
+         ]);
     }
 
     /**
@@ -93,25 +111,25 @@ class DashboardsController extends AppController
      *
      * @return void
      */
-    public function contributors()
-    {
-        $contributors = $this->cbi->getRepositoryContributors('alt3/cakebox-console');
-        $this->set([
-        'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
-        '_serialize' => ['contributors']
-        ]);
-    }
+        public function contributors()
+        {
+            $contributors = $this->Info->getRepositoryContributors('alt3/cakebox-console', 'dev');
+            $this->set([
+            'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
+            '_serialize' => ['contributors']
+            ]);
+        }
 
     /**
-    * Return LICENSE.TXT as json
-    *
-    * @return void
-    */
-    public function license() {
-        $this->set([
+     * Return LICENSE.TXT as json
+     *
+     * @return void
+     */
+        public function license()
+        {
+            $this->set([
             'fileContent' => CakeboxUtility::getFileContent('/cakebox/console/LICENSE.txt'),
             '_serialize' => ['fileContent']
-        ]);
-    }
-
+            ]);
+        }
 }

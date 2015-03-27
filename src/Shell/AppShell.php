@@ -18,14 +18,14 @@ class AppShell extends Shell
      *
      * @var \App\Lib\CakeboxInfo
      */
-    protected $cbi;
+    protected $Info;
 
     /**
      * Instance of CakeboxExecute available to all Shells.
      *
      * @var \App\Lib\CakeboxExecute
      */
-    protected $execute;
+    protected $Execute;
 
     /**
      * Initialization. Used to disconnect default loggers from consoleIO output
@@ -33,10 +33,11 @@ class AppShell extends Shell
      *
      * @return void
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->_io->setLoggers(false);
-        $this->cbi = new CakeboxInfo();
-        $this->execute = new CakeboxExecute();
+        $this->Info = new CakeboxInfo();
+        $this->Execute = new CakeboxExecute();
         parent::initialize();
     }
 
@@ -53,25 +54,27 @@ class AppShell extends Shell
     }
 
     /**
-    * Convenience function adds a "hr" splitter element to the logs to easily
-    * identify various actions when reading the plain logfile.
-    *
-    * @param string $message
-    * @return void
-    */
-    public function logStart($message) {
-        log::debug(str_repeat("=", 80));
-        $this->out($message, 1, Shell::QUIET);
-        log::info($message);
+     * Convenience function adds a "hr" splitter element to the logs to easily
+     * identify various actions when reading the plain logfile.
+     *
+     * @param string $message Message to be logged.
+     * @return void
+     */
+    public function logStart($message)
+    {
+        Log::debug(str_repeat("=", 80));
+        $this->out($message, 2, Shell::QUIET);
+        Log::debug($message);
     }
 
     /**
      * Only output debug message to screen when script is run with --verbose argument
      *
-     * @param string $message
+     * @param string $message  Message to be logged.
      * @return void
      */
-    public function logDebug($message) {
+    public function logDebug($message)
+    {
         log::debug($message);
         $this->out($message, 1, Shell::VERBOSE);
     }
@@ -79,10 +82,11 @@ class AppShell extends Shell
     /**
      * Always output info message to screen (even when using --quiet).
      *
-     * @param string|array $message
+     * @param string|array $message  Message to be logged.
      * @return void
      */
-    public function logInfo($message) {
+    public function logInfo($message)
+    {
         if (is_string($message)) {
             log::info($message);
             $this->out($message, 1, Shell::QUIET);
@@ -94,36 +98,43 @@ class AppShell extends Shell
     }
 
     /**
-    * Always output warning message to screen (even when using --quiet)
-    *
-    * @param string $message
-    * @return void
-    */
-    public function logWarning($message) {
+     * Always output warning message to screen (even when using --quiet)
+     *
+     * @param string $message  Message to be logged.
+     * @return void
+     */
+    public function logWarning($message)
+    {
         log::warning($message);
         $this->out($message, 1, Shell::QUIET);
     }
 
     /**
-    * Always output warning message to screen (even when using --quiet)
-    *
-    * @param string $message
-    * @return void
-    */
-    public function logError($message) {
+     * Always output warning message to screen (even when using --quiet)
+     *
+     * @param string $message  Message to be logged.
+     * @return void
+     */
+    public function logError($message = null)
+    {
+        if (empty($message)) {
+            $message = 'Error';
+        }
         log::warning($message);
-        $this->out("<error>$message</error> <info>See cakebox log for details.</info>", 1, Shell::QUIET);
+        $this->out("<error>$message</error>", 1, Shell::QUIET);
+        $this->out("<info>See /var/log/cakephp/cakebox.cli.log for details.</info>");
     }
 
     /**
      * Exit PHP script with exit code 0 to inform bash about success.
      *
+     * @param string $message  Message to be logged.
      * @return void
      */
     public function exitBashSuccess($message = null)
     {
-        if (count($this->execute->debug()) != 0) {
-            foreach ($this->execute->debug() as $entry) {
+        if (count($this->Execute->debug()) != 0) {
+            foreach ($this->Execute->debug() as $entry) {
                 $this->out($entry, 1, Shell::VERBOSE);
             }
         }
@@ -136,12 +147,13 @@ class AppShell extends Shell
     /**
      * Exit PHP script with exit code 0 to inform bash about success.
      *
+     * @param string $message  Message to be logged.
      * @return void
      */
     public function exitBashWarning($message)
     {
-        if (count($this->execute->debug()) != 0) {
-            foreach ($this->execute->debug() as $entry) {
+        if (count($this->Execute->debug()) != 0) {
+            foreach ($this->Execute->debug() as $entry) {
                 $this->out($entry, 1, Shell::VERBOSE);
             }
         }
@@ -153,12 +165,17 @@ class AppShell extends Shell
      * Show most recent execute log message to user before exiting PHP script
      * with exit code 1 to inform bash about errors.
      *
+     * @param string $message  Message to be logged.
      * @return void
      */
-    public function exitBashError($message)
+    public function exitBashError($message = null)
     {
-        if (count($this->execute->debug()) != 0) {
-            foreach ($this->execute->debug() as $entry) {
+        if (empty($message)) {
+            $message = 'Error';
+        }
+
+        if (count($this->Execute->debug()) != 0) {
+            foreach ($this->Execute->debug() as $entry) {
                 $this->out($entry, 1, Shell::QUIET);
             }
         }

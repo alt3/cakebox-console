@@ -13,6 +13,8 @@
 	7. msgGrowl
 	8. Key/Value Pairs
 	9. Footer
+    10. Syntax Highlighting
+    11. Notifications
 
 -------------------------------------------------------------------*/
 
@@ -20,16 +22,16 @@ body {
     background: #fff;
 }
 body, p {
-	font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
     font-size: 14px;
-	color: #666;
+    color: #666;
 }
 h1, h2, h3, h4, h5, h6 {
-	font-family: inherit;
-	font-weight: bolder;
+    font-family: inherit;
+    font-weight: bolder;
 }
 a, a:link, a:visited, a:hover, a:active {
-	color: #4183c4;
+    color: #4183c4;
 }
 
 /* elements no longer using BaseAdmin's Google Open Sans font */
@@ -76,16 +78,20 @@ a.btn-primary:focus {
     /*margin-left: -30px;*/
 }
 .collapse {
-	visibility: visible !important;		/** fix to get jQuery show() working */
+    visibility: visible !important; /* fix to get jQuery show() working */
+}
+
+.navbar-right li a i {
+    padding-left: 2px;
 }
 
 /*------------------------------------------------------------------
  * 3. Widgets
  * ---------------------------------------------------------------*/
 .widget .widget-header h3 {
-	font-weight: bolder;
-	font-size: inherit;
-	left: 8px;
+    font-weight: bolder;
+    font-size: inherit;
+    left: 8px;
 }
 
 .widget .widget-header [class^="fa-"], .widget .widget-header [class*=" fa-"] {
@@ -117,10 +123,12 @@ caption {
 }
 .widget.danger .widget-header {
     background-image: linear-gradient(to bottom, #D9534F 0%, #C9302C 100%);
+
 }
 .widget.danger .widget-header i,
 .widget.danger .widget-header h3 {
     color: #fff;
+    font-weight: normal;
 }
 
 /*------------------------------------------------------------------
@@ -138,6 +146,12 @@ td.actions div button i {
 }
 div.actions a {
     margin-bottom: 10px;
+}
+td.nowrap {
+    white-space: nowrap;
+}
+td.center {
+    text-align: center;
 }
 
 /*------------------------------------------------------------------
@@ -196,4 +210,36 @@ ul.pair li span.key {
 * ---------------------------------------------------------------*/
 #back-to-top {
     background-color: #1a1a1a;
+}
+
+/*------------------------------------------------------------------
+* 10. Syntax Highlighting
+* ---------------------------------------------------------------*/
+.syntaxhighlighter {
+    overflow-y: hidden !important; /* prevent 1px vertical scrollbar on Chrome */
+}
+
+/*------------------------------------------------------------------
+* 11. Notifications
+* ---------------------------------------------------------------*/
+.navbar-notifier span {
+    margin-left: 3px;
+    color: #ccc;
+}
+.navbar-notifier.has-messages span {
+    background-color: #337AB7;
+    background-color: red;
+    color: #fff;
+}
+
+li.notification i {
+    padding-right: 1px;
+    /*color: #f9f9f9;*/
+}
+
+#collapseNotifications .well {
+    background: transparent;
+    border: none;
+    color: #9d9d9d;
+
 }

@@ -24,116 +24,116 @@
  * 1. Stats
  * ---------------------------------------------------------------*/
 .widget-content.dashboard-stats {
-	padding-bottom: 0;
+    padding-bottom: 0;
 }
 
 .stats {
-	width: 100%;
-	display: table;
-	padding: 0 0 0 10px;
-	margin-top: 1em;
-	margin-bottom: 2.55em;	/* use this to align stats widget height with shortcuts height */
+    width: 100%;
+    display: table;
+    padding: 0 0 0 10px;
+    margin-top: 1em;
+    margin-bottom: 2.55em; /* use this to align stats widget height with shortcuts height */
 }
 
 .stats .stat {
-	display: table-cell;
-	width: 40%;
-	vertical-align: top;
+    display: table-cell;
+    width: 40%;
+    vertical-align: top;
 
-	font-size: 11px;
-	font-weight: bold;
-	color: #999;
+    font-size: 11px;
+    font-weight: bold;
+    color: #999;
 }
 
 .stat-value {
-	display: block;
-	margin-bottom: .55em;
+    display: block;
+    margin-bottom: .55em;
 
-	font-size: 30px;
-	font-weight: bold;
-	letter-spacing: -2px;
-	color: #444;
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: -2px;
+    color: #444;
 }
 
 .stat-time {
-	text-align: center;
-	padding-top: 1.5em;
+    text-align: center;
+    padding-top: 1.5em;
 }
 
 .stat-time .stat-value {
-	color: #F90;
-	font-size: 40px;
+    color: #F90;
+    font-size: 40px;
 }
 
 .stats #donut-chart {
-	height: 100px;
-	margin-left: -20px;
+    height: 100px;
+    margin-left: -20px;
 }
 
 
 .row.stats > div {
-	text-align: center;
+    text-align: center;
 }
 .stat-value {
-	font-size: 45px;
-	padding-bottom: 5px;
+    font-size: 45px;
+    padding-bottom: 5px;
 }
 .stat-key {
-	font-size: 13px;
-	font-weight: bold;
-	color: #999;
+    font-size: 13px;
+    font-weight: bold;
+    color: #999;
 }
 
 
 .stat-chart {
-	padding-bottom: 0;  /* use this to align stats widget height with shortcuts height */
+    padding-bottom: 0; /* use this to align stats widget height with shortcuts height */
 }
 .stat-time {
-	padding-top: 1.2em;
+    padding-top: 1.2em;
 }
 
 .stat-value {
-	letter-spacing: -4px;
-	margin-bottom: 0.11em;
+    letter-spacing: -4px;
+    margin-bottom: 0.11em;
 
 }
 .uptime-component {
-	padding-right: 10px;
+    padding-right: 10px;
 }
 .uptime-value {
 
 }
 .uptime-key {
-	font-size: 26px;
-	padding: 0;
-	margin: 0;
+    font-size: 26px;
+    padding: 0;
+    margin: 0;
 }
 .uptime-title {
-	font-size: 13px;
+    font-size: 13px;
 }
 
 /*------------------------------------------------------------------
  * 2. Flot
  * ---------------------------------------------------------------*/
 .legendColorBox {
-	padding-right: 4px;
+    padding-right: 4px;
 }
 
 /*------------------------------------------------------------------
  * 3. Application List
  * ---------------------------------------------------------------*/
 td.app-name a {
-	padding-left: 4px;
+    padding-left: 4px;
 }
 .app-framework-icon {
-	margin-left: 4px;
-	margin-right: 5px;
+    margin-left: 4px;
+    margin-right: 5px;
 }
 .app-actions {
-	text-align: center;
+    text-align: center;
 }
 .app-actions i {
-	color: #fff;
+    color: #fff;
 }
 
 /*------------------------------------------------------------------
@@ -142,93 +142,93 @@ td.app-name a {
 
 [class^="icon-"],
 [class*="icon-"] {
-	padding-right: 2px;
+    padding-right: 2px;
 }
 [class^="icon-"]:not(.fa),
 [class*="icon-"]:not(.fa) {
-	padding-right: 14px;
+    padding-right: 14px;
 }
 .shortcuts .shortcut {
-	margin-right: 10px;
-	color: #666;
+    margin-right: 10px;
+    color: #666;
 }
 .shortcut-label {
-	font-size: 13px;
+    font-size: 13px;
 }
 a.shortcut > i {
-	display: inline;
+    display: inline;
 }
 
 /*------------------------------------------------------------------
  * 5. Recent Contributions
  * ---------------------------------------------------------------*/
 ul.pull-requests {
-	padding: 0px;
-	margin: 1em 0px 0px;
+    padding: 0px;
+    margin: 1em 0px 0px;
 }
 li.pull-request {
-	border-bottom: 1px dotted #CCC;
-	padding-bottom: 0.5em;
-	margin-bottom: 1em;
+    border-bottom: 1px dotted #CCC;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
 }
 li.pull-request.api-failure {
-	margin-left: 15px;
+    margin-left: 15px;
 }
 li.pull-request.api-failure i{
-	margin-left: 5px;
+    margin-left: 5px;
 }
 li.pull-request:last-child {
-	border-bottom: none;
-	margin-bottom: 0;
+    border-bottom: none;
+    margin-bottom: 0;
 }
 
 .pull-request .avatar img {
-	margin-top: 1px;
-	margin-left: 15px;
-	border: 1px solid #c0c0c0;
+    margin-top: 1px;
+    margin-left: 15px;
+    border: 1px solid #c0c0c0;
 }
 .pull-request .details {
-	padding-top: 0px;
-	padding-left: 35px;
+    padding-top: 0px;
+    padding-left: 35px;
 }
 .pull-request .details a{
-	font-weight: bolder;
+    font-weight: bolder;
 }
 .pull-request .details .link{
-	font-weight: normal;
-	font-size: 12px;
-	margin-left: 2px;
+    font-weight: normal;
+    font-size: 12px;
+    margin-left: 2px;
 }
 
 .pull-request .date .day {
-	display: block;
-	margin-bottom: .22em;
-	margin-left: 15px;
-	margin-top: 2px;
-	font-size: 24px;
-	color: #888;
+    display: block;
+    margin-bottom: .22em;
+    margin-left: 15px;
+    margin-top: 2px;
+    font-size: 24px;
+    color: #888;
 }
 .pull-request .date .month {
-	display: block;
-	margin-left: 18px;
-	font-size: 12px;
-	font-weight: 600;
-	color: #888;
+    display: block;
+    margin-left: 18px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
 }
 
 /*------------------------------------------------------------------
  * 6. Extra Footer
  * ---------------------------------------------------------------*/
 .extra {
-	font-size: 12px;
+    font-size: 12px;
 }
 .extra ul li a {
-	color: #666;
+    color: #666;
 }
 .extra-icon {
-	font-size: 23px;
-	vertical-align: top;
-	margin-right: 5px;
+    font-size: 23px;
+    vertical-align: top;
+    margin-right: 5px;
 }
 
 /*------------------------------------------------------------------
@@ -240,22 +240,22 @@ li.pull-request:last-child {
 
 @media (max-width: 480px) {
 
-	.stats .stat {
-		margin-bottom: 3em;
-	}
+    .stats .stat {
+        margin-bottom: 3em;
+    }
 
-	.stats .stat .stat-value {
-		margin-bottom: .15em;
-		font-size: 20px;
-	}
+    .stats .stat .stat-value {
+        margin-bottom: .15em;
+        font-size: 20px;
+    }
 
-	.stats {
-		float: left;
-		display: block;
-		margin-bottom: 0;
-	}
+    .stats {
+        float: left;
+        display: block;
+        margin-bottom: 0;
+    }
 
-	#chart-stats {
-		margin: 2em 0 1em;
-	}
+    #chart-stats {
+        margin: 2em 0 1em;
+    }
 }
