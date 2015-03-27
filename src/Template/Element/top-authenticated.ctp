@@ -55,6 +55,7 @@
 				<div class="well">
 					<ul class="list-unstyled">
 						<?php foreach($data['notifications'] as $notification) : ?>
+
 							<li class="notification">
 								<i class="fa fa-bell-o"></i>
 								<?php if (!empty($notification['link'])) : ?>
@@ -67,9 +68,8 @@
 								<?php else : ?>
 									<?= $notification['message'] ?>
 								<?php endif ?>
-
-
 							</li>
+
 						<?php endforeach ?>
 					</ul>
 				</div>

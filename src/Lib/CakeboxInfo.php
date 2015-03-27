@@ -1159,7 +1159,7 @@ class CakeboxInfo
             return false;
         }
         return [
-            'message' => __("Update available for your %s."),
+            'message' => __("Update available for your %s"),
             'link' => [
                 'text' => 'local machine',
                 'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#local-machine-update'
@@ -1178,7 +1178,7 @@ class CakeboxInfo
             return false;
         }
         return [
-            'message' => __("Update available for your %s."),
+            'message' => __("Update available for your %s"),
             'link' => [
                 'text' => 'virtual machine',
                 'url' => 'http://cakebox.readthedocs.org/en/latest/tutorials/updating-your-box/#virtual-machine-update'
