@@ -49,9 +49,9 @@ class UpdateShell extends AppShell
         }
 
         // Update Cakebox Commands and Dashboard
-#        if (!$this->_updateCakeboxConsole()) {
-#            $this->exitBashError();
-#        }
+        if (!$this->_updateCakeboxConsole()) {
+            $this->exitBashError();
+        }
 
         // Update CakePHP Code Sniffer
         if (!$this->_updateCakephpCodeSniffer()) {
