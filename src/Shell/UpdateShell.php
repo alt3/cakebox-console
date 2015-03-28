@@ -58,8 +58,13 @@ class UpdateShell extends AppShell
             $this->exitBashError();
         }
 
-        // Fix HHVM configuration
-        if (!$this->_fixHhvm()) {
+        // Box fix HHVM
+        if (!$this->_boxFixHhvm()) {
+            $this->exitBashError();
+        }
+
+        // Box fix Elasticsearch
+        if (!$this->_boxFixElasticSearch()) {
             $this->exitBashError();
         }
         $this->exitBashSuccess('Self-update completed successfully');
@@ -149,7 +154,7 @@ class UpdateShell extends AppShell
      *
      * @return boolean True on success
      */
-    protected function _fixHhvm()
+    protected function _boxFixHhvm()
     {
         $this->logInfo('Updating HHVM configuration');
 
@@ -159,17 +164,50 @@ class UpdateShell extends AppShell
             return false;
         }
 
+        // Repair php.ini only once (idempotent)
+        $source = APP . 'Template' . DS . 'Bake' . DS . 'box-fix-hhvm-php-ini';
+        $target = '/etc/hhvm/php.ini';
+        if (md5_file($source) === md5_file($target)) {
+            return true;
+        }
+
         $this->logInfo('* Correcting HHVM session.save_path');
-        $result = CakeboxUtility::updateConfigFile(
-            '/etc/hhvm/php.ini',
-            [
-                '/var/lib/php5' => '/var/lib/php5/sessions'
-            ],
-            true // update file as root
-        );
+        $command = "cp $source $target";
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
 
         $this->logInfo('* Restarting service');
         $command = 'service hhvm restart';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Box-fix: add missing update-rc levels for HHVM so the service
+     * automatically starts on startup + corrects default session.save_path
+     *
+     * @return boolean True on success
+     */
+    protected function _boxFixElasticsearch()
+    {
+        // Repair init script only once (idempotent)
+        $source = APP . 'Template' . DS . 'Bake' . DS . 'box-fix-elasticsearch-init';
+        $target = '/etc/init.d/elasticsearch';
+        if (md5_file($source) === md5_file($target)) {
+            return true;
+        }
+
+        $this->logInfo('Updating Elasticsearch configuration');
+        $command = "cp $source $target";
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+
+        $this->logInfo('* Restarting service');
+        $command = 'service elasticsearch restart';
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
