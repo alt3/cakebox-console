@@ -58,13 +58,8 @@ class UpdateShell extends AppShell
             $this->exitBashError();
         }
 
-        // Auto start HHVM service on startup
-        if (!$this->_autoStartHhvm()) {
-            $this->exitBashError();
-        }
-
-        // Set correct path for HHVM sessions
-        if (!$this->_setHhvmSessionPath()) {
+        // Fix HHVM configuration
+        if (!$this->_fixHhvm()) {
             $this->exitBashError();
         }
         $this->exitBashSuccess('Self-update completed successfully');
@@ -149,31 +144,22 @@ class UpdateShell extends AppShell
     }
 
     /**
-     * Box-fix: configure update-rc so hhvm service automatically start after
-     * a system reboot.
+     * Box-fix: add missing update-rc levels for HHVM so the service
+     * automatically starts on startup + corrects default session.save_path
      *
      * @return boolean True on success
      */
-    protected function _autoStartHhvm()
+    protected function _fixHhvm()
     {
-        $this->logInfo('Creating HHVM system start/stop links');
+        $this->logInfo('Updating HHVM configuration');
 
+        $this->logInfo('* Creating system start/stop links');
         $command = 'update-rc.d hhvm defaults';
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
-        return true;
-    }
 
-    /**
-     * Box-fix: set correct hhvm session.save_path then reload service
-     *
-     * @return boolean True on success
-     */
-    protected function _setHhvmSessionPath()
-    {
-        $this->logInfo('Correcting HHVM session.save_path');
-
+        $this->logInfo('* Correcting HHVM session.save_path');
         $result = CakeboxUtility::updateConfigFile(
             '/etc/hhvm/php.ini',
             [
@@ -182,6 +168,7 @@ class UpdateShell extends AppShell
             true // update file as root
         );
 
+        $this->logInfo('* Restarting service');
         $command = 'service hhvm restart';
         if (!$this->Execute->shell($command, 'root')) {
             return false;
