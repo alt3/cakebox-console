@@ -39,6 +39,10 @@ class VhostShell extends AppShell
                         'short' => 'f',
                         'help' => __('Use to overwrite an existing virtual host configuration file.'),
                         'boolean' => true
+                    ],
+                    'hhvm' => [
+                        'help' => __('Serve pages using HHVM instead of PHP-FPM.'),
+                        'boolean' => true
                     ]
                 ]
             ]
@@ -87,9 +91,13 @@ class VhostShell extends AppShell
         }
 
         # Site file either does not exist or --force option used
-        if ($this->Execute->addVhost($url, $webroot, true) == false) {
+        if (!$this->Execute->addVhost($url, $webroot, [
+                'force' => true,
+                'hhvm' => $this->params['hhvm']
+        ])) {
             $this->exitBashError('Error creating virtual host configuration file');
         }
+
         $this->out("\nRemember to update your hosts file with: <info>" . $this->Info->getVmIpAddress() . " http://$url</info>\n");
         $this->out('Installation completed successfully');
     }
