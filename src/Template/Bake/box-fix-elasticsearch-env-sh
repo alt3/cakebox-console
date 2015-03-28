@@ -1,0 +1,24 @@
+# JVM Configuration for ElasticSearch
+# ===================================
+# See <https://github.com/elasticsearch/elasticsearch/blob/master/bin/elasticsearch.in.sh>
+#
+
+ES_HOME='/usr/local/elasticsearch'
+ES_CLASSPATH=$ES_CLASSPATH:$ES_HOME/lib/*:$ES_HOME/lib/sigar/*
+ES_HEAP_SIZE=256m
+
+ES_JAVA_OPTS="
+  -server
+  -Djava.net.preferIPv4Stack=true
+  -Des.config=/usr/local/etc/elasticsearch/elasticsearch.yml
+  -Xms256m
+  -Xmx256m
+  -Xss256k
+    -XX:+UseParNewGC
+  -XX:+UseConcMarkSweepGC
+  -XX:CMSInitiatingOccupancyFraction=75
+  -XX:+UseCMSInitiatingOccupancyOnly
+  -XX:+HeapDumpOnOutOfMemoryError
+
+
+"
