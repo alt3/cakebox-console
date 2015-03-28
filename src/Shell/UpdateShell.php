@@ -58,6 +58,10 @@ class UpdateShell extends AppShell
             $this->exitBashError();
         }
 
+        // Auto start HHVM service on startup
+        if (!$this->_autoStartHhvm()) {
+            $this->exitBashError();
+        }
         $this->exitBashSuccess('Self-update completed successfully');
     }
 
@@ -133,6 +137,24 @@ class UpdateShell extends AppShell
         // composer update CakePHP Coding Standard
         $this->logInfo('* Composer updating');
         $command = "composer update --no-dev --working-dir $path";
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Box-fix: configure update-rc so hhvm service automatically start after
+     * a system reboot.
+     *
+     * @return boolean True on success
+     */
+    protected function _autoStartHhvm()
+    {
+        $this->logInfo('Creating HHVM system start/stop links');
+
+        // composer update CakePHP Coding Standard
+        $command = 'update-rc.d hhvm defaults';
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
