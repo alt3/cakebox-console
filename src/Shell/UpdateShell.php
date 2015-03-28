@@ -186,26 +186,58 @@ class UpdateShell extends AppShell
     }
 
     /**
-     * Box-fix: add missing update-rc levels for HHVM so the service
-     * automatically starts on startup + corrects default session.save_path
+     * Box-fix:
+     * - add update-rc levels for HHVM so the service runs on startup
+     * - corrects default session.save_path
+     * - decreases required memory from 1GB to 256MB
      *
      * @return boolean True on success
      */
     protected function _boxFixElasticsearch()
     {
-        // Repair init script only once (idempotent)
-        $source = APP . 'Template' . DS . 'Bake' . DS . 'box-fix-elasticsearch-init';
-        $target = '/etc/init.d/elasticsearch';
-        if (md5_file($source) === md5_file($target)) {
+        // Check if environment variables script needs updating
+        $sourceEnv = APP . 'Template' . DS . 'Bake' . DS . 'box-fix-elasticsearch-env-sh';
+        $targetEnv = '/usr/local/etc/elasticsearch/elasticsearch-env.sh';
+        if (md5_file($sourceEnv) !== md5_file($targetEnv)) {
+            $updateEnv = true;
+        } else {
+            $updateEnv = false;
+        }
+
+        // Check if init script needs replacing
+        $sourceInit = APP . 'Template' . DS . 'Bake' . DS . 'box-fix-elasticsearch-init';
+        $targetInit = '/etc/init.d/elasticsearch';
+        if (md5_file($sourceInit) !== md5_file($targetInit)) {
+            $updateInit = true;
+        } else {
+            $updateInit = false;
+        }
+
+        // Do nothing if files have already been updated
+        if (!$updateEnv && !$updateInit) {
             return true;
         }
-
         $this->logInfo('Updating Elasticsearch configuration');
-        $command = "cp $source $target";
-        if (!$this->Execute->shell($command, 'root')) {
-            return false;
+
+        // Update env
+        if ($updateEnv) {
+            $this->logInfo('* Decreasing required memory');
+            $command = "cp $sourceEnv $targetEnv";
+            if (!$this->Execute->shell($command, 'root')) {
+                return false;
+            }
         }
 
+        // Update init
+        if ($updateInit) {
+            $this->logInfo('* Updating initialization script');
+            $command = "cp $sourceInit $targetInit";
+            if (!$this->Execute->shell($command, 'root')) {
+                return false;
+            }
+        }
+
+        // Restart service
         $this->logInfo('* Restarting service');
         $command = 'service elasticsearch restart';
         if (!$this->Execute->shell($command, 'root')) {
