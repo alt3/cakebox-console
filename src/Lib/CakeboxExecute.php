@@ -248,36 +248,15 @@ class CakeboxExecute
     }
 
     /**
-     * Reload nginx webservice (not a restart!)
-     *
-     * @return boolean True on success
-     */
-    public function reloadNginx()
-    {
-        $this->_log("Reloading Nginx webserver");
-
-        $this->_log("* Checking configuration");
-        if (!$this->shell("nginx -t", 'root')) {
-            return false;
-        }
-
-        $this->_log("* Restarting service");
-        if (!$this->shell("service nginx reload", 'root')) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Create a new Nginx website by generating a virtual host file, creating a
      * symoblic link and reloading the webserver.
      *
      * @param string $url Fully Qualified Domain Name used to expose the site.
      * @param string $webroot Full path to the site's webroot directory.
-     * @param bool $force Optional, true to overwrite existing file.
+     * @param array $options Hash with options
      * @return boolean True on success
      */
-    public function addVhost($url, $webroot, $force = false)
+    public function addVhost($url, $webroot, array $options = null)
     {
         $this->_flushLogs();
         $this->_logStart("Creating virtual host for $url");
@@ -291,7 +270,7 @@ class CakeboxExecute
         // Check for existing site file
         $vhostFile = $this->Info->webserverMeta['nginx']['sites-available'] . DS . $url;
         if (file_exists($vhostFile)) {
-            if (!$force) {
+            if (!$options['force']) {
                 $this->_error("* Virtual host file $vhostFile already exists. Use --force to drop.");
                 return false;
             }
@@ -299,7 +278,12 @@ class CakeboxExecute
         }
 
         // Load template into string, replace placeholders
-        $template = APP . 'Template' . DS . 'Bake' . DS . 'vhost_nginx.ctp';
+        if ($options['hhvm']) {
+            $template = APP . 'Template' . DS . 'Bake' . DS . 'vhost_hhvm.ctp';
+        } else {
+            $template = APP . 'Template' . DS . 'Bake' . DS . 'vhost_nginx.ctp';
+        }
+
         $config = String::insert(file_get_contents($template), [
         'url' => $url,
         'webroot' => $webroot
@@ -320,6 +304,11 @@ class CakeboxExecute
 
         // Reload nginx service to effectuate changes
         if (!$this->reloadNginx()) {
+            return false;
+        }
+
+        // Reload hhvm service if needed
+        if (!$this->reloadHhvm()) {
             return false;
         }
         return true;
@@ -398,6 +387,41 @@ class CakeboxExecute
             return false;
         }
         $this->_log("Virtual host removed successully");
+        return true;
+    }
+
+    /**
+     * Reload nginx webservice (not a restart!)
+     *
+     * @return boolean True on success
+     */
+    public function reloadNginx()
+    {
+        $this->_log("Reloading Nginx webserver");
+
+        $this->_log("* Checking configuration");
+        if (!$this->shell("nginx -t", 'root')) {
+            return false;
+        }
+
+        $this->_log("* Restarting service");
+        if (!$this->shell("service nginx reload", 'root')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Restart HHVM service
+     *
+     * @return boolean True on success
+     */
+    public function reloadHhvm()
+    {
+        $this->_log("Reloading HHVM service");
+        if (!$this->shell("service hhvm force-reload", 'root')) {
+            return false;
+        }
         return true;
     }
 

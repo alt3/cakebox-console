@@ -58,6 +58,15 @@ class UpdateShell extends AppShell
             $this->exitBashError();
         }
 
+        // Auto start HHVM service on startup
+        if (!$this->_autoStartHhvm()) {
+            $this->exitBashError();
+        }
+
+        // Set correct path for HHVM sessions
+        if (!$this->_setHhvmSessionPath()) {
+            $this->exitBashError();
+        }
         $this->exitBashSuccess('Self-update completed successfully');
     }
 
@@ -133,6 +142,47 @@ class UpdateShell extends AppShell
         // composer update CakePHP Coding Standard
         $this->logInfo('* Composer updating');
         $command = "composer update --no-dev --working-dir $path";
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Box-fix: configure update-rc so hhvm service automatically start after
+     * a system reboot.
+     *
+     * @return boolean True on success
+     */
+    protected function _autoStartHhvm()
+    {
+        $this->logInfo('Creating HHVM system start/stop links');
+
+        $command = 'update-rc.d hhvm defaults';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Box-fix: set correct hhvm session.save_path then reload service
+     *
+     * @return boolean True on success
+     */
+    protected function _setHhvmSessionPath()
+    {
+        $this->logInfo('Correcting HHVM session.save_path');
+
+        $result = CakeboxUtility::updateConfigFile(
+            '/etc/hhvm/php.ini',
+            [
+                '/var/lib/php5' => '/var/lib/php5/sessions'
+            ],
+            true // update file as root
+        );
+
+        $command = 'service hhvm restart';
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }

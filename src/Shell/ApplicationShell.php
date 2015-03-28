@@ -63,6 +63,10 @@ class ApplicationShell extends AppShell
                         'help' => __('Webroot as to be used as your Nginx virtual host webroot directive. Required when using custom sources.'),
                         'required' => false
                     ],
+                    'hhvm' => [
+                        'help' => __('Serve pages using HHVM instead of PHP-FPM.'),
+                        'boolean' => true
+                    ],
                     'ssh' => [
                         'help' => __('Use SSH instead of HTTPS. Only useful in combination with out-of-the-box applications using git repositories.'),
                         'boolean' => true
@@ -161,6 +165,11 @@ class ApplicationShell extends AppShell
         # Create Nginx virtual host if needed
         # ------------------------------------------------------------
         $this->out('Creating virtual host');
+        if ($this->params['hhvm']) {
+            $vhostType = 'HHVM';
+        } else {
+            $vhostType = 'PHP-FPM';
+        }
 
         // remove existing (assumed orphaned) vhost when not in --repair mode
         if (CakeboxUtility::vhostAvailable($url) && !$this->params['repair']) {
@@ -174,7 +183,7 @@ class ApplicationShell extends AppShell
         $vhostEnabled = CakeboxUtility::vhostEnabled($url);
 
         if ($vhostAvailable && $vhostEnabled) {
-            $this->out('* Skipping: virtual host already up and running');
+            $this->out("* Skipping: $vhostType virtual host already up and running");
         }
 
         if ($vhostAvailable && !$vhostEnabled) {
@@ -182,11 +191,13 @@ class ApplicationShell extends AppShell
         }
 
         if (!$vhostAvailable) {
-            if (!$this->Execute->addVhost($url, $installer->option('webroot'), true)) {
-                $this->exitBashError('Error creating virtual host');
-            } else {
-                $this->out('* Successfully created virtual host');
+            if (!$this->Execute->addVhost($url, $installer->option('webroot'), [
+                    'force' => true,
+                    'hhvm' => $this->params['hhvm']
+            ])) {
+                $this->exitBashError("Error creating $vhostType virtual host");
             }
+            $this->out("* Successfully created $vhostType virtual host");
         }
 
         // recheck symlink since it could have been created above
