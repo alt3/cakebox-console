@@ -238,8 +238,13 @@ class UpdateShell extends AppShell
         }
 
         // Restart service
-        $this->logInfo('* Restarting service');
-        $command = 'service elasticsearch restart';
+        $this->logInfo('* Stopping service');
+        $command = 'service elasticsearch stop';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+
+        $command = 'service elasticsearch start';
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
