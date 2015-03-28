@@ -1,5 +1,5 @@
 #
-# Cakebox-generated Nginx virtual host using generic template.
+# Cakebox-generated Nginx PHP-FMP virtual host using generic template.
 #
 
 server {
