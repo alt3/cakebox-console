@@ -49,9 +49,9 @@ class UpdateShell extends AppShell
         }
 
         // Update Cakebox Commands and Dashboard
-        if (!$this->_updateCakeboxConsole()) {
-            $this->exitBashError();
-        }
+#        if (!$this->_updateCakeboxConsole()) {
+#            $this->exitBashError();
+#        }
 
         // Update CakePHP Code Sniffer
         if (!$this->_updateCakephpCodeSniffer()) {
@@ -159,14 +159,18 @@ class UpdateShell extends AppShell
             return false;
         }
 
+        // Repair php.ini only once (idempotent fix)
+        $source = APP . 'Template' . DS . 'Bake' . DS . 'box-fix-hhvm-php-ini';
+        $target = '/etc/hhvm/php.ini';
+        if (md5_file($source) === md5_file($target)) {
+            return true;
+        }
+
         $this->logInfo('* Correcting HHVM session.save_path');
-        $result = CakeboxUtility::updateConfigFile(
-            '/etc/hhvm/php.ini',
-            [
-                '/var/lib/php5' => '/var/lib/php5/sessions'
-            ],
-            true // update file as root
-        );
+        $command = "cp $source $target";
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
 
         $this->logInfo('* Restarting service');
         $command = 'service hhvm restart';
