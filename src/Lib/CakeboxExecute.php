@@ -498,13 +498,13 @@ class CakeboxExecute
         Log::debug("* Checking if directory is writable by vagrant user");
 
         if (!is_dir($directory)) {
-            log::error("* Directory does not exist");
+            Log::error("* Directory does not exist");
             return false;
         }
 
         $testfile = $directory . DS . CakeboxUtility::getSaltCipher('heart-this');
         if (!$this->shell("touch $testfile; rm $testfile", 'vagrant')) {
-            log::error("* Directory is NOT writable");
+            Log::error("* Directory is NOT writable");
             return false;
         }
         Log::debug("* Directory is writable");
