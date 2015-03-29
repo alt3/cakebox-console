@@ -83,6 +83,12 @@ class UpdateShell extends AppShell
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
+
+        $this->logInfo('* Updating cache permissions');
+        $command = 'chown vagrant:vagrant /home/vagrant/.composer -R';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
          return true;
     }
 
