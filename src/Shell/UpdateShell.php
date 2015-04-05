@@ -58,6 +58,15 @@ class UpdateShell extends AppShell
             $this->exitBashError();
         }
 
+        // Box fix HHVM
+        if (!$this->_boxFixHhvm()) {
+            $this->exitBashError();
+        }
+
+        // Box fix Elasticsearch
+        if (!$this->_boxFixElasticSearch()) {
+            $this->exitBashError();
+        }
         $this->exitBashSuccess('Self-update completed successfully');
     }
 
@@ -71,6 +80,12 @@ class UpdateShell extends AppShell
     {
         $this->logInfo('Self-updating Composer');
         $command = 'composer self-update';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+
+        $this->logInfo('* Updating cache permissions');
+        $command = 'chown vagrant:vagrant /home/vagrant/.composer -R';
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
@@ -133,6 +148,109 @@ class UpdateShell extends AppShell
         // composer update CakePHP Coding Standard
         $this->logInfo('* Composer updating');
         $command = "composer update --no-dev --working-dir $path";
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Box-fix: add missing update-rc levels for HHVM so the service
+     * automatically starts on startup + corrects default session.save_path
+     *
+     * @return boolean True on success
+     */
+    protected function _boxFixHhvm()
+    {
+        $this->logInfo('Updating HHVM configuration');
+
+        $this->logInfo('* Creating system start/stop links');
+        $command = 'update-rc.d hhvm defaults';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+
+        // Repair php.ini only once (idempotent)
+        $source = APP . 'Template' . DS . 'Bake' . DS . 'box-fix-hhvm-php-ini';
+        $target = '/etc/hhvm/php.ini';
+        if (md5_file($source) === md5_file($target)) {
+            return true;
+        }
+
+        $this->logInfo('* Correcting HHVM session.save_path');
+        $command = "cp $source $target";
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+
+        $this->logInfo('* Restarting service');
+        $command = 'service hhvm restart';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Box-fix:
+     * - add update-rc levels for HHVM so the service runs on startup
+     * - corrects default session.save_path
+     * - decreases required memory from 1GB to 256MB
+     *
+     * @return boolean True on success
+     */
+    protected function _boxFixElasticsearch()
+    {
+        // Check if environment variables script needs updating
+        $sourceEnv = APP . 'Template' . DS . 'Bake' . DS . 'box-fix-elasticsearch-env-sh';
+        $targetEnv = '/usr/local/etc/elasticsearch/elasticsearch-env.sh';
+        if (md5_file($sourceEnv) !== md5_file($targetEnv)) {
+            $updateEnv = true;
+        } else {
+            $updateEnv = false;
+        }
+
+        // Check if init script needs replacing
+        $sourceInit = APP . 'Template' . DS . 'Bake' . DS . 'box-fix-elasticsearch-init';
+        $targetInit = '/etc/init.d/elasticsearch';
+        if (md5_file($sourceInit) !== md5_file($targetInit)) {
+            $updateInit = true;
+        } else {
+            $updateInit = false;
+        }
+
+        // Do nothing if files have already been updated
+        if (!$updateEnv && !$updateInit) {
+            return true;
+        }
+        $this->logInfo('Updating Elasticsearch configuration');
+
+        // Update env
+        if ($updateEnv) {
+            $this->logInfo('* Decreasing required memory');
+            $command = "cp $sourceEnv $targetEnv";
+            if (!$this->Execute->shell($command, 'root')) {
+                return false;
+            }
+        }
+
+        // Update init
+        if ($updateInit) {
+            $this->logInfo('* Updating initialization script');
+            $command = "cp $sourceInit $targetInit";
+            if (!$this->Execute->shell($command, 'root')) {
+                return false;
+            }
+        }
+
+        // Restart service
+        $this->logInfo('* Stopping service');
+        $command = 'service elasticsearch stop';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+
+        $command = 'service elasticsearch start';
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }

@@ -74,7 +74,7 @@ class CakeboxFrameworkInstaller
      */
     public function setup(Array $options)
     {
-        log::debug("Determining installation settings");
+        Log::debug("Determining installation settings");
         try {
             $this->_mergeOptions($options);
             $this->_setPath();
@@ -84,7 +84,7 @@ class CakeboxFrameworkInstaller
             $this->flags['configured'] = true;
             return true;
         } catch (Exception $e) {
-            log::error("Setup failed: " . $e->getMessage());
+            Log::error("Setup failed: " . $e->getMessage());
             return false;
         }
     }
@@ -97,9 +97,9 @@ class CakeboxFrameworkInstaller
      */
     public function createDirectory()
     {
-        log::debug("Creating installation directory...");
+        Log::debug("Creating installation directory...");
         if (!$this->flags['configured']) {
-            log::error("Setup method has not been run");
+            Log::error("Setup method has not been run");
             return false;
         }
 
@@ -108,7 +108,7 @@ class CakeboxFrameworkInstaller
             $this->flags['prepared'] = true;
             return true;
         } catch (Exception $e) {
-            log::error("Preparation failed: " . $e->getMessage());
+            Log::error("Preparation failed: " . $e->getMessage());
             return false;
         }
     }
@@ -121,7 +121,7 @@ class CakeboxFrameworkInstaller
      */
     public function installSources()
     {
-        log::debug("Installing application...");
+        Log::debug("Installing application...");
 
         try {
             if ($this->options['installation_method'] == 'composer') {
@@ -131,7 +131,7 @@ class CakeboxFrameworkInstaller
             }
             return true;
         } catch (Exception $e) {
-            log::error("Installation failed: " . $e->getMessage());
+            Log::error("Installation failed: " . $e->getMessage());
             return false;
         }
     }
@@ -183,9 +183,9 @@ class CakeboxFrameworkInstaller
      */
     protected function _logOptions()
     {
-        log::debug("Installation options:");
+        Log::debug("Installation options:");
         foreach ($this->options as $key => $value) {
-            log::debug("  $key => $value");
+            Log::debug("  $key => $value");
         }
     }
 
@@ -270,12 +270,12 @@ class CakeboxFrameworkInstaller
 
         # Attempt changing the source if --ssh option was used.
         if (isset($this->options['ssh'])) {
-            log::debug("Trying to change Git source since user passed --ssh option");
+            Log::debug("Trying to change Git source since user passed --ssh option");
             if (isset($this->Info->frameworkMeta[$this->options['framework_short']]['source_ssh'])) {
                 $this->options['source'] = $this->Info->frameworkMeta[$this->options['framework_short']]['source_ssh'];
-                log::debug("* Changed source to " . $this->options['source']);
+                Log::debug("* Changed source to " . $this->options['source']);
             } else {
-                log::debug("* Skipping: metadata contains no alternative SSH source");
+                Log::debug("* Skipping: metadata contains no alternative SSH source");
             }
         }
         return true;
@@ -313,7 +313,7 @@ class CakeboxFrameworkInstaller
         }
 
         if (!is_dir($this->options['path'])) {
-            log::debug("Creating target directory " . $this->options['path']);
+            Log::debug("Creating target directory " . $this->options['path']);
             if (!$this->Execute->mkVagrantDir($this->options['path'])) {
                 throw new Exception("Error creating target directory " . $this->options['path']);
             }
@@ -329,7 +329,7 @@ class CakeboxFrameworkInstaller
      */
     protected function _composerInstall()
     {
-        log::Debug("Composer installing " . $this->options['framework_human']);
+        Log::Debug("Composer installing " . $this->options['framework_human']);
         if (!$this->Execute->composerCreateProject($this->options['source'], $this->options['path'])) {
             throw new Exception("Error composer installing.");
         }
@@ -344,7 +344,7 @@ class CakeboxFrameworkInstaller
      */
     protected function _gitInstall()
     {
-        log::Debug("Git installing " . $this->options['framework_human']);
+        Log::Debug("Git installing " . $this->options['framework_human']);
         if (!$this->Execute->gitClone($this->options['source'], $this->options['path'])) {
             throw new Exception("Error git cloning.");
         }
@@ -359,22 +359,22 @@ class CakeboxFrameworkInstaller
      */
     public function setPermissions()
     {
-        log::debug("Updating directory permissions");
+        Log::debug("Updating directory permissions");
 
         # Skip if no framework was detected
         if (!isset($this->options['framework_short'])) {
-            log::debug("* Skipping: unsupported/empty framework");
+            Log::debug("* Skipping: unsupported/empty framework");
             return true;
         }
 
         # Skip if the framework does not use writable directories
         if (!isset($this->Info->frameworkMeta[$this->options['framework_short']]['writable_dirs'])) {
-            log::debug("* Skipping: framework does not use writeable directories");
+            Log::debug("* Skipping: framework does not use writeable directories");
             return true;
         }
 
         # Set permissions
-        log::debug("* Applying " . $this->options['framework_short'] . " folder permissions");
+        Log::debug("* Applying " . $this->options['framework_short'] . " folder permissions");
         foreach ($this->Info->frameworkMeta[$this->options['framework_short']]['writable_dirs'] as $directory) {
             if (!CakeboxUtility::setFolderPermissions($this->options['path'] . DS . $directory)) {
                 throw new Exception("Error setting permissions.");
@@ -391,15 +391,15 @@ class CakeboxFrameworkInstaller
      */
     public function updateConfigs()
     {
-        log::debug("Updating configuration files");
+        Log::debug("Updating configuration files");
 
         $knownSources = Hash::extract($this->Info->frameworkMeta, '{s}.source');
         if (!in_array($this->options['source'], $knownSources)) {
-            log::debug("* Skipping: automated configuration updates are not supported for user specified applications");
+            Log::debug("* Skipping: automated configuration updates are not supported for user specified applications");
             return true;
         }
 
-        log::debug("Updating " . $this->options['framework_human'] . " config files");
+        Log::debug("Updating " . $this->options['framework_human'] . " config files");
 
         if ($this->options['framework_short'] == 'cakephp3') {
             if (!$this->Execute->updateCake3Configuration($this->options['path'], $this->options['url'])) {
