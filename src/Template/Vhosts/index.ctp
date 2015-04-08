@@ -31,7 +31,7 @@ $this->assign('title', 'Virtual Hosts');
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th><?= __("Site File") ?></th>
+                            <th><?= __("Virtual Host") ?></th>
                             <th><?= __("Enabled") ?></th>
                             <th><?= __("Last Modified") ?></th>
                             <th></th>
@@ -51,7 +51,7 @@ $this->assign('title', 'Virtual Hosts');
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#fileModal">
                                             <?= __('View') ?>
                                         </button>
-                                        <button type="button" class="confirm delete btn btn-danger btn-sm" rel="sitefiles/ajaxDelete">
+                                        <button type="button" class="confirm delete btn btn-danger btn-sm" rel="vhosts/ajaxDelete">
                                             <?= __('Delete') ?>
                                         </button>
                                     </div>
