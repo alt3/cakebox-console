@@ -80,7 +80,7 @@ class VhostsController extends AppController
         $id = $this->request->data['id'];
 
         $execute = new CakeboxExecute();
-        if ($execute->removeSite($id) == false) {
+        if ($execute->removeVhost($id) == false) {
             throw new RestException("Error deleting website $id. See cakebox.log for details.", null, 401);
         }
 

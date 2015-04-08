@@ -132,7 +132,7 @@ class VhostShell extends AppShell
     public function listall()
     {
         $this->out('Enabled websites highlighted:');
-        foreach ($this->Info->getRichNginxFiles() as $site) {
+        foreach ($this->Info->getRichVhosts() as $site) {
             if ($site['enabled'] == true) {
                 $this->out("  <info>" . $site['name'] . "</info>");
             } else {
