@@ -1,6 +1,7 @@
 <?php
 namespace App\Shell;
 
+use App\Lib\CakeboxInfo;
 use App\Lib\CakeboxUtility;
 use Cake\Console\Shell;
 
