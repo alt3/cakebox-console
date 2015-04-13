@@ -33,7 +33,6 @@ class CakeboxExecute
     /**
      * Class constructor
      *
-     * @return void
      */
     public function __construct()
     {
@@ -100,7 +99,7 @@ class CakeboxExecute
         $this->_log("Shelling command `$command` as user `$username`");
 
         // Execute the command, capture exit code, stdout and stderr
-        $ret = exec($command, $stdout, $exitCode);
+        exec($command, $stdout, $exitCode);
 
         // Log command output if any was produced
         if (!empty($stdout)) {

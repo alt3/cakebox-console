@@ -27,7 +27,6 @@ class RestException extends BadRequestException
      * @param string $message Containing error message
      * @param array $errors Array with validation errors.
      * @param int $code Status code, defaults to 412
-     * @return void
      */
     public function __construct($message, $errors = null, $code = 412)
     {
@@ -44,7 +43,7 @@ class RestException extends BadRequestException
      * Getter function used by the ExceptionRenderer to add validation errors
      * to the json response.
      *
-     * @return @array Array holding validation errors
+     * @return array Array holding validation errors
      */
     public function getErrors()
     {

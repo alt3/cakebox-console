@@ -220,11 +220,10 @@ class CakeboxCheck
     {
         try {
             $connection = ConnectionManager::get('default');
-            $connected = $connection->connect();
-            $connected = $connection->disconnect();
+            $connection->connect();
+            $connection->disconnect();
             return true;
         } catch (Exception $connectionError) {
-            $connected = false;
             $errorMsg = $connectionError->getMessage();
             if (method_exists($connectionError, 'getAttributes')) {
                 $attributes = $connectionError->getAttributes();
