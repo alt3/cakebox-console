@@ -166,8 +166,6 @@ class CakeboxInfo
 
     /**
      * Class constructor
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -347,6 +345,7 @@ class CakeboxInfo
      * Return a list of databases on the vm excluding system/protected databases.
      *
      * @return array List holding database names
+     * @throws \Exception
      */
     public function getAppDatabases()
     {
@@ -358,10 +357,11 @@ class CakeboxInfo
             foreach ($stripped as $databaseName) {
                 $result[] = ['name' => $databaseName];
             }
-            return $result;
         } catch (\Exception $e) {
             throw new \Exception("Error generating database list: " . $e->getMessage());
         }
+
+        return $result;
     }
 
     /**
@@ -476,10 +476,11 @@ class CakeboxInfo
             $m = new Memcached();
             $m->addServer('localhost', 11211);
             $version = $m->getVersion();
-            return $version['localhost:11211'];
         } catch (\Exception $e) {
             return false;
         }
+
+        return $version['localhost:11211'];
     }
 
     /**
@@ -1188,8 +1189,7 @@ class CakeboxInfo
      */
     protected function _getLatestCakeboxCommitLocal()
     {
-        $commit = trim(file_get_contents('/home/vagrant/.cakebox/last-known-cakebox-commit'));
-        return $commit;
+        return trim(file_get_contents('/home/vagrant/.cakebox/last-known-cakebox-commit'));
     }
 
     /**
@@ -1200,8 +1200,7 @@ class CakeboxInfo
      */
     protected function _getLatestCakeboxConsoleCommitLocal()
     {
-        $commit = trim(file_get_contents('/cakebox/console/.git/refs/heads/' . $this->getCakeboxConsoleBranch()));
-        return $commit;
+        return trim(file_get_contents('/cakebox/console/.git/refs/heads/' . $this->getCakeboxConsoleBranch()));
     }
 
     /**
@@ -1214,8 +1213,7 @@ class CakeboxInfo
     protected function _getLatestRemoteCommit($repository, $branch = 'master')
     {
         $commits = $this->getRepositoryCommits($repository, $branch, 1);
-        $commit = $commits[0]['sha'];
-        return $commit;
+        return $commits[0]['sha'];
     }
 
     /**
@@ -1249,19 +1247,21 @@ class CakeboxInfo
             if (!$response->isOk()) {
                 return null;
             }
-            $result = json_decode($response->body(), true);
-            Cache::write($cacheKey, $result, 'short');
-            return $result;
         } catch (\Exception $e) {
             return null;
         }
+
+        $result = json_decode($response->body(), true);
+        Cache::write($cacheKey, $result, 'short');
+
+        return $result;
     }
 
     /**
      * Returns rich information for the Cakebox.yaml file.
      *
      * @return array Hash with raw file data and timestamp.
-     * @throws Exception
+     * @throws \Exception
      */
     public function getRichCakeboxYaml()
     {
@@ -1280,15 +1280,15 @@ class CakeboxInfo
      * Checks if the Cakebox Dashboard is using HTTPS by parsing the default
      * Nginx catch-all website.
      *
-     * @return array boolean True when HTTPS is being used.
+     * @return bool True when HTTPS is being used.
      */
     public function dashboardUsesHttps()
     {
         $vhost = file_get_contents($this->webserverMeta['nginx']['sites-available'] . DS . 'default');
         preg_match('/HTTPS/', $vhost, $matches);
-        if (!empty($matches)) {
-            return true;
+        if (empty($matches)) {
+            return false;
         }
-        return false;
+        return true;
     }
 }

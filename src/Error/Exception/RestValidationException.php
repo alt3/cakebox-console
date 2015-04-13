@@ -35,7 +35,7 @@ class RestValidationException extends BadRequestException
      * Getter function used by the ExceptionRenderer to add validation errors
      * to the json response.
      *
-     * @return @array Array holding validation errors
+     * @return array Array holding validation errors
      */
     public function getErrors()
     {

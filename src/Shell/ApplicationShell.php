@@ -34,7 +34,8 @@ class ApplicationShell extends AppShell
                 ],
                 'arguments' => [
                     'url' => [
-                        'help' => __('Fully qualified domain name used to expose the application.'), 'required' => true
+                        'help' => __('Fully qualified domain name used to expose the application.'),
+                        'required' => true
                     ],
                 ],
                 'options' => [

@@ -1,9 +1,6 @@
 <?php
 namespace App\Lib;
 
-use App\Lib\CakeboxExecute;
-use App\Lib\CakeboxInfo;
-use App\Lib\CakeboxUtility;
 use Cake\Core\Exception\Exception;
 use Cake\Log\Log;
 use Cake\Utility\Hash;
@@ -56,8 +53,6 @@ class CakeboxFrameworkInstaller
 
     /**
      * Class constructor
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -70,7 +65,7 @@ class CakeboxFrameworkInstaller
      *
      * @param array $options Installer options
      * @return boolean True when successful
-     * @throws Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     public function setup(Array $options)
     {
@@ -93,7 +88,7 @@ class CakeboxFrameworkInstaller
      * Run framework agnostic preparations (e.g. creating the target directory).
      *
      * @return boolean True when successful
-     * @throws Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     public function createDirectory()
     {
@@ -117,7 +112,7 @@ class CakeboxFrameworkInstaller
      * Run framework specific installation using either composer or git clone.
      *
      * @return boolean True when successful
-     * @throws Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     public function installSources()
     {
@@ -141,7 +136,7 @@ class CakeboxFrameworkInstaller
      *
      * @param array $options Array with passed installer options.
      * @return void
-     * @throws Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     protected function _mergeOptions($options)
     {
@@ -197,10 +192,10 @@ class CakeboxFrameworkInstaller
     protected function _setPath()
     {
         if (isset($this->options['path'])) {
-            $this->options['path'] = $this->options['path'];
-        } else {
-            $this->options['path'] = '/home/vagrant/Apps/' . $this->options['url'];
+            return;
         }
+
+        $this->options['path'] = '/home/vagrant/Apps/' . $this->options['url'];
     }
 
     /**
@@ -217,7 +212,7 @@ class CakeboxFrameworkInstaller
      * Set framework specific information.
      *
      * @return boolean True if a valid method could be determined.
-     * @throws Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     protected function _setFrameworkOptions()
     {
@@ -226,7 +221,6 @@ class CakeboxFrameworkInstaller
             $this->options['framework_short'] = 'custom';
             $this->options['framework_human'] = 'user specified';
             $this->options['installation_method'] = $this->detectInstallationMethod($this->options['source']);
-            $this->options['source'] = $this->options['source'];
 
             # Unset irrelevant options to keep logs
             unset ($this->options['framework']);
@@ -304,7 +298,7 @@ class CakeboxFrameworkInstaller
      * Prepare a directory for installation by the `vagrant` user.
      *
      * @return boolean True if successful
-     * @throws Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     protected function _prepareDirectory()
     {
@@ -355,7 +349,7 @@ class CakeboxFrameworkInstaller
      * Set permissions on writebale directories for known frameworks.
      *
      * @return boolean True if permissions were skipped OR set succesfully
-     * @throws Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     public function setPermissions()
     {
@@ -387,7 +381,7 @@ class CakeboxFrameworkInstaller
      * Update framework specific configuration files if possible.
      *
      * @return boolean True if successful
-     * @throws Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     public function updateConfigs()
     {
