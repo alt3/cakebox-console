@@ -24,7 +24,11 @@ class DashboardsController extends AppController
                 'sites' => $this->Info->getNginxFileCount()
             ],
             'commits' => $this->Info->getRepositoryCommits('alt3/cakebox-console', 5),
-            'contributions' => $this->Info->getRepositoryContributions('alt3/cakebox-console', 'dev')
+            'contributions' => $this->Info->getContributions([
+                    'alt3/cakebox' => 'dev',
+                    'alt3/cakebox-console' => 'dev'
+                ]
+            )
         ];
 
         $notifications = $this->Info->getNotifications();

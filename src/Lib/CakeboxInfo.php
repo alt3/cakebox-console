@@ -960,6 +960,22 @@ class CakeboxInfo
     }
 
     /**
+     * Get contributions for multiple repositories
+     *
+     * @param array $repositories Array with Github repository shortname (owner/repo) as key and branch as value
+     * @return array
+     */
+    public function getContributions($repositories)
+    {
+        return collection($repositories)
+            ->unfold(function ($branch, $repository) {
+                return $this->getRepositoryContributions($repository, $branch);
+            })
+            ->sortBy('merged_at', SORT_DESC, SORT_STRING)
+            ->take(5)
+            ->toArray();
+    }
+    /**
      * Return Github API statistics the 5 most recent contributions by extracting
      * merged Pull Requests in the provided branch of given repository.
      *
@@ -972,7 +988,7 @@ class CakeboxInfo
      */
     public function getRepositoryContributions($repository, $branch)
     {
-        $cached = Cache::read('contributions', 'short');
+        $cached = Cache::read('contributions-' . $repository . $branch, 'short');
         if ($cached) {
             return $cached;
         }
@@ -1026,7 +1042,7 @@ class CakeboxInfo
             })
             ->toArray();
 
-        Cache::write('contributions', $result, 'short');
+        Cache::write('contributions-' . $repository . $branch, $result, 'short');
         return $result;
     }
 
