@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "09ee61be5dd2f36db108c21dda15dd0f",
+    "hash": "62cb77c24e1685b89cef96f85c2a3fee",
     "packages": [
         {
             "name": "aura/installer-default",
@@ -127,16 +127,16 @@
         },
         {
             "name": "cakephp/bake",
-            "version": "1.0.1",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "ad86dbce53c16a8c8af4ee30fdaa4ff41a924778"
+                "reference": "4cf1c9904a93a629109f5c67e272b0ccdc20bedb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/ad86dbce53c16a8c8af4ee30fdaa4ff41a924778",
-                "reference": "ad86dbce53c16a8c8af4ee30fdaa4ff41a924778",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/4cf1c9904a93a629109f5c67e272b0ccdc20bedb",
+                "reference": "4cf1c9904a93a629109f5c67e272b0ccdc20bedb",
                 "shasum": ""
             },
             "require": {
@@ -169,20 +169,20 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2015-03-22 18:09:12"
+            "time": "2015-04-08 03:13:05"
         },
         {
             "name": "cakephp/cakephp",
-            "version": "3.0.0",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "09eb23891dc8134830f4e39e01a3a39f82935e41"
+                "reference": "40c10c6a1ea0cd1fa34227aeb294b95e44c0ab7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/09eb23891dc8134830f4e39e01a3a39f82935e41",
-                "reference": "09eb23891dc8134830f4e39e01a3a39f82935e41",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/40c10c6a1ea0cd1fa34227aeb294b95e44c0ab7a",
+                "reference": "40c10c6a1ea0cd1fa34227aeb294b95e44c0ab7a",
                 "shasum": ""
             },
             "require": {
@@ -212,6 +212,11 @@
                 "phpunit/phpunit": "*"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Cake\\": "src"
@@ -238,20 +243,20 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-03-22 16:42:46"
+            "time": "2015-04-20 01:29:22"
         },
         {
             "name": "cakephp/debug_kit",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/debug_kit.git",
-                "reference": "824c1610fe4a79f14f0a22b56de06241dfa49c37"
+                "reference": "51d8f0e0f9d88888b7e341206415322500b4af1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/debug_kit/zipball/824c1610fe4a79f14f0a22b56de06241dfa49c37",
-                "reference": "824c1610fe4a79f14f0a22b56de06241dfa49c37",
+                "url": "https://api.github.com/repos/cakephp/debug_kit/zipball/51d8f0e0f9d88888b7e341206415322500b4af1e",
+                "reference": "51d8f0e0f9d88888b7e341206415322500b4af1e",
                 "shasum": ""
             },
             "require": {
@@ -267,7 +272,7 @@
             "type": "cakephp-plugin",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2.x-dev"
+                    "dev-master": "3.0.x-dev"
                 }
             },
             "autoload": {
@@ -298,7 +303,7 @@
                 "debug",
                 "kit"
             ],
-            "time": "2015-03-22 18:05:17"
+            "time": "2015-04-19 19:07:17"
         },
         {
             "name": "cakephp/plugin-installer",
@@ -595,17 +600,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.6.5",
+            "version": "v2.6.6",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "0cd8e72071e46e15fc072270ae39ea1b66b10a9d"
+                "reference": "174f009ed36379a801109955fc5a71a49fe62dd4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/0cd8e72071e46e15fc072270ae39ea1b66b10a9d",
-                "reference": "0cd8e72071e46e15fc072270ae39ea1b66b10a9d",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/174f009ed36379a801109955fc5a71a49fe62dd4",
+                "reference": "174f009ed36379a801109955fc5a71a49fe62dd4",
                 "shasum": ""
             },
             "require": {
@@ -641,7 +646,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2015-03-12 10:28:44"
+            "time": "2015-03-30 15:54:10"
         }
     ],
     "packages-dev": [],
