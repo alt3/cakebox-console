@@ -137,7 +137,7 @@ class ApplicationShell extends AppShell
             $this->out('* Skipping: directory already created');
         }
 
-        if (!$targetDirAvailable && !$dirHasData) {
+        if ($targetDirAvailable && !$dirHasData) {
             if (!$this->Execute->mkVagrantDir($installer->option('path'))) {
                 $this->exitBashError('Error creating target directory ' . $installer->option('path'));
             }
