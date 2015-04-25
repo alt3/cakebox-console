@@ -138,7 +138,7 @@ class CakeboxExecute
             return false;
         }
 
-        if (!$this->shell("chown vagrant $path -R", 'root')) {
+        if (!$this->shell("chown vagrant:vagrant $path -R", 'root')) {
             return false;
         }
 
