@@ -118,26 +118,28 @@ class ApplicationShell extends AppShell
         $targetDirAvailable = CakeboxUtility::dirAvailable($installer->option('path'));
 
         # Check: stop provisioning if the target directory is not
-        # available/empty AND and we are not in --repair mode
+        # available/empty AND and we are NOT in --repair mode
         if (!$targetDirAvailable && (!$this->params['repair'])) {
             $this->exitBashError('Error: target directory ' . $installer->option('path') . ' contains data');
         }
 
-        # ------------------------------------------------------------
-        # Create installation directory if needed
-        # ------------------------------------------------------------
-        $dirHasData = false;
+        # ----------------------------------------------------------------
+        # New install or --repair: create installation directory if needed
+        # ----------------------------------------------------------------
         $this->out('Creating installation directory');
-        if (!$targetDirAvailable) {
-            $dirHasData = true;
+
+        // Dir exists AND contains data: do nothing
+        if (!$targetDirAvailable && is_dir($installer->option('path'))) {
             $this->out('* Skipping: target directory contains data');
         }
 
+        // Dir exists AND does not contain data: do nothing
         if ($targetDirAvailable && is_dir($installer->option('path'))) {
             $this->out('* Skipping: directory already created');
         }
 
-        if ($targetDirAvailable && !$dirHasData) {
+        // Dir does not exist; create it
+        if ($targetDirAvailable && !is_dir($installer->option('path'))) {
             if (!$this->Execute->mkVagrantDir($installer->option('path'))) {
                 $this->exitBashError('Error creating target directory ' . $installer->option('path'));
             }
@@ -146,14 +148,14 @@ class ApplicationShell extends AppShell
         # ------------------------------------------------------------
         # Install sources if needed
         # ------------------------------------------------------------
-        if (!$dirHasData) {
+        if ($targetDirAvailable) {
             $this->out(Inflector::camelize($installer->option('installation_method')) . ' installing ' . $installer->option('framework_human') . ' application sources');
             if (!$installer->installSources()) {
                 $this->exitBashError('Error installing application sources.');
             }
         }
 
-        if (!$dirHasData && $installer->option('installation_method') !== 'composer') {
+        if (!$targetDirAvailable && $installer->option('installation_method') !== 'composer') {
             if (file_exists($installer->option('path') . DS . 'composer.json')) {
                 $this->logInfo('Composer installing detected composer.json');
                 if (!$this->Execute->composerInstall($installer->option('path'))) {
