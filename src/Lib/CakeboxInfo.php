@@ -390,7 +390,7 @@ class CakeboxInfo
         $result = [];
         foreach ($this->packages as $package => $details) {
              // fetch version
-            switch($package) {
+            switch ($package) {
                 case 'memcached':
                     $version = $this->_getPackageVersionMemcached();
                     break;
@@ -1094,7 +1094,7 @@ class CakeboxInfo
             //
             // Should ideally be moved into testable logic or... ask Monolog lib.
             $level = $matches[2];
-            switch ($level){
+            switch ($level) {
                 case 100:
                     $levelName = 'debug';
                     break;
