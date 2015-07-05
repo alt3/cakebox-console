@@ -141,7 +141,7 @@ class AppShell extends Shell
         if ($message) {
             $this->logInfo($message);
         }
-        exit (0);
+        exit(0);
     }
 
     /**
@@ -158,7 +158,7 @@ class AppShell extends Shell
             }
         }
         $this->logInfo($message);
-        exit (0);
+        exit(0);
     }
 
     /**
@@ -180,6 +180,6 @@ class AppShell extends Shell
             }
         }
         $this->logError($message);
-        exit (1);
+        exit(1);
     }
 }

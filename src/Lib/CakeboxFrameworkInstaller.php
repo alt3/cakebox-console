@@ -223,9 +223,9 @@ class CakeboxFrameworkInstaller
             $this->options['installation_method'] = $this->detectInstallationMethod($this->options['source']);
 
             # Unset irrelevant options to keep logs
-            unset ($this->options['framework']);
-            unset ($this->options['majorversion']);
-            unset ($this->options['framework']);
+            unset($this->options['framework']);
+            unset($this->options['majorversion']);
+            unset($this->options['framework']);
             return true;
         }
 
@@ -254,8 +254,8 @@ class CakeboxFrameworkInstaller
                 $this->options['installation_method'] = $this->Info->frameworkMeta['laravel']['installation_method'];
                 $this->options['source'] = $this->Info->frameworkMeta['laravel']['source'];
                 $this->options['webroot'] = $this->options['path'] . DS . $this->Info->frameworkMeta['laravel']['webroot'];
-                unset ($this->options['majorversion']);
-                unset ($this->options['template']);
+                unset($this->options['majorversion']);
+                unset($this->options['template']);
                 break;
 
             default:
