@@ -7,7 +7,7 @@
 	"require": {
 		"php": ">=5.4.16",
 		"cakephp/bake": "~1.0",
-		"cakephp/cakephp": "^3.0.2",
+		"cakephp/cakephp": "~3.0",
 		"cakephp/debug_kit": "~3.0",
 		"cakephp/plugin-installer": "*",
 		"mobiledetect/mobiledetectlib": "2.*",
