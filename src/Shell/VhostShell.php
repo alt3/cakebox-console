@@ -98,7 +98,7 @@ class VhostShell extends AppShell
             $this->exitBashError('Error creating virtual host configuration file');
         }
 
-        $this->out("\nRemember to update your hosts file with: <info>" . $this->Info->getVmIpAddress() . " http://$url</info>\n");
+        $this->out("\nRemember to update your hosts file with: <info>" . $this->Info->getVmIpAddress() . " $url</info>\n");
         $this->out('Installation completed successfully');
     }
 
