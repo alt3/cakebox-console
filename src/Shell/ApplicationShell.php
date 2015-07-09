@@ -292,7 +292,7 @@ class ApplicationShell extends AppShell
             $this->out("  => Make sure to manually update your database credentials, plugins, etc.");
         }
 
-        $this->out("\nRemember to update your hosts file with: <info>" . $this->Info->getVmIpAddress() . " http://$url</info>\n");
+        $this->out("\nRemember to update your hosts file with: <info>" . $this->Info->getVmIpAddress() . " $url</info>\n");
         $this->exitBashSuccess('Installation completed successfully');
     }
 }
