@@ -74,8 +74,8 @@ class CakeboxInfo
     public $frameworkMeta = [
         'cakephp2' => [
             'installation_method' => 'git',
-            'source' => 'https://github.com/cakephp/cakephp.git -b 2.7',
-            'source_ssh' => 'git@github.com:cakephp/cakephp.git -b 2.7',
+            'source' => 'https://github.com/cakephp/cakephp.git -b 2.x',
+            'source_ssh' => 'git@github.com:cakephp/cakephp.git -b 2.x',
             'webroot' => 'app/webroot',
             'writable_dirs' => ['app/tmp'],
             'salt' => 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi',
