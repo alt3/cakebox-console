@@ -44,7 +44,7 @@ class CakeboxExecute
      *
      * @param string $command Full path to the command with options and arguments.
      * @param string $username User used to execute the command (e.g. `vagrant`).
-     * @return boolean True if the command completed successfully
+     * @return bool True if the command completed successfully
      */
     public function shell($command, $username = 'vagrant')
     {
@@ -86,7 +86,7 @@ class CakeboxExecute
      *
      * @param string $command Full path to the command with options and arguments.
      * @param string $username User used to execute the command (e.g. `vagrant`).
-     * @return boolean True if the command completed successfully
+     * @return bool True if the command completed successfully
      */
     public function getShellOutput($command, $username)
     {
@@ -129,7 +129,7 @@ class CakeboxExecute
      * Create a directory as root and change ownership to vagrant user.
      *
      * @param string $path Full path of directory to be created.
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function mkVagrantDir($path)
     {
@@ -150,7 +150,7 @@ class CakeboxExecute
      *
      * @param string $gitKey Name of the git config key (e.g. user.name)
      * @param string $value Value the git key will be set to
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function gitConfig($gitKey, $value)
     {
@@ -166,7 +166,7 @@ class CakeboxExecute
      *
      * @param string $package Name of the composer package (e.g. `cakephp/app`).
      * @param string $path Full path to the directory to create the project in.
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function composerCreateProject($package, $path)
     {
@@ -182,7 +182,7 @@ class CakeboxExecute
      * Run `composer install` for a given package as user vagrant.
      *
      * @param string $directory Full path to the directory holding composer.json.
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function composerInstall($directory)
     {
@@ -199,7 +199,7 @@ class CakeboxExecute
      *
      * @param string $repository Github shortname (owner/repository).
      * @param string $path Full path to the directory to clone the repo in.
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function gitClone($repository, $path)
     {
@@ -225,7 +225,7 @@ class CakeboxExecute
     /**
      * Perform sanity checks against SSH preconditions before git cloning using SSH
      *
-     * @return boolean True on success
+     * @return bool True on success
      */
     protected function _sanityCheckSSH()
     {
@@ -253,7 +253,7 @@ class CakeboxExecute
      * @param string $url Fully Qualified Domain Name used to expose the site.
      * @param string $webroot Full path to the site's webroot directory.
      * @param array $options Hash with options
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function addVhost($url, $webroot, array $options = null)
     {
@@ -318,7 +318,7 @@ class CakeboxExecute
      * /etc/nginx/sites-enabled as root.
      *
      * @param string $vhostFile Name of the nginx virtual host file without path.
-     * @return boolean True if created successfully
+     * @return bool True if created successfully
      */
     public function enableVhost($vhostFile)
     {
@@ -346,7 +346,7 @@ class CakeboxExecute
      * configuration file, symbolic link and reloading Nginx.
      *
      * @param string $url Fully Qualified Domain Name used to expose the site.
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function removeVhost($url)
     {
@@ -392,7 +392,7 @@ class CakeboxExecute
     /**
      * Reload nginx webservice (not a restart!)
      *
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function reloadNginx()
     {
@@ -413,7 +413,7 @@ class CakeboxExecute
     /**
      * Restart HHVM service
      *
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function reloadHhvm()
     {
@@ -432,7 +432,7 @@ class CakeboxExecute
      * @param string $username User granted local access to (only) this database.
      * @param string $password Password for above user.
      * @param bool $force Optional, true to drop existing database.
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function addDatabase($database, $username, $password, $force = false)
     {
@@ -474,7 +474,7 @@ class CakeboxExecute
      * Check if a database name is actually a MySQL system database.
      *
      * @param string $database Name to be used for the databases.
-     * @return boolean True if it is a system database
+     * @return bool True if it is a system database
      */
     protected function _isSystemDatabase($database)
     {
@@ -492,7 +492,7 @@ class CakeboxExecute
      *
      * @param string $file Full path to the file to write.
      * @param string $content Containing file body.
-     * @return boolean True if the write is successful
+     * @return bool True if the write is successful
      */
     protected function _writeSystemFile($file, $content)
     {
@@ -514,7 +514,7 @@ class CakeboxExecute
      * Checks if a directory is writable by the vagrant user.
      *
      * @param string $directory Full path to the directory.
-     * @return boolean True if writable
+     * @return bool True if writable
      */
     public function isVagrantWritable($directory)
     {
@@ -538,7 +538,7 @@ class CakeboxExecute
      * Install a software package from the Ubuntu Package archive.
      *
      * @param string $package Name of package to install  as used by `apt-get install`.
-     * @return boolean True if installed successfully
+     * @return bool True if installed successfully
      */
     public function installPackage($package)
     {
@@ -563,7 +563,7 @@ class CakeboxExecute
      *
      * @param string $appdir Full path to the application directory (APP)
      * @param string $url FQDN used to expose the application.
-     * @return boolean True if the file was updated successfully
+     * @return bool True if the file was updated successfully
      */
     public function updateCake3Configuration($appdir, $url)
     {
@@ -588,7 +588,7 @@ class CakeboxExecute
      *
      * @param string $appdir Full path to the application directory (APP).
      * @param string $url FQDN used to expose the application.
-     * @return boolean True if the file was updated successfully
+     * @return bool True if the file was updated successfully
      */
     public function updateCake2Configuration($appdir, $url)
     {
@@ -641,7 +641,7 @@ class CakeboxExecute
      * /tmp before moving it to the Vagrant Synced folder /cakebox/backups
      * (to prevent speed issues on systems with slow synced folders).
      *
-     * @return boolean Success if the backup completes succesfully
+     * @return bool Success if the backup completes succesfully
      * @throws Cake\Core\Exception\Exception
      */
     public function backupDatabases()
@@ -684,7 +684,7 @@ class CakeboxExecute
      * effectuate the new template.
      *
      * @param string $protocol Either `http` or `https`.
-     * @return boolean True if protocol was changed successfully
+     * @return bool True if protocol was changed successfully
      */
     public function setDashboardProtocol($protocol)
     {
