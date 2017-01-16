@@ -135,7 +135,7 @@ class ConfigShell extends AppShell
      * Turn cakebox-console debug mode on/off by replacing value in app.php.
      *
      * @param string $mode String containing either 'on' or 'off'
-     * @return boolean True on success
+     * @return bool True on success
      */
     public function debug($mode)
     {
@@ -148,6 +148,7 @@ class ConfigShell extends AppShell
                 $this->exitBashError("Error enabling Cakebox debug mode.");
             }
             $this->exitBashSuccess("Command completed successfully");
+
             return true;
         }
 
@@ -157,6 +158,7 @@ class ConfigShell extends AppShell
             $this->exitBashError("Error disabling Cakebox debug mode.");
         }
         $this->exitBashSuccess("Command completed successfully");
+
         return true;
     }
 }

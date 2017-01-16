@@ -73,6 +73,7 @@ class DatabaseShell extends AppShell
                 ]
             ]
         ]);
+
         return $parser;
     }
 

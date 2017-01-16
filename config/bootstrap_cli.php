@@ -31,7 +31,8 @@ Log::config('default', function () {
 
     $formatter = new LogstashFormatter('cakephp');
     $handler->setFormatter($formatter);
-    $log = new Logger('cli.cakebox', array($handler));
+    $log = new Logger('cli.cakebox', [$handler]);
+
     return $log;
 });
 

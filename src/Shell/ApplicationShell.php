@@ -79,6 +79,7 @@ class ApplicationShell extends AppShell
                 ]
             ]
         ]);
+
         return $parser;
     }
 

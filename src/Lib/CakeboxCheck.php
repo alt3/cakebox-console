@@ -230,6 +230,7 @@ class CakeboxCheck
             $connection = ConnectionManager::get('default');
             $connection->connect();
             $connection->disconnect();
+
             return true;
         } catch (Exception $connectionError) {
             $errorMsg = $connectionError->getMessage();

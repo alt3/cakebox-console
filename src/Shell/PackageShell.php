@@ -33,6 +33,7 @@ class PackageShell extends AppShell
                 ]
             ]
         ]);
+
         return $parser;
     }
 

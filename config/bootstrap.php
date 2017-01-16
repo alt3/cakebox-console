@@ -143,10 +143,12 @@ Security::salt(Configure::consume('Security.salt'));
  */
 Request::addDetector('mobile', function ($request) {
     $detector = new \Detection\MobileDetect();
+
     return $detector->isMobile();
 });
 Request::addDetector('tablet', function ($request) {
     $detector = new \Detection\MobileDetect();
+
     return $detector->isTablet();
 });
 
@@ -203,7 +205,8 @@ if (!$isCli) {
 
         $formatter = new LogstashFormatter('cakephp');
         $handler->setFormatter($formatter);
-        $log = new Logger('app.cakebox', array($handler));
+        $log = new Logger('app.cakebox', [$handler]);
+
         return $log;
     });
 

@@ -30,6 +30,7 @@ class UpdateShell extends AppShell
                 ]
             ]
         ]);
+
         return $parser;
     }
 
@@ -74,7 +75,7 @@ class UpdateShell extends AppShell
     /**
      * Self-update global composer to prevent outdated warnings.
      *
-     * @return boolean True on success
+     * @return bool True on success
      */
     protected function _updateComposer()
     {
@@ -89,6 +90,7 @@ class UpdateShell extends AppShell
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
+
          return true;
     }
 
@@ -97,7 +99,7 @@ class UpdateShell extends AppShell
      * prevent outdated warning), updating the git repository and finally
      * running composer update.
      *
-     * @return boolean True on success
+     * @return bool True on success
      */
     protected function _updateCakeboxConsole()
     {
@@ -122,6 +124,7 @@ class UpdateShell extends AppShell
         if (!$this->Execute->shell($command, 'vagrant')) {
             return false;
         }
+
         return true;
     }
 
@@ -130,7 +133,7 @@ class UpdateShell extends AppShell
      * by updating version in composer.json (if needed) and then running
      * composer update.
      *
-     * @return boolean True on success
+     * @return bool True on success
      */
     protected function _updateCakephpCodeSniffer()
     {
@@ -151,6 +154,7 @@ class UpdateShell extends AppShell
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
+
         return true;
     }
 
@@ -158,7 +162,7 @@ class UpdateShell extends AppShell
      * Box-fix: add missing update-rc levels for HHVM so the service
      * automatically starts on startup + corrects default session.save_path
      *
-     * @return boolean True on success
+     * @return bool True on success
      */
     protected function _boxFixHhvm()
     {
@@ -188,6 +192,7 @@ class UpdateShell extends AppShell
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
+
         return true;
     }
 
@@ -197,7 +202,7 @@ class UpdateShell extends AppShell
      * - corrects default session.save_path
      * - decreases required memory from 1GB to 256MB
      *
-     * @return boolean True on success
+     * @return bool True on success
      */
     protected function _boxFixElasticsearch()
     {
@@ -254,6 +259,7 @@ class UpdateShell extends AppShell
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
+
         return true;
     }
 }

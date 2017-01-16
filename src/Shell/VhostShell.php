@@ -69,6 +69,7 @@ class VhostShell extends AppShell
                 ]
             ]
         ]);
+
         return $parser;
     }
 

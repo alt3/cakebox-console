@@ -19,13 +19,14 @@ class CakeboxUtility
      * Checks if a virtual host file exists in /etc/nginx/sites-available.
      *
      * @param string $url Virtuals host's FQDN
-     * @return boolean True if a vhost is found for the given URL
+     * @return bool True if a vhost is found for the given URL
      */
     public static function vhostAvailable($url)
     {
         if (file_exists('/etc/nginx/sites-available/' . $url)) {
             return true;
         }
+
         return false;
     }
 
@@ -34,13 +35,14 @@ class CakeboxUtility
      * /etc/nginx/sites-enabled.
      *
      * @param string $url Virtuals host's FQDN
-     * @return boolean True if a symlink is found for the given URL
+     * @return bool True if a symlink is found for the given URL
      */
     public static function vhostEnabled($url)
     {
         if (is_link('/etc/nginx/sites-enabled/' . $url)) {
             return true;
         }
+
         return false;
     }
 
@@ -60,6 +62,7 @@ class CakeboxUtility
         if (!empty($value)) {
             return $value;
         }
+
         return false;
     }
 
@@ -78,6 +81,7 @@ class CakeboxUtility
         // escape / in package name to not break Xpath query
         $package = str_replace('/', '\/', $package);
         $json = json_decode(file_get_contents("$path/composer.lock"), true);
+
         return implode(Hash::extract($json, "packages.{n}[name=/$package/].version"));
     }
 
@@ -93,6 +97,7 @@ class CakeboxUtility
         if (isset($matches[0])) {
             return $matches[0];
         }
+
         return false;
     }
 
@@ -123,6 +128,7 @@ class CakeboxUtility
             return false;
         }
         $fh = new File($file);
+
         return htmlentities($fh->read());
     }
 
@@ -139,7 +145,7 @@ class CakeboxUtility
         $perColumn = floor($n / $numColumns);
         $rest = $n % $numColumns;
 
-        $columns = array();
+        $columns = [];
         $index = 0;
         for ($i = 0; $i < $numColumns; $i++) {
             // Add an extra item to each column while the column number is less
@@ -149,6 +155,7 @@ class CakeboxUtility
             $columns[] = array_slice($data, $index, $number);
             $index += $number;
         }
+
         return $columns;
     }
 
@@ -163,6 +170,7 @@ class CakeboxUtility
         $name = str_replace('.', '_', $name); // replace dots
         $name = (str_replace('\\', '_', $name)); // replace backslashes
         $name = (str_replace('/', '_', $name)); // replace forward slashes
+
         return $name;
     }
 
@@ -170,7 +178,7 @@ class CakeboxUtility
      * Check if a database exists.
      *
      * @param string $database Database name.
-     * @return boolean True if the database exists
+     * @return bool True if the database exists
      */
     public static function databaseExists($database)
     {
@@ -179,10 +187,12 @@ class CakeboxUtility
             $connection = ConnectionManager::get('default');
             if ($connection->execute("SHOW DATABASES LIKE '$database'")->count()) {
                 return true;
-            };
+            }
+
             return false;
         } catch (\Exception $e) {
             Log::error("Error showing databases: " . $e->getMessage());
+
             return false;
         }
     }
@@ -191,7 +201,7 @@ class CakeboxUtility
      * Delete existing database and related test_ database.
      *
      * @param string $database Database name.
-     * @return boolean True when dropped successfully.
+     * @return bool True when dropped successfully.
      */
     public static function dropDatabase($database)
     {
@@ -209,9 +219,11 @@ class CakeboxUtility
                 Log::debug("* Database `$database` dropped successfully");
             } catch (\Exception $e) {
                 Log::error("Error dropping database `$database`: " . $e->getMessage());
+
                 return false;
             }
         }
+
         return true;
     }
 
@@ -223,7 +235,7 @@ class CakeboxUtility
      * @param string $database Name used for the new database.
      * @param string $username User granted local access to (only) this database.
      * @param string $password Password for above user.
-     * @return boolean True if created successfully
+     * @return bool True if created successfully
      * @throws Cake\Core\Exception\Exception
      */
     public static function createDatabase($database, $username, $password)
@@ -231,6 +243,7 @@ class CakeboxUtility
         $database = self::normalizeDatabaseName($database);
         if (self::databaseExists($database)) {
             Log::warning("* Skipping: database $database already exists");
+
             return false;
         }
 
@@ -241,8 +254,10 @@ class CakeboxUtility
             self::grantDatabaseRights($database, $username, $password);
         } catch (Exception $e) {
             Log::error("Error creating database: " . $e->getMessage());
+
             return false;
         }
+
         return true;
     }
 
@@ -252,7 +267,7 @@ class CakeboxUtility
      * @param string $database Name used for the new databases.
      * @param string $username User granted local access to (only) this database.
      * @param string $password Password for above user.
-     * @return boolean True if both databases are created successfully
+     * @return bool True if both databases are created successfully
      */
     public static function createDatabasePair($database, $username, $password)
     {
@@ -261,6 +276,7 @@ class CakeboxUtility
         foreach ($databases as $database) {
             self::createDatabase($database, $username, $password);
         }
+
         return true;
     }
 
@@ -270,7 +286,7 @@ class CakeboxUtility
      * @param string $database Database name.
      * @param string $username Name of user to grant localhost access.
      * @param string $password Password for given user.
-     * @return boolean True on success
+     * @return bool True on success
      */
     public static function grantDatabaseRights($database, $username, $password)
     {
@@ -281,8 +297,10 @@ class CakeboxUtility
             Log::debug("* Granted user `$username` localhost access on database `$database`");
         } catch (\Exception $e) {
             Log::error("Error granting user `$username` localhost access on database `$database`");
+
             return false;
         }
+
         return true;
     }
 
@@ -292,13 +310,14 @@ class CakeboxUtility
      * @param string $file Path to the file containing the string to replace.
      * @param array $valuePairs Containing 'old' => 'new' values.
      * @param bool $root True to write new file as root
-     * @return boolean True if the file was updated successfully
+     * @return bool True if the file was updated successfully
      */
     public static function updateConfigFile($file, $valuePairs, $root = false)
     {
         Log::debug("* Updating config file $file");
         if (!file_exists($file)) {
             Log::error("* Cannot replace values in non-existent file $file");
+
             return false;
         }
         $content = file_get_contents($file);
@@ -308,6 +327,7 @@ class CakeboxUtility
             $content = str_replace($old, $new, $content, $count);
             if ($count == 0) {
                 Log::warning("* Skipping: nothing to replace, `$old` could not be found");
+
                 return true;
             } else {
                 Log::debug("* Replaced $count occurences of `$old`");
@@ -319,6 +339,7 @@ class CakeboxUtility
             $result = file_put_contents($file, $content);
             if (!$result) {
                 Log::error("* Error writing to config file: " . error_get_last());
+
                 return false;
             }
         } else {
@@ -328,6 +349,7 @@ class CakeboxUtility
             }
         }
         Log::info("* Successfully updated config file");
+
         return true;
     }
 
@@ -337,7 +359,7 @@ class CakeboxUtility
      * This is not the most secure default, but it gets people up and running quickly.
      *
      * @param string $dir The application's root directory.
-     * @return boolean True if permissions are updated successfully
+     * @return bool True if permissions are updated successfully
      */
     public static function setFolderPermissions($dir)
     {
@@ -349,12 +371,14 @@ class CakeboxUtility
             $currentPerms = octdec(substr(sprintf('%o', fileperms($path)), -4));
             if (($currentPerms & $perms) == $perms) {
                 Log::debug('* Skipping: desired permissions already set for ' . $path);
+
                 return true;
             }
 
             $res = chmod($path, $currentPerms | $perms);
             if (!$res) {
                 Log::error('Failed to set permissions on ' . $path);
+
                 return false;
             }
             Log::debug('* Successfully updated permissions for ' . $path);
@@ -376,6 +400,7 @@ class CakeboxUtility
         $worldWritable = bindec('0000000111');
         $changePerms($dir, $worldWritable);
         $walker($dir, $worldWritable);
+
         return true;
     }
 
@@ -393,6 +418,7 @@ class CakeboxUtility
         if (file_exists($file)) {
             return true;
         }
+
         return false;
     }
 
@@ -411,6 +437,7 @@ class CakeboxUtility
         Log::debug("* Checking if installation directory exists");
         if (!file_exists($directory)) {
             Log::debug("* Pass: directory does not exist");
+
             return true;
         }
 
@@ -419,6 +446,7 @@ class CakeboxUtility
         $files = scandir($directory);
         if (count($files) > 2) {
             Log::warning("* Fail: directory exists but is NOT empty");
+
             return false;
         }
 
@@ -428,6 +456,7 @@ class CakeboxUtility
             return false;
         }
         Log::debug("* Pass: directory is writable");
+
         return true;
     }
 
