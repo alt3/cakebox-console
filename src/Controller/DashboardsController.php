@@ -105,10 +105,10 @@ class DashboardsController extends AppController
      */
     public function clilog()
     {
-         $this->set([
-             'log' => $this->Info->getCakeboxCliLog(),
-             '_serialize' => ['log']
-         ]);
+        $this->set([
+            'log' => $this->Info->getCakeboxCliLog(),
+            '_serialize' => ['log']
+        ]);
     }
 
     /**
