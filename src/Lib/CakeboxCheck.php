@@ -82,7 +82,6 @@ class CakeboxCheck
     {
         $minversion = $this->boxRequirements['global']['php_min_version'];
         if (version_compare(PHP_VERSION, $minversion, '>=')) {
-
             return [
                 'name' => 'php_version',
                 'message' => "System version of PHP is $minversion or higher",
