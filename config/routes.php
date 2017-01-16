@@ -41,5 +41,4 @@ Router::scope('/', function ($routes) {
     * how to customize the loading of plugin routes.
     */
     Plugin::routes();
-
 });

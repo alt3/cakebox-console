@@ -116,25 +116,25 @@ class DashboardsController extends AppController
      *
      * @return void
      */
-        public function contributors()
-        {
-            $contributors = $this->Info->getRepositoryContributors('alt3/cakebox-console', 'dev');
-            $this->set([
+    public function contributors()
+    {
+        $contributors = $this->Info->getRepositoryContributors('alt3/cakebox-console', 'dev');
+        $this->set([
             'contributors' => CakeboxUtility::columnizeArray($contributors, 3),
             '_serialize' => ['contributors']
-            ]);
-        }
+        ]);
+    }
 
     /**
      * Return LICENSE.TXT as json
      *
      * @return void
      */
-        public function license()
-        {
-            $this->set([
+    public function license()
+    {
+        $this->set([
             'fileContent' => CakeboxUtility::getFileContent('/cakebox/console/LICENSE.txt'),
             '_serialize' => ['fileContent']
-            ]);
-        }
+        ]);
+    }
 }

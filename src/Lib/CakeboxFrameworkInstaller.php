@@ -64,10 +64,10 @@ class CakeboxFrameworkInstaller
      * Store information required for installing.
      *
      * @param array $options Installer options
-     * @return boolean True when successful
+     * @return bool True when successful
      * @throws \Cake\Core\Exception\Exception
      */
-    public function setup(Array $options)
+    public function setup(array $options)
     {
         Log::debug("Determining installation settings");
         try {
@@ -77,9 +77,11 @@ class CakeboxFrameworkInstaller
             $this->_setFrameworkOptions();
             $this->_logOptions();
             $this->flags['configured'] = true;
+
             return true;
         } catch (Exception $e) {
             Log::error("Setup failed: " . $e->getMessage());
+
             return false;
         }
     }
@@ -87,7 +89,7 @@ class CakeboxFrameworkInstaller
     /**
      * Run framework agnostic preparations (e.g. creating the target directory).
      *
-     * @return boolean True when successful
+     * @return bool True when successful
      * @throws \Cake\Core\Exception\Exception
      */
     public function createDirectory()
@@ -95,15 +97,18 @@ class CakeboxFrameworkInstaller
         Log::debug("Creating installation directory...");
         if (!$this->flags['configured']) {
             Log::error("Setup method has not been run");
+
             return false;
         }
 
         try {
             $this->_prepareDirectory();
             $this->flags['prepared'] = true;
+
             return true;
         } catch (Exception $e) {
             Log::error("Preparation failed: " . $e->getMessage());
+
             return false;
         }
     }
@@ -111,7 +116,7 @@ class CakeboxFrameworkInstaller
     /**
      * Run framework specific installation using either composer or git clone.
      *
-     * @return boolean True when successful
+     * @return bool True when successful
      * @throws \Cake\Core\Exception\Exception
      */
     public function installSources()
@@ -124,9 +129,11 @@ class CakeboxFrameworkInstaller
             } else {
                 $this->_gitInstall();
             }
+
             return true;
         } catch (Exception $e) {
             Log::error("Installation failed: " . $e->getMessage());
+
             return false;
         }
     }
@@ -168,6 +175,7 @@ class CakeboxFrameworkInstaller
         if (isset($this->options[$key])) {
             return $this->options[$key];
         }
+
         return false;
     }
 
@@ -211,7 +219,7 @@ class CakeboxFrameworkInstaller
     /**
      * Set framework specific information.
      *
-     * @return boolean True if a valid method could be determined.
+     * @return bool True if a valid method could be determined.
      * @throws \Cake\Core\Exception\Exception
      */
     protected function _setFrameworkOptions()
@@ -226,6 +234,7 @@ class CakeboxFrameworkInstaller
             unset($this->options['framework']);
             unset($this->options['majorversion']);
             unset($this->options['framework']);
+
             return true;
         }
 
@@ -272,6 +281,7 @@ class CakeboxFrameworkInstaller
                 Log::debug("* Skipping: metadata contains no alternative SSH source");
             }
         }
+
         return true;
     }
 
@@ -280,7 +290,7 @@ class CakeboxFrameworkInstaller
      * composer if the source does not match a git repository.
      *
      * @param string $source Containing git repository or composer package name.
-     * @return boolean True if successful
+     * @return bool True if successful
      */
     public function detectInstallationMethod($source)
     {
@@ -291,13 +301,14 @@ class CakeboxFrameworkInstaller
         if (substr($source, 0, 4) === 'git@') {
             return 'git';
         }
+
         return 'composer';
     }
 
     /**
      * Prepare a directory for installation by the `vagrant` user.
      *
-     * @return boolean True if successful
+     * @return bool True if successful
      * @throws \Cake\Core\Exception\Exception
      */
     protected function _prepareDirectory()
@@ -312,13 +323,14 @@ class CakeboxFrameworkInstaller
                 throw new Exception("Error creating target directory " . $this->options['path']);
             }
         }
+
         return true;
     }
 
     /**
      * Install application using Composer create-project.
      *
-     * @return boolean True if successful
+     * @return bool True if successful
      * @throws Cake\Core\Exception\Exception
      */
     protected function _composerInstall()
@@ -327,13 +339,14 @@ class CakeboxFrameworkInstaller
         if (!$this->Execute->composerCreateProject($this->options['source'], $this->options['path'])) {
             throw new Exception("Error composer installing.");
         }
+
         return true;
     }
 
     /**
      * Install public/private repository using Git clone.
      *
-     * @return boolean True if successful
+     * @return bool True if successful
      * @throws Cake\Core\Exception\Exception
      */
     protected function _gitInstall()
@@ -342,13 +355,14 @@ class CakeboxFrameworkInstaller
         if (!$this->Execute->gitClone($this->options['source'], $this->options['path'])) {
             throw new Exception("Error git cloning.");
         }
+
         return true;
     }
 
     /**
      * Set permissions on writebale directories for known frameworks.
      *
-     * @return boolean True if permissions were skipped OR set succesfully
+     * @return bool True if permissions were skipped OR set succesfully
      * @throws \Cake\Core\Exception\Exception
      */
     public function setPermissions()
@@ -358,12 +372,14 @@ class CakeboxFrameworkInstaller
         # Skip if no framework was detected
         if (!isset($this->options['framework_short'])) {
             Log::debug("* Skipping: unsupported/empty framework");
+
             return true;
         }
 
         # Skip if the framework does not use writable directories
         if (!isset($this->Info->frameworkMeta[$this->options['framework_short']]['writable_dirs'])) {
             Log::debug("* Skipping: framework does not use writeable directories");
+
             return true;
         }
 
@@ -374,13 +390,14 @@ class CakeboxFrameworkInstaller
                 throw new Exception("Error setting permissions.");
             }
         }
+
         return true;
     }
 
     /**
      * Update framework specific configuration files if possible.
      *
-     * @return boolean True if successful
+     * @return bool True if successful
      * @throws \Cake\Core\Exception\Exception
      */
     public function updateConfigs()
@@ -390,6 +407,7 @@ class CakeboxFrameworkInstaller
         $knownSources = Hash::extract($this->Info->frameworkMeta, '{s}.source');
         if (!in_array($this->options['source'], $knownSources)) {
             Log::debug("* Skipping: automated configuration updates are not supported for user specified applications");
+
             return true;
         }
 
@@ -406,6 +424,7 @@ class CakeboxFrameworkInstaller
                 throw new Exception("Error updating config file.");
             }
         }
+
         return true;
     }
 }

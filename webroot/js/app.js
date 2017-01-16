@@ -119,6 +119,7 @@ $(document).ready(function () {
                 setFormToValidated(form)
                 form.find('.alert > span').html(response.message)
                 form.find('.alert').show()
+
                 return
             }
 
@@ -131,6 +132,7 @@ $(document).ready(function () {
                 if (!validationErrors[input.name]) {
                     formGroup.addClass('has-success')
                     formGroup.append('<span class="fa fa-check form-control-feedback" aria-hidden="true"></span>')
+
                     return true
                 }
 

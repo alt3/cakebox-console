@@ -28,6 +28,7 @@ class BackupShell extends AppShell
                 ]
             ]
         ]);
+
         return $parser;
     }
 

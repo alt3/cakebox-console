@@ -12,7 +12,7 @@ Assigned to:	Rod Howard (rh)
 
 
 *** Any customizations made to this should be added to the custom.css
-stylesheet in order to separate your customizations and make 
+stylesheet in order to separate your customizations and make
 upgrading in the future easier. ***
 
 -------------------------------------------------------------------*/
@@ -107,10 +107,10 @@ upgrading in the future easier. ***
   .item-row:after {
     content: " ";
     /* 1 */
-  
+
     display: table;
     /* 2 */
-  
+
   }
   .item-row:after {
     clear: both;
@@ -223,7 +223,7 @@ upgrading in the future easier. ***
 }
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-  
+
 }
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {

@@ -199,6 +199,7 @@ class CakeboxInfo
         if (empty($matches[1])) {
             return false;
         }
+
         return $matches[1];
     }
 
@@ -242,6 +243,7 @@ class CakeboxInfo
         if (empty($matches[1])) {
             throw new Exception('Error determining vm IP address');
         }
+
         return $matches[1];
     }
 
@@ -254,6 +256,7 @@ class CakeboxInfo
     {
         $cpuinfo = file_get_contents('/proc/cpuinfo');
         preg_match_all('/^processor/m', $cpuinfo, $matches);
+
         return count($matches[0]);
     }
 
@@ -266,6 +269,7 @@ class CakeboxInfo
     {
         $meminfo = file_get_contents('/proc/meminfo');
         preg_match_all('/^MemTotal:\\s++(\\d*) kB/m', $meminfo, $matches);
+
         return round($matches[1][0] / 1024);
     }
 
@@ -282,8 +286,9 @@ class CakeboxInfo
             $pair = explode("=", $line);
             $specs[$pair[0]] = str_replace('"', '', $pair[1]);
         }
-     // no need to determine the architecture for our box, just add
+        // no need to determine the architecture for our box, just add
         $specs['architecture'] = "64-bit (x86_64)";
+
         return $specs;
     }
 
@@ -295,6 +300,7 @@ class CakeboxInfo
     public static function getUptime()
     {
         $stdout = `2>&1 cut -d. -f1 /proc/uptime`;
+
         return [
             'days' => floor($stdout / 60 / 60 / 24),
             'hours' => $stdout / 60 / 60 % 24,
@@ -311,6 +317,7 @@ class CakeboxInfo
     public function getNginxFiles()
     {
         $dir = new Folder($this->webserverMeta['nginx']['sites-available']);
+
         return $dir->find('.*', 'sort');
     }
     /**
@@ -328,6 +335,7 @@ class CakeboxInfo
                 'modified' => (new File($this->webserverMeta['nginx']['sites-available'] . DS . $file))->lastChange()
             ];
         }
+
         return $result;
     }
 
@@ -422,6 +430,7 @@ class CakeboxInfo
         }
         sort($result);
         Cache::write('packages', $result, 'short');
+
         return $result;
     }
 
@@ -495,6 +504,7 @@ class CakeboxInfo
             $http = new Client();
             $response = $http->get('http://' . $this->getVmIpAddress() . ':9200');
             $result = json_decode($response->body(), true);
+
             return $result['version']['number'];
         } catch (\Exception $e) {
             return false;
@@ -518,6 +528,7 @@ class CakeboxInfo
         if (!empty($matches[1])) {
             return $matches[1];
         }
+
         return false;
     }
 
@@ -535,6 +546,7 @@ class CakeboxInfo
             if (!empty($matches[1])) {
                 return $matches[1];
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -570,6 +582,7 @@ class CakeboxInfo
             ];
         }
         Cache::write('php_modules', $result, 'short');
+
         return $result;
     }
 
@@ -644,6 +657,7 @@ class CakeboxInfo
             }
         }
         Cache::write('nginx_modules', $result, 'short');
+
         return $result;
     }
 
@@ -661,6 +675,7 @@ class CakeboxInfo
         $result = preg_replace("/^\w{4}\_/", '', $result);
         // remove leading nginx- prefix for 3rd party modules
         $result = preg_replace("/^nginx-||ngx_/", '', $result);
+
         return $result;
     }
 
@@ -716,6 +731,7 @@ class CakeboxInfo
         if ($name === '_' || $name === false) {
             return false;
         }
+
         return $name;
     }
 
@@ -728,6 +744,7 @@ class CakeboxInfo
     public function getWebrootFromSite($vhostFile)
     {
         $webroot = CakeboxUtility::getNginxFileSetting($vhostFile, 'root');
+
         return $webroot;
     }
 
@@ -778,6 +795,7 @@ class CakeboxInfo
         if (is_dir($laravelbase)) {
             return $laravelbase;
         }
+
         return false;
     }
 
@@ -792,6 +810,7 @@ class CakeboxInfo
         if ($this->getFrameworkName($path)) {
             return true;
         }
+
         return false;
     }
 
@@ -820,6 +839,7 @@ class CakeboxInfo
         if ($this->getCakeVersionFromFile($appdir)) {
             return 'cakephp';
         }
+
         return false;
     }
 
@@ -842,6 +862,7 @@ class CakeboxInfo
         if ($version) {
             return $version;
         }
+
         return false;
     }
 
@@ -870,6 +891,7 @@ class CakeboxInfo
                 return $version;
             }
         }
+
         return false;
     }
 
@@ -888,12 +910,14 @@ class CakeboxInfo
         $cake3file = $appdir . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'VERSION.txt';
         if (file_exists($cake3file)) {
             $lines = file($cake3file);
+
             return trim($lines[count($lines) - 1]);
         }
 
         $cake2file = $appdir . DS . 'lib' . DS . 'Cake' . DS . 'VERSION.txt';
         if (file_exists($cake2file)) {
             $lines = file($cake2file);
+
             return trim($lines[count($lines) - 1]);
         }
 
@@ -906,9 +930,11 @@ class CakeboxInfo
         foreach ($versionFiles as $versionFile) {
             if ($this->isCakeVersionFile($versionFile)) {
                 $lines = file($versionFile);
+
                 return trim($lines[count($lines) - 1]);
             }
         }
+
         return false;
     }
 
@@ -925,6 +951,7 @@ class CakeboxInfo
         if (count($files) != 0) {
             return $files;
         }
+
         return false;
     }
 
@@ -942,6 +969,7 @@ class CakeboxInfo
             return true;
         }
         $fh->close();
+
         return false;
     }
 
@@ -956,6 +984,7 @@ class CakeboxInfo
     {
         $framework = $this->getFrameworkName($appdir);
         $majorVersion = CakeboxUtility::getMajorVersion($this->getFrameworkVersion($appdir));
+
         return $framework . $majorVersion;
     }
 
@@ -1019,6 +1048,7 @@ class CakeboxInfo
                 $url = $record['user']['avatar_url'];
                 if (array_key_exists($url, $avatars)) {
                     $record['user']['avatar_data'] = $avatars[$url];
+
                     return $record;
                 }
 
@@ -1026,10 +1056,12 @@ class CakeboxInfo
                     $response = $http->get($record['user']['avatar_url'] . "&amp;size=40");
                     if (!$response->isOk()) {
                         $record['user']['avatar_data'] = false;
+
                         return $record;
                     }
                 } catch (\Exception $e) {
                     $record['user']['avatar_data'] = null;
+
                     return $record;
                 }
 
@@ -1038,11 +1070,13 @@ class CakeboxInfo
                 Cache::write('avatars', $avatars, 'medium');
 
                 $record['user']['avatar_data'] = $avatars[$url];
+
                 return $record;
             })
             ->toArray();
 
         Cache::write('contributions-' . $repository . $branch, $result, 'short');
+
         return $result;
     }
 
@@ -1056,6 +1090,7 @@ class CakeboxInfo
     {
          $composerVersion = $this->_yaml['cakebox']['version'];
          $parts = explode('-', $composerVersion);
+
          return $parts[1];
     }
 
@@ -1070,6 +1105,7 @@ class CakeboxInfo
     {
          $composerVersion = $this->_yaml['cakebox']['version'];
          $parts = explode('-', $composerVersion);
+
          return $parts[1];
     }
 
@@ -1125,13 +1161,14 @@ class CakeboxInfo
 
             // store as rich formatted hash entry
             $result[] = [
-              'date' => $time->i18nFormat('YYYY-MM-dd'),
-              'time' => $time->i18nFormat('HH:mm:ss'),
-              'level' => $level,
-              'level_name' => $levelName,
-              'message' => $matches[3]
+                'date' => $time->i18nFormat('YYYY-MM-dd'),
+                'time' => $time->i18nFormat('HH:mm:ss'),
+                'level' => $level,
+                'level_name' => $levelName,
+                'message' => $matches[3]
             ];
         }
+
         return $result;
     }
 
@@ -1155,6 +1192,7 @@ class CakeboxInfo
         if ($cakeboxUpdate) {
             $result[] = $cakeboxUpdate;
         }
+
         return $result;
     }
 
@@ -1169,6 +1207,7 @@ class CakeboxInfo
         if ($this->_getLatestCakeboxCommitLocal() === $this->_getLatestRemoteCommit('alt3/cakebox', $this->getCakeboxBranch())) {
             return false;
         }
+
         return [
             'message' => __("Update available for your %s"),
             'link' => [
@@ -1188,6 +1227,7 @@ class CakeboxInfo
         if ($this->_getLatestCakeboxConsoleCommitLocal() === $this->_getLatestRemoteCommit('alt3/cakebox-console', $this->getCakeboxConsoleBranch())) {
             return false;
         }
+
         return [
             'message' => __("Update available for your %s"),
             'link' => [
@@ -1229,6 +1269,7 @@ class CakeboxInfo
     protected function _getLatestRemoteCommit($repository, $branch = 'master')
     {
         $commits = $this->getRepositoryCommits($repository, $branch, 1);
+
         return $commits[0]['sha'];
     }
 
@@ -1283,6 +1324,7 @@ class CakeboxInfo
     {
         try {
             $fileHandle = new File($this->cakeboxMeta['host']['yaml']);
+
             return [
                 'timestamp' => $fileHandle->lastChange(),
                 'raw' => $fileHandle->read()
@@ -1305,6 +1347,7 @@ class CakeboxInfo
         if (empty($matches)) {
             return false;
         }
+
         return true;
     }
 }

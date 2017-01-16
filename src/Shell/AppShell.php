@@ -90,6 +90,7 @@ class AppShell extends Shell
         if (is_string($message)) {
             Log::info($message);
             $this->out($message, 1, Shell::QUIET);
+
             return;
         }
         foreach ($message as $entry) {
