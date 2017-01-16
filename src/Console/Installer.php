@@ -132,12 +132,14 @@ class Installer
 
         if ($count == 0) {
             $io->write('No Security.salt placeholder to replace.');
+
             return;
         }
 
         $result = file_put_contents($config, $content);
         if ($result) {
             $io->write('Updated Security.salt value in config/salt.php');
+
             return;
         }
         $io->write('Unable to update Security.salt value.');
