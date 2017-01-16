@@ -70,6 +70,7 @@ class AppExceptionRenderer extends \Cake\Error\ExceptionRenderer
         if ($exception instanceof CakeException && $isDebug) {
             $this->controller->set($this->error->getAttributes());
         }
+
         return $this->_outputMessage($template);
     }
 }
