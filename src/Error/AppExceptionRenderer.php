@@ -49,22 +49,22 @@ class AppExceptionRenderer extends \Cake\Error\ExceptionRenderer
         }
 
         if (isset($errors)) {
-             $this->controller->set(array(
+             $this->controller->set([
                 'message' => $message,
                 'url' => h($url),
                 'error' => $exception,
                 $errorKey => $errors,
                 'code' => $code,
-                '_serialize' => array('message', 'url', 'code', $errorKey)
-             ));
+                '_serialize' => ['message', 'url', 'code', $errorKey]
+             ]);
         } else {
-             $this->controller->set(array(
+             $this->controller->set([
                 'message' => $message,
                 'url' => h($url),
                 'error' => $exception,
                 'code' => $code,
-                '_serialize' => array('message', 'url', 'code')
-             ));
+                '_serialize' => ['message', 'url', 'code']
+             ]);
         }
 
         if ($exception instanceof CakeException && $isDebug) {
