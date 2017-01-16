@@ -27,22 +27,22 @@ class CakeboxCheck
      * @var array Hash
      */
     protected $boxRequirements = [
-    'global' => [
-        'php_min_version' => '5.4.16',
-        'php_modules' => ['mbstring', 'openssl', 'mcrypt', 'intl', 'pdo_sqlite']
-    ]
+        'global' => [
+            'php_min_version' => '5.4.16',
+            'php_modules' => ['mbstring', 'openssl', 'mcrypt', 'intl', 'pdo_sqlite']
+        ]
     ];
 
     /**
      * @var array Hash containing framework specific requirements.
      */
     protected $frameworkRequirements = [
-    'cakephp3' => [
-        'writeables' => ['tmp', 'logs']
-    ],
-    'laravel' => [
-        'writables' => ['/todo/']
-    ]
+        'cakephp3' => [
+            'writeables' => ['tmp', 'logs']
+        ],
+        'laravel' => [
+            'writables' => ['/todo/']
+        ]
     ];
 
     /**
@@ -62,13 +62,14 @@ class CakeboxCheck
      */
     public function getSystemChecks()
     {
-     // php version
+        // php version
         $result[] = $this->validatePhpVersion();
 
-     // php modules
+        // php modules
         foreach ($this->boxRequirements['global']['php_modules'] as $module) {
             $result[] = $this->validatePhpModule($module);
         }
+
         return $result;
     }
 
@@ -81,16 +82,18 @@ class CakeboxCheck
     {
         $minversion = $this->boxRequirements['global']['php_min_version'];
         if (version_compare(PHP_VERSION, $minversion, '>=')) {
+
             return [
-            'name' => 'php_version',
-            'message' => "System version of PHP is $minversion or higher",
-            'pass' => true
+                'name' => 'php_version',
+                'message' => "System version of PHP is $minversion or higher",
+                'pass' => true
             ];
         }
+
         return [
-        'name' => 'php_version',
-        'message' => "System version of PHP is too low. We need PHP $minversion or higher to support all frameworks",
-        'pass' => false
+            'name' => 'php_version',
+            'message' => "System version of PHP is too low. We need PHP $minversion or higher to support all frameworks",
+            'pass' => false
         ];
     }
 
@@ -104,11 +107,12 @@ class CakeboxCheck
     {
         if (extension_loaded($module)) {
             return [
-            'name' => "php_module_$module",
-            'message' => "System version of PHP has the $module extension loaded",
-            'pass' => true
+                'name' => "php_module_$module",
+                'message' => "System version of PHP has the $module extension loaded",
+                'pass' => true
             ];
         }
+
         return [
             'name' => "php_module_$module",
             'message' => "System version of PHP does NOT have the $module extension loaded",
@@ -126,14 +130,15 @@ class CakeboxCheck
     {
         $framework = $this->Info->getFrameworkCommonName($appdir);
 
-     // writebale directories
+        // writebale directories
         foreach ($this->frameworkRequirements[$framework]['writeables'] as $dir) {
             $result[] = $this->getWriteableDirectoryCheck($appdir . DS . $dir);
         }
 
-     // cache and database
+        // cache and database
         $result[] = $this->getApplicationCacheCheck();
         $result[] = $this->getApplicationDatabaseCheck();
+
         return $result;
     }
 
@@ -152,6 +157,7 @@ class CakeboxCheck
                 'pass' => true
             ];
         }
+
         return [
             'name' => 'writeable_' . str_replace('/', '_', $path),
             'message' => "Application directory $path is NOT writable",
@@ -177,6 +183,7 @@ class CakeboxCheck
                 'pass' => true
             ];
         }
+
         return [
             'name' => 'cache_engine',
             'message' => 'Application cache is NOT working. Please check the settings in config/app.php',
@@ -198,6 +205,7 @@ class CakeboxCheck
                 'pass' => true
             ];
         }
+
         return [
             'name' => 'database_connection',
             'message' => 'Application is NOT able to connect to the database',
@@ -232,6 +240,7 @@ class CakeboxCheck
                 }
             }
         }
+
         return false;
     }
 
@@ -243,26 +252,26 @@ class CakeboxCheck
     public function getSecurityChecks()
     {
         return [
-        [
-            'name' => 'dashboard_password',
-            'message' => 'Your cakebox dashboard is NOT using a password!',
-            'pass' => false
-        ],
-        [
-            'name' => 'ssh_keypair',
-            'message' => 'SSH access to your cakebox is protected by your personal key pair',
-            'pass' => true
-        ],
-        [
-            'name' => 'database_root',
-            'message' => 'Your database server is using the default root password!',
-            'pass' => false
-        ],
-        [
-            'name' => 'database_remote',
-            'message' => 'Your remote database user is using the default password!',
-            'pass' => false
-        ]
+            [
+                'name' => 'dashboard_password',
+                'message' => 'Your cakebox dashboard is NOT using a password!',
+                'pass' => false
+            ],
+            [
+                'name' => 'ssh_keypair',
+                'message' => 'SSH access to your cakebox is protected by your personal key pair',
+                'pass' => true
+            ],
+            [
+                'name' => 'database_root',
+                'message' => 'Your database server is using the default root password!',
+                'pass' => false
+            ],
+            [
+                'name' => 'database_remote',
+                'message' => 'Your remote database user is using the default password!',
+                'pass' => false
+            ]
         ];
     }
 }
