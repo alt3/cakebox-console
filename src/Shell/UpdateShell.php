@@ -71,7 +71,6 @@ class UpdateShell extends AppShell
         $this->exitBashSuccess('Self-update completed successfully');
     }
 
-
     /**
      * Self-update global composer to prevent outdated warnings.
      *
