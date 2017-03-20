@@ -1,32 +1,40 @@
 language: php
 
-sudo: false
-
 php:
-  - 5.5
   - 5.6
   - 7.0
+  - 7.1
   - hhvm
+
+sudo: false
+
+env:
+  global:
+    - PHPUNIT=1
 
 matrix:
   fast_finish: true
-  include:
-    - php: 5.6
-      env: PHPCS=1
-  allow_failures:
-    - php: 7.0
 
-install:
-- composer self-update
-- composer install --prefer-dist --no-interaction
+  include:
+    - php: 7.1
+      env: PHPCS=1
+
+  allow_failures:
+    - php: hhvm
 
 before_script:
-  - sh -c "if [ '$PHPCS' = '1' ]; then composer require cakephp/cakephp-codesniffer:~2.0; fi"
+  - composer self-update
+  - composer install --prefer-dist --no-interaction
+
+  - sh -c "if [ '$PHPCS' = '1' ]; then composer require cakephp/cakephp-codesniffer:dev-master; fi"
+
   - phpenv rehash
+  - set +H
+  - cp phpunit.xml.dist phpunit.xml
 
 script:
-  - sh -c "if [ '$PHPCS' != '1' ]; then phpunit; fi"
-  - sh -c "if [ '$PHPCS' = '1' ]; then vendor/bin/phpcs -p --extensions=php,css,js --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot --ignore=.src/Template/Bake,./webroot/css/base.css,./webroot/css/cdn-fallback,./webroot/js/cdn-fallback; fi"
+  - sh -c "if [ '$PHPUNIT' = '1' ]; then vendor/bin/phpunit; fi"
+  - sh -c "if [ '$PHPCS' = '1' ]; then vendor/bin/phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests; fi"
 
 notifications:
   email: false

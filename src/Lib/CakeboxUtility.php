@@ -227,8 +227,6 @@ class CakeboxUtility
         return true;
     }
 
-
-
     /**
      * Creates a MySQL database with specified database user GRANT.
      *
