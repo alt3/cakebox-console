@@ -8,7 +8,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\I18n\Time;
 use Cake\Log\Log;
-use Cake\Utility\String;
+use Cake\Utility\Text;
 
 /**
  * Class library for shelling commands
@@ -295,7 +295,7 @@ class CakeboxExecute
             $template = APP . 'Template' . DS . 'Bake' . DS . 'vhost_nginx.ctp';
         }
 
-        $config = String::insert(file_get_contents($template), [
+        $config = Text::insert(file_get_contents($template), [
             'url' => $url,
             'webroot' => $webroot
         ]);
@@ -528,7 +528,7 @@ class CakeboxExecute
     protected function _writeSystemFile($file, $content)
     {
         $this->_log("Writing system file");
-        $tempFile = '/tmp/' . String::uuid();
+        $tempFile = '/tmp/' . Text::uuid();
         $fh = new File($tempFile, true);
         $fh->write($content);
 
