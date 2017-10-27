@@ -300,6 +300,7 @@ class CakeboxInfo
     public static function getUptime()
     {
         $stdout = `2>&1 cut -d. -f1 /proc/uptime`;
+        $seconds = (int)trim($stdout);
 
         return [
             'days' => floor($stdout / 60 / 60 / 24),
