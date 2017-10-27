@@ -293,20 +293,20 @@ class CakeboxInfo
     }
 
     /**
-     * Returns the amount of virtual memory assigned to the vm in MBs.
+     * Returns the uptime of the server.
      *
-     * @return int Virtual memory in MB
+     * @return array
      */
     public static function getUptime()
     {
         $stdout = `2>&1 cut -d. -f1 /proc/uptime`;
-        $seconds = (int)trim($stdout);
+        $uptime = (int)trim($stdout);
 
         return [
-            'days' => floor($stdout / 60 / 60 / 24),
-            'hours' => $stdout / 60 / 60 % 24,
-            'minutes' => $stdout / 60 % 60,
-            'seconds' => $stdout % 60
+            'days' => floor($uptime / 60 / 60 / 24),
+            'hours' => $uptime / 60 / 60 % 24,
+            'minutes' => $uptime / 60 % 60,
+            'seconds' => $uptime % 60
         ];
     }
 
