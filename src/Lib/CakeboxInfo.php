@@ -303,10 +303,10 @@ class CakeboxInfo
         $seconds = (int)trim($stdout);
 
         return [
-            'days' => floor($stdout / 60 / 60 / 24),
-            'hours' => $stdout / 60 / 60 % 24,
-            'minutes' => $stdout / 60 % 60,
-            'seconds' => $stdout % 60
+            'days' => floor($seconds / 60 / 60 / 24),
+            'hours' => $seconds / 60 / 60 % 24,
+            'minutes' => $seconds / 60 % 60,
+            'seconds' => $seconds % 60
         ];
     }
 
