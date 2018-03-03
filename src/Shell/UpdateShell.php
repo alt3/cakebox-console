@@ -142,7 +142,7 @@ class UpdateShell extends AppShell
         $requiredVersion = '2.*';
         $result = CakeboxUtility::updateConfigFile(
             "$path/composer.json",
-            [ '2.*@dev' => '2.*' ],
+            [ '2.*' => '^3.0' ],
             true // update file as root
         );
 
