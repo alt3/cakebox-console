@@ -68,6 +68,11 @@ class UpdateShell extends AppShell
         if (!$this->_boxFixElasticSearch()) {
             $this->exitBashError();
         }
+
+        // Box fix Composer permissions
+        $this->_boxFixComposerPermissions();
+
+        // All done
         $this->exitBashSuccess('Self-update completed successfully');
     }
 
@@ -84,13 +89,7 @@ class UpdateShell extends AppShell
             return false;
         }
 
-        $this->logInfo('* Updating cache permissions');
-        $command = 'chown vagrant:vagrant /home/vagrant/.composer -R';
-        if (!$this->Execute->shell($command, 'root')) {
-            return false;
-        }
-
-         return true;
+        return true;
     }
 
     /**
@@ -255,6 +254,23 @@ class UpdateShell extends AppShell
         }
 
         $command = 'service elasticsearch start';
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Box-fix:
+     * - make sure Composer cache permissions are set to vagrant:vagrant
+     *
+     * @return bool True on success
+     */
+    protected function _boxFixComposerPermissions()
+    {
+        $this->logInfo('* Updating Composer cache permissions');
+        $command = 'chown vagrant:vagrant /home/vagrant/.composer -R';
         if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
