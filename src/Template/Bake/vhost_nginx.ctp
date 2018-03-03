@@ -11,6 +11,7 @@ server {
 server {
     listen 80;
     server_name :url;
+    client_max_body_size 64M;
 
     # root directive should be global
     root :webroot;
