@@ -80,7 +80,7 @@ class UpdateShell extends AppShell
     {
         $this->logInfo('Self-updating Composer');
         $command = 'composer self-update';
-        if (!$this->Execute->shell($command)) {
+        if (!$this->Execute->shell($command, 'root')) {
             return false;
         }
 
