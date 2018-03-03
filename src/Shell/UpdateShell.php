@@ -80,7 +80,11 @@ class UpdateShell extends AppShell
     {
         $this->logInfo('Self-updating Composer');
         $command = 'composer self-update';
-        if (!$this->Execute->shell($command, 'root')) {
+
+        // We MUST use the -H` addition when updating the globally installed Composer
+        // or permissions inside `/home/vagrant/.composer` will be changed to user `root`
+        // giving all sorts of trouble (https://github.com/composer/composer/issues/6602)
+        if (!$this->Execute->shell($command, 'root -H')) {
             return false;
         }
 
