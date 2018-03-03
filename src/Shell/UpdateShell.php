@@ -54,7 +54,12 @@ class UpdateShell extends AppShell
             $this->exitBashError();
         }
 
-        // Update CakePHP Code Sniffer
+        // Update global Squizlabs PHP Code Sniffer
+        if (!$this->_updatePhpCodeSniffer()) {
+            $this->exitBashError();
+        }
+
+        // Update global CakePHP CodeSniffer
         if (!$this->_updateCakephpCodeSniffer()) {
             $this->exitBashError();
         }
@@ -127,6 +132,35 @@ class UpdateShell extends AppShell
     }
 
     /**
+     * Box-fix: composer update globally installed squizlabs/php_codesniffer
+     * by updating version in composer.json (if needed) and then running
+     * composer update.
+     *
+     * @return bool True on success
+     */
+    protected function _updatePhpCodeSniffer()
+    {
+        $this->logInfo('Updating Squizlabs PHP Code Sniffer');
+
+        // update package version in composer.json to 2.*
+        $path = '/opt/composer-libraries/php_codesniffer';
+        $result = CakeboxUtility::updateConfigFile(
+            "$path/composer.json",
+            [ '2.*' => '^3.0.0' ],
+            true // update file as root
+        );
+
+        // composer update CakePHP Coding Standard
+        $this->logInfo('* Composer updating');
+        $command = "composer update --no-dev --working-dir $path";
+        if (!$this->Execute->shell($command, 'root')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Box-fix: composer update globally installed cakephp-codesniffer
      * by updating version in composer.json (if needed) and then running
      * composer update.
@@ -139,7 +173,6 @@ class UpdateShell extends AppShell
 
         // update package version in composer.json to 2.*
         $path = '/opt/composer-libraries/cakephp_codesniffer';
-        $requiredVersion = '2.*';
         $result = CakeboxUtility::updateConfigFile(
             "$path/composer.json",
             [ '2.*' => '^3.0' ],
